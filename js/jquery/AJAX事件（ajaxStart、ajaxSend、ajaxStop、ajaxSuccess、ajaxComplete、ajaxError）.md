@@ -17,16 +17,16 @@
 	//你会看到A、B都会打印的
 ```
 
-* beforeSend - `局部`事件  
+2. beforeSend - `局部`事件  
   当beforeSend `return false`时，会`阻止`此次请求，但紧随其后会触发`ajaxError`、
 `ajaxComplete`、`ajaxStop`事件。
 	beforeSend(jqXHR jqXHR, PlainObject settings)
 
-* ajaxSend - `全局`事件  
+3. ajaxSend - `全局`事件  
   当且仅当beforeSend `return false`时不会触发。
 	ajaxSend(Event event, jqXHR jqXHR, PlainObject ajaxOptions)
 
-* success - `局部`事件  
+4. success - `局部`事件  
   只有在请求**`成功`**后才会执行此事件。
 	success(Anything data, String textStatus, jqXHR jqXHR)
 
@@ -49,7 +49,7 @@
 	//success可以传数组或单个函数。当传数组时，数组里面每个函数都会执行。
 ```
 
-* ajaxSuccess - `全局`事件  
+6. ajaxSuccess - `全局`事件  
   只有在请求**`成功`**后才会执行此事件。
 	ajaxSuccess(Event event, jqXHR jqXHR, PlainObject ajaxOptions, PlainObject data)
 
@@ -64,7 +64,7 @@
 ```
 > 注意：如果想要获取请求内容，可以通过`xhr.responseXML` 或 `xhr.responseText` 获取对应的`XML`、`HTML`。
 
-* error - `局部`事件  
+7. error - `局部`事件  
   只有在请求**`失败`**后才会执行此事件。
 	error(jqXHR jqXHR, String textStatus, String errorThrown)
 	textStatus值为：`null`,`"timeout"`,`"error"`,`"abort"`,`"parsererror"`。当发生HTTP请求错误时，errorThrown值为`"Not Found"`、`"Internal Server Error."`等
@@ -90,12 +90,12 @@
 
 > 注意：当跨域script或JSONP请求发生错误时，不会触发此事件。
 
-* ajaxError - `全局`事件  
+8. ajaxError - `全局`事件  
   只有在请求**`失败`**后或beforeSend `return false`时才会执行此事件。
 	ajaxError(Event event, jqXHR jqXHR, PlainObject ajaxSettings, String thrownError)
 > 注意：当跨域script或JSONP请求发生错误时，不会触发此事件。
 
-* complete - `局部`事件  
+9. complete - `局部`事件  
   无论请求`失败或成功`都会触发此函数，当且仅当beforeSend `return false`时不会触发。
 	complete(jqXHR jqXHR, String textStatus)
 	textStatus值：`"success"`, `"notmodified"`, `"nocontent"`, `"error"`, `"timeout"`, `"abort"`, `"parsererror"`
@@ -125,7 +125,7 @@
 	//complete可以传数组或单个函数。当传数组时，数组里面每个函数都会执行。
 ```
 
-* ajaxComplete - `全局`事件  
+10. ajaxComplete - `全局`事件  
   始终都会触发此事件。
 	ajaxComplete(Event event, jqXHR jqXHR, PlainObject ajaxOptions)
 
@@ -140,7 +140,7 @@
 	//xhr.responseText 是请求返回的内容
 ```
 
-* ajaxStop - `全局`事件  
+11. ajaxStop - `全局`事件  
   参考ajaxStart
 
 > **`注意`：自JQuery1.8以后，全局事件只能绑定在documnet上，当`global = false`时不会触发全局事件。**
