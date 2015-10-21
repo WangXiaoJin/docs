@@ -6,3 +6,7 @@
 - [x] C
 - [ ] java
 
+
+```Java
+public static void main(String[]args){} //Java
+```
