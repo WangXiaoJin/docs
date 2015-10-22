@@ -156,8 +156,8 @@ textStatus值：`"success"`, `"notmodified"`, `"nocontent"`, `"error"`, `"timeou
 ###10. ajaxStop - `全局`事件  
   参考ajaxStart
 
-> **`注意`：自JQuery1.8以后，全局事件只能绑定在documnet上，当`global = false`时不会触发全局事件。
-> 可以通过`$.ajaxSetup({})`设置Ajax默认参数，已达到全局控制的目的，实例如下:**
+> **`注意`：自JQuery1.8以后，全局事件只能绑定在documnet上，当`global = false`时不会触发全局事件。  
+可以通过`$.ajaxSetup({})`设置Ajax默认参数，已达到全局控制的目的，实例如下:**
 
 ```javascript
 	$.ajaxSetup({
