@@ -1,4 +1,8 @@
 ## Ajax事件详解
+
+#####　`【原创】`转载时标明来源，请支持原创 :heart_eyes:
+---
+
 　　Ajax事件有全局事件和局部事件之分。全局事件，所有ajax请求都会
 触发。局部事件只会监听单次请求。以下顺序为事件触发的顺序：
 
@@ -21,8 +25,8 @@
 ###2. beforeSend - `局部`事件  
   当beforeSend `return false`时，会`阻止`此次请求，但紧随其后会触发`ajaxError`、
 `ajaxComplete`、`ajaxStop`事件。
-	
-	beforeSend(jqXHR jqXHR, PlainObject settings)
+
+	``beforeSend(jqXHR jqXHR, PlainObject settings)``
 
 ###3. ajaxSend - `全局`事件  
   当且仅当beforeSend `return false`时不会触发。  
