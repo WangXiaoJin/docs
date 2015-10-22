@@ -20,15 +20,18 @@
 
 ###2. beforeSend - `局部`事件  
   当beforeSend `return false`时，会`阻止`此次请求，但紧随其后会触发`ajaxError`、
-`ajaxComplete`、`ajaxStop`事件。  
+`ajaxComplete`、`ajaxStop`事件。
+	
 	beforeSend(jqXHR jqXHR, PlainObject settings)
 
 ###3. ajaxSend - `全局`事件  
   当且仅当beforeSend `return false`时不会触发。  
+  
 	ajaxSend(Event event, jqXHR jqXHR, PlainObject ajaxOptions)
 
 ###4. success - `局部`事件  
   只有在请求**`成功`**后才会执行此事件。  
+  
 	success(Anything data, String textStatus, jqXHR jqXHR)
 
 ```javascript
@@ -52,6 +55,7 @@
 
 ###5. ajaxSuccess - `全局`事件  
   只有在请求**`成功`**后才会执行此事件。  
+  
 	ajaxSuccess(Event event, jqXHR jqXHR, PlainObject ajaxOptions, PlainObject data)
 
 ```javascript
@@ -67,6 +71,7 @@
 
 ###6. error - `局部`事件  
   只有在请求**`失败`**后才会执行此事件。  
+  
 	error(jqXHR jqXHR, String textStatus, String errorThrown)  
 	textStatus值为：`null`,`"timeout"`,`"error"`,`"abort"`,`"parsererror"`。当发生HTTP请求错误时，errorThrown值为`"Not Found"`、`"Internal Server Error."`等
 
@@ -93,11 +98,13 @@
 
 ###7. ajaxError - `全局`事件  
   只有在请求**`失败`**后或beforeSend `return false`时才会执行此事件。  
+  
 	ajaxError(Event event, jqXHR jqXHR, PlainObject ajaxSettings, String thrownError)
 > 注意：当跨域script或JSONP请求发生错误时，不会触发此事件。
 
 ###8. complete - `局部`事件  
   无论请求`失败或成功`都会触发此函数，当且仅当beforeSend `return false`时不会触发。  
+  
 	complete(jqXHR jqXHR, String textStatus)
 	textStatus值：`"success"`, `"notmodified"`, `"nocontent"`, `"error"`, `"timeout"`, `"abort"`, `"parsererror"`
 
@@ -128,6 +135,7 @@
 
 ###9. ajaxComplete - `全局`事件  
   始终都会触发此事件。  
+  
 	ajaxComplete(Event event, jqXHR jqXHR, PlainObject ajaxOptions)
 
 ```javascript
