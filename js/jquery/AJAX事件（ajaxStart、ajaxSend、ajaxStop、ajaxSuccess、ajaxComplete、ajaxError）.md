@@ -72,8 +72,8 @@
 ###6. error - `局部`事件  
   只有在请求**`失败`**后才会执行此事件。  
   
-	error(jqXHR jqXHR, String textStatus, String errorThrown)  
-	textStatus值为：`null`,`"timeout"`,`"error"`,`"abort"`,`"parsererror"`。当发生HTTP请求错误时，errorThrown值为`"Not Found"`、`"Internal Server Error."`等
+	error(jqXHR jqXHR, String textStatus, String errorThrown)
+textStatus值为：`null`,`"timeout"`,`"error"`,`"abort"`,`"parsererror"`。当发生HTTP请求错误时，errorThrown值为`"Not Found"`、`"Internal Server Error."`等
 
 ```javascript
 	$.ajax({
@@ -106,7 +106,7 @@
   无论请求`失败或成功`都会触发此函数，当且仅当beforeSend `return false`时不会触发。  
   
 	complete(jqXHR jqXHR, String textStatus)
-	textStatus值：`"success"`, `"notmodified"`, `"nocontent"`, `"error"`, `"timeout"`, `"abort"`, `"parsererror"`
+textStatus值：`"success"`, `"notmodified"`, `"nocontent"`, `"error"`, `"timeout"`, `"abort"`, `"parsererror"`
 
 ```javascript
 	$.ajax({
