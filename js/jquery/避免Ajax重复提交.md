@@ -124,5 +124,5 @@
     <a id="btn4" href="javascript:void(0);" >保存</a>
 ```
 
-> 提示： 
+> 提示： 想进一步了解Ajax事件的，请参考[Ajax事件](./Ajax事件--ajaxStart、ajaxSend、ajaxSuccess、ajaxComplete等.md)
 
