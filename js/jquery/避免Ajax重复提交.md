@@ -17,55 +17,58 @@
      *      submiting: "保存..." //【可选】正在请求中的提示信息，默认为'{0}...'
      *  });
 	 */
-	$(document).ajaxSend(function (event, jqXHR, opts) {
-        //opts.submitBtn 可以是函数、jquery选择器、jquery对象、dom对象
-        function $obj(obj) {
-            if (Object.prototype.toString.call(obj) === '[object Function]') {
-                obj = obj();
-            }
-            return obj == null || obj.jquery ? obj : $(obj);
+	$(document).off(".repeatSubmit").on({
+		"ajaxSend.repeatSubmit": function (event, jqXHR, opts) {
+            //opts.submitBtn 可以是函数、jquery选择器、jquery对象、dom对象
+	        function $obj(obj) {
+	            if (Object.prototype.toString.call(obj) === '[object Function]') {
+	                obj = obj();
+	            }
+	            return obj == null || obj.jquery ? obj : $(obj);
+	        }
+	        if (opts.submitBtn = $obj(opts.submitBtn)) {
+	            var $btn = opts.submitBtn,
+	                data = $btn.data();
+	            if (data.submiting) {
+	                jqXHR.abort();
+	                return false;
+	            }
+	            opts.submiting = opts.submiting != null ? opts.submiting : "{0}...";
+	            //注：如果你的项目用到bootstrap，可以考虑吧"submiting" 换成 "submiting disabled"，
+	            //因为bootstrap的disabled样式已经写好，且比较完善。
+	            //或者你可以通过$.ajaxSetup设置默认参数
+	            opts.IngClass = opts.IngClass == null ? "submiting" : opts.IngClass + " submiting";
+	
+	            data.submiting = true;
+	            if (!data.hasOwnProperty("originalText")) {
+	                data.valProp = $btn[0].tagName == "INPUT" || $btn[0].tagName == "TEXTAREA" ? true : false;
+	                data.disabledProp = data.valProp || $btn[0].tagName == "BUTTON" ? true : false;
+	                data.originalText = data.valProp ? $btn.val() : $btn.text();
+	            }
+	            if (data.valProp) {
+	                $btn.val(opts.submiting.replace(/\{0\}/g, data.originalText)).addClass(opts.IngClass);
+	            } else {
+	                $btn.text(opts.submiting.replace(/\{0\}/g, data.originalText)).addClass(opts.IngClass);
+	            }
+	            if (data.disabledProp)
+	                $btn.prop("disabled", true);
+	        }
+        },
+        "ajaxComplete.repeatSubmit": function (event, jqXHR, opts) {
+            if (opts.submitBtn && opts.submitBtn.data("submiting")) {
+	            var $btn = opts.submitBtn,
+	                data = opts.submitBtn.data();
+	            data.submiting = false;
+	            if (data.valProp) {
+	                $btn.val(data.originalText).removeClass(opts.IngClass);
+	            } else {
+	                $btn.text(data.originalText).removeClass(opts.IngClass);
+	            }
+	            if (data.disabledProp)
+	                $btn.prop("disabled", false);
+	        }
         }
-        if (opts.submitBtn = $obj(opts.submitBtn)) {
-            var $btn = opts.submitBtn,
-                data = $btn.data();
-            if (data.submiting) {
-                jqXHR.abort();
-                return false;
-            }
-            opts.submiting = opts.submiting != null ? opts.submiting : "{0}...";
-            //注：如果你的项目用到bootstrap，可以考虑吧"submiting" 换成 "submiting disabled"，
-            //因为bootstrap的disabled样式已经写好，且比较完善。
-            //或者你可以通过$.ajaxSetup设置默认参数
-            opts.IngClass = opts.IngClass == null ? "submiting" : opts.IngClass + " submiting";
-
-            data.submiting = true;
-            if (!data.hasOwnProperty("originalText")) {
-                data.valProp = $btn[0].tagName == "INPUT" || $btn[0].tagName == "TEXTAREA" ? true : false;
-                data.disabledProp = data.valProp || $btn[0].tagName == "BUTTON" ? true : false;
-                data.originalText = data.valProp ? $btn.val() : $btn.text();
-            }
-            if (data.valProp) {
-                $btn.val(opts.submiting.replace(/\{0\}/g, data.originalText)).addClass(opts.IngClass);
-            } else {
-                $btn.text(opts.submiting.replace(/\{0\}/g, data.originalText)).addClass(opts.IngClass);
-            }
-            if (data.disabledProp)
-                $btn.prop("disabled", true);
-        }
-    }).ajaxComplete(function (event, jqXHR, opts) {
-        if (opts.submitBtn && opts.submitBtn.data("submiting")) {
-            var $btn = opts.submitBtn,
-                data = opts.submitBtn.data();
-            data.submiting = false;
-            if (data.valProp) {
-                $btn.val(data.originalText).removeClass(opts.IngClass);
-            } else {
-                $btn.text(data.originalText).removeClass(opts.IngClass);
-            }
-            if (data.disabledProp)
-                $btn.prop("disabled", false);
-        }
-    });
+	});
 ```
 ---
 
