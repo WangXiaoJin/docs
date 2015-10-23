@@ -9,6 +9,14 @@
 ###JS代码如下：
 
 ```javascript
+	/**
+	 * 防止ajax重复提交
+	 * $.ajax({
+     *      submitBtn: "#btn",  //【必须】触发请求的按钮，可以是函数、jquery选择器、jquery对象、dom对象
+     *      IngClass:  "class1 class2",	//【可选】按钮正在提交时显示的class，默认会自动加上'submiting'
+     *      submiting: "保存..." //【可选】正在请求中的提示信息，默认为'{0}...'
+     *  });
+	 */
 	$(document).ajaxSend(function (event, jqXHR, opts) {
         //opts.submitBtn 可以是函数、jquery选择器、jquery对象、dom对象
         function $obj(obj) {
@@ -25,6 +33,10 @@
                 return false;
             }
             opts.submiting = opts.submiting != null ? opts.submiting : "{0}...";
+            //注：如果你的项目用到bootstrap，可以考虑吧"submiting" 换成 "submiting disabled"，
+            //因为bootstrap的disabled样式已经写好，且比较完善。
+            //或者你可以通过$.ajaxSetup设置默认参数
+            opts.IngClass = opts.IngClass == null ? "submiting" : opts.IngClass + " submiting";
 
             data.submiting = true;
             if (!data.hasOwnProperty("originalText")) {
@@ -33,9 +45,9 @@
                 data.originalText = data.valProp ? $btn.val() : $btn.text();
             }
             if (data.valProp) {
-                $btn.val(opts.submiting.replace(/\{0\}/g, data.originalText)).addClass("submiting");
+                $btn.val(opts.submiting.replace(/\{0\}/g, data.originalText)).addClass(opts.IngClass);
             } else {
-                $btn.text(opts.submiting.replace(/\{0\}/g, data.originalText)).addClass("submiting");
+                $btn.text(opts.submiting.replace(/\{0\}/g, data.originalText)).addClass(opts.IngClass);
             }
             if (data.disabledProp)
                 $btn.prop("disabled", true);
@@ -46,9 +58,9 @@
                 data = opts.submitBtn.data();
             data.submiting = false;
             if (data.valProp) {
-                $btn.val(data.originalText).removeClass("submiting");
+                $btn.val(data.originalText).removeClass(opts.IngClass);
             } else {
-                $btn.text(data.originalText).removeClass("submiting");
+                $btn.text(data.originalText).removeClass(opts.IngClass);
             }
             if (data.disabledProp)
                 $btn.prop("disabled", false);
@@ -60,6 +72,7 @@
 ###CSS代码如下：
 
 ```css
+	/* 如果你的项目有在用bootstrap，可以考虑用bootstrap的.disabled的样式 */
 	.submiting {
         cursor: not-allowed !important; 
         opacity: 0.8;
@@ -74,8 +87,9 @@
 	$("#btn").click(function () {
         $.ajax({
             url: "...",
-            submitBtn: "#btn",  //触发请求的按钮
-            submiting: "保存...", //正在请求中的提示信息
+            submitBtn: "#btn",  //【必须】触发请求的按钮
+            IngClass: "class1 class2", //【可选】正在请求时显示的样式
+            submiting: "保存...", //【可选】正在请求中的提示信息
             success: function (data) {
                 
             }
@@ -86,8 +100,8 @@
 	$("#btn").click(function () {
         $.ajax({
             url: "...",
-            submitBtn: $("#btn"),  //触发请求的按钮
-            submiting: "拼死保存中...", //正在请求中的提示信息
+            submitBtn: $("#btn"),  //【必须】触发请求的按钮
+            submiting: "拼死保存中...", //【可选】正在请求中的提示信息
             success: function (data) {
                 
             }
@@ -101,7 +115,7 @@
             submitBtn: function() {
 				return anyVal > 1 ? "#btn1" : "#btn2";
 			},
-            submiting: "{0}...", //{0}代表原有按钮的内容
+            submiting: "{0}...", //【可选】{0}代表原有按钮的内容
             success: function (data) {
                 
             }
