@@ -86,7 +86,18 @@
 ###使用例子：
 
 ```javascript
-	//例子1
+	//例子1 最简单写法
+	$("#btn").click(function () {
+        $.ajax({
+            url: "...",
+            submitBtn: "#btn",  //【必须】触发请求的按钮
+            success: function (data) {
+                
+            }
+        });
+    });
+    
+    //例子2
 	$("#btn").click(function () {
         $.ajax({
             url: "...",
@@ -99,7 +110,7 @@
         });
     });
 
-	//例子2
+	//例子3
 	$("#btn").click(function () {
         $.ajax({
             url: "...",
@@ -111,7 +122,7 @@
         });
     });
 
-	//例子3
+	//例子4
 	$("#btn").click(function () {
         $.ajax({
             url: "...",
