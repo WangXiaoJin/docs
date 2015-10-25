@@ -28,6 +28,8 @@ $(document).off(".repeatSubmit").on({
             }
             if (Object.prototype.toString.call(obj) === '[object Array]') {
                 var $objs =  null;
+                //IE9以下浏览器Array对象不提供forEach函数，你需要改成for(var i = 0; i < obj.length; i++),或自己实现forEach函数
+                //注意：遍历数组时千万不要用for(var i in obj)，因为如果你扩展了Array的函数后，i值也会包含你自定义的函数名。js的foreach语句为遍历对象的所有属性，这是和其他语言的区别
                 obj.forEach(function (item) {
                     var tmp = $obj(item);
                     $objs = $objs == null ? tmp : tmp == null ? $objs : $objs.add(tmp);
