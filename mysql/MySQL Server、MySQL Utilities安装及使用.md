@@ -22,7 +22,7 @@ Windows安装分为两种方式：一种是以msi结尾的可视化安装程序�
 		basedir=E:/mysql
 		# 设置MySQL的Data目录
 		datadir=E:/mydata/data
-	第二步：[初始化MySQL的Data目录](#initDataDir)  
+	第二步：参考[初始化MySQL的Data目录](#初始化MySQL的Data目录)  
 	第三步：开启MySQL服务
 
 	* 直接启动
@@ -72,7 +72,7 @@ Windows安装分为两种方式：一种是以msi结尾的可视化安装程序�
 | ~/.my.cnf | User-specific options |
 | ~/.mylogin.cnf | Login path options |
 
-### <a name="initDataDir"></a>初始化MySQL的Data目录  
+### 初始化MySQL的Data目录  
 Windows初始化Data目录命令：  
 
 	C:\> bin\mysqld --initialize
