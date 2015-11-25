@@ -1,10 +1,8 @@
 ## MySQL Server、MySQL Utilities安装及使用
 
-##### `【原创】` :heart_eyes: 
+##### `【原创】` :heart_eyes:
 ---
 
-<i class="icon-cog"></i>
-	
 　　最近正在研究MySQl的高可用性、负载均衡、分库分表，借此机会记录下自己
 粗陋的理解。
 
@@ -24,7 +22,7 @@ Windows安装分为两种方式：一种是以msi结尾的可视化安装程序�
 		basedir=E:/mysql
 		# 设置MySQL的Data目录
 		datadir=E:/mydata/data
-	第二步：参考[初始化MySQL的Data目录](#初始化MySQL的Data目录)  
+	第二步：[初始化MySQL的Data目录](#initDataDir)  
 	第三步：开启MySQL服务
 
 	* 直接启动
@@ -46,10 +44,10 @@ Windows安装分为两种方式：一种是以msi结尾的可视化安装程序�
 			
 			C:\> "C:\Program Files\MySQL\MySQL Server 5.7\bin\mysqld" --remove
 
-	第三步：[修改初始密码](#updPwd)
+	第三步：[修改密码](#updPwd)
 
 ### 配置MySQL Server  
-参考：[配置文件](http://dev.mysql.com/doc/refman/5.7/en/option-files.html)  
+参考：<http://dev.mysql.com/doc/refman/5.7/en/option-files.html>  
 
 1. Windows环境的配置文件路径，加载顺序为表格的顺序  
 
@@ -74,7 +72,7 @@ Windows安装分为两种方式：一种是以msi结尾的可视化安装程序�
 | ~/.my.cnf | User-specific options |
 | ~/.mylogin.cnf | Login path options |
 
-### 初始化MySQL的Data目录  
+### 初始化MySQL的Data目录<a name="initDataDir"></a>  
 Windows初始化Data目录命令：  
 
 	C:\> bin\mysqld --initialize
@@ -116,22 +114,105 @@ Linux初始化Data目录命令：
 	
 		mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';
 
->注意：  
->[`初始化Data目录`官方文档](http://dev.mysql.com/doc/refman/5.7/en/data-directory-initialization-mysqld.html) 。
->修改密码可参考[修改初始密码](#updPwd)
+>注意：[`初始化Data目录`官方文档](http://dev.mysql.com/doc/refman/5.7/en/data-directory-initialization-mysqld.html) 。修改密码可参考[修改密码](#updPwd)
 
-### 修改初始密码  
-	<a name="updPwd"></a>
+### 修改密码<a name="updPwd"></a>  
 查看数据库中包含哪些账号，他们的密码是否为空：
 
 ```
 #假设root账号的密码为空
 shell> mysql -u root
 ```
-
 ```
 #MySQL 5.7.6版本使用
 mysql> SELECT User, Host, HEX(authentication_string) FROM mysql.user;
 ```
+```
+#MySQL 5.7.6之前的版本使用
+mysql> SELECT User, Host, Password FROM mysql.user;
+```
+```
+#将返回数据：
++------+--------------------+----------+
+| User | Host               | Password |
++------+--------------------+----------+
+| root | localhost          |          |
+| root | myhost.example.com |          |
+| root | 127.0.0.1          |          |
+| root | ::1                |          |
+|      | localhost          |          |
+|      | myhost.example.com |          |
++------+--------------------+----------+
+```
+
+1. 设置初始密码  
+	* MySQL 5.7.6, 用 ALTER USER：  
+
+			mysql> ALTER USER user IDENTIFIED BY 'new_password';
+	* 5.7.6之前用 SET PASSWORD：  
+	
+			mysql> SET PASSWORD FOR user = PASSWORD('new_password');
+			
+	设置root密码例子：
+	
+		shell> mysql -u root
+		mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';
+	设置匿名账号密码：
+		
+		shell> mysql -u root -p
+		Enter password: (enter root password here)
+		mysql> SET PASSWORD FOR ''@'localhost' = PASSWORD('new_password');
+	删除匿名账号：
+	
+		shell> mysql -u root -p
+		Enter password: (enter root password here)
+		mysql> DROP USER ''@'localhost';
+	安全设置Test库（因test库和已test_开头库，任何账号都有权限访问，即使没有给此账号分配任何权限）：
+	
+		shell> mysql -u root -p
+		Enter password: (enter root password here)
+		mysql> DELETE FROM mysql.db WHERE Db LIKE 'test%';
+		mysql> FLUSH PRIVILEGES;
+	删除test库（可选）：
+	
+		mysql> DROP DATABASE test;
+2. 设置账号密码  
+	创建新账号及设置密码：
+	
+		mysql> CREATE USER 'jeffrey'@'localhost' IDENTIFIED BY 'mypass';
+		
+	设置已有账号密码：
+	
+		#MySQL 5.7.6使用ALTER USER
+		mysql> ALTER USER 'jeffrey'@'localhost' IDENTIFIED BY 'mypass';
+		#MySQL 5.7.6之前使用SET PASSWORD
+		mysql> SET PASSWORD FOR 'jeffrey'@'localhost' = PASSWORD('mypass');
+	设置当前登录账号密码：
+	
+		#MySQL 5.7.6使用ALTER USER
+		mysql> ALTER USER USER() IDENTIFIED BY 'mypass';
+		#MySQL 5.7.6之前使用SET PASSWORD
+		mysql> SET PASSWORD = PASSWORD('mypass');
+	使用mysqladmin修改密码：
+	
+		shell> mysqladmin -u user_name -h host_name password "new_password"
 
 >注意：[`修改初始密码`官方文档](http://dev.mysql.com/doc/refman/5.7/en/default-privileges.html) 
+
+### 重置密码<a name="resetPwd"></a>  
+官方提供了两种方案[官方重置密码文档](http://dev.mysql.com/doc/refman/5.7/en/resetting-permissions.html)，这里我选择了一种任何平台都通用的方案：
+
+1. 停止MySQL服务，重启`mysqld`时附带`--skip-grant-tables --skip-networking`
+2. 连接MySQL，不需要输入密码：
+
+		shell> mysql
+3. 使用`FLUSH PRIVILEGES;`重新加载grant tables，使账号管理的SQL语句起作用：
+
+		mysql> FLUSH PRIVILEGES;
+		#MySQL 5.7.6版本
+		mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
+		#MySQL 5.7.6之前的版本
+		mysql> SET PASSWORD FOR 'root'@'localhost' = PASSWORD('MyNewPass');
+4. 重启MySQL服务，不需要`--skip-grant-tables --skip-networking`参数
+
+#待完成...
