@@ -1,8 +1,10 @@
 ## MySQL Server、MySQL Utilities安装及使用
 
-##### `【原创】` :heart_eyes:
+##### `【原创】` :heart_eyes: 
 ---
 
+<i class="icon-cog"></i>
+	
 　　最近正在研究MySQl的高可用性、负载均衡、分库分表，借此机会记录下自己
 粗陋的理解。
 
