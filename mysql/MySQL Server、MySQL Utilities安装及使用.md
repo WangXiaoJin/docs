@@ -72,8 +72,7 @@ Windows安装分为两种方式：一种是以msi结尾的可视化安装程序�
 | ~/.my.cnf | User-specific options |
 | ~/.mylogin.cnf | Login path options |
 
-### 初始化MySQL的Data目录  
-<a name="initDataDir"></a>
+### <a name="initDataDir"></a>初始化MySQL的Data目录  
 Windows初始化Data目录命令：  
 
 	C:\> bin\mysqld --initialize
