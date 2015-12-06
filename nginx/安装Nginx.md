@@ -1,6 +1,6 @@
 ## 安装Nginx
 
-##### 参考自[官方文档](http://nginx.org/en/docs/configure.html)、<http://blog.csdn.net/staricqxyz/article/details/17015401>
+##### `【原创】` :heart_eyes:
 ---
 
 ### Linux安装Nginx
@@ -283,4 +283,5 @@ Nginx版本：nginx-1.8.0
    
    * `--with-debug` 启用debug日志
    
+   ##### configure参数参考自<http://blog.csdn.net/staricqxyz/article/details/17015401>   
 
