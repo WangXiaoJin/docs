@@ -1,4 +1,4 @@
-## 安装Nginx
+## 安装Nginx、Tengine
 
 ##### `【原创】` :heart_eyes:
 ---
@@ -285,3 +285,54 @@ Nginx版本：nginx-1.8.0
    
    ##### configure参数参考自<http://blog.csdn.net/staricqxyz/article/details/17015401>   
 
+### Linux安装Tengine
+Linux版本：CentOS release 6.7 (Final)  
+Tengine版本：tengine-1.5.2
+
+1. 源码安装  
+   安装方法和Nginx一样，下面列出Tengine特有属性：
+   * configure参数 - 大多数参数和Nginx一样，同样可以使用`./configure --help`获取帮助信息
+	   * `--dso-path`  
+	      设置DSO模块的安装路径。
+	      
+	   * `--dso-tool-path`  
+	      设置dso_tool脚本本身的安装路径。
+	      
+	   * `--without-dso`  
+	     关闭动态加载模块的功能。
+	     
+	   * `--with-jemalloc`  
+		 让Tengine链接jemalloc库，运行时用jemalloc来分配和释放内存。
+		 
+	   * `--with-jemalloc=path`  
+	     设置jemalloc库的源代码路径，Tengine可以静态编译和链接该库。
+	     
+	     ```
+	     ./configure [--with-http_concat_module | --with-http_concat_module=shared]
+	     #concat模块将被静态编译到tengine中
+		 --with-http_concat_module
+		 #concat模块将被编译成动态文件，采用动态模块的方式添加到tengine中。需要用到下面的make dso_install指令
+		 --with-http_concat_module=shared
+		 
+	     ```
+	* `make`指令
+		* `make test`  
+		  运行Tengine的测试用例。你首先需要安装perl来运行这个指令。
+		
+		* `make dso_install`  
+		  将动态模块的so文件拷贝到目标目录。这个目录可以通过'--dso-path'设置。默认是在Tengine*安装目录下面的modules目录。  
+		  1. 动态加载模块的个数限制为128个  
+		  2. 如果已经加载的动态模块有修改，那么必须重起Tengine才会生效  
+		  3. 只支持HTTP模块
+			```
+		  	dso {
+			     load ngx_http_lua_module.so;
+			     load ngx_http_memcached_module.so;
+			}
+			
+			events {
+			   worker_connections  1024;
+			}
+			```
+			> 注：使用详情见官网:<http://tengine.taobao.org/document_cn/dso_cn.html>
+	     
