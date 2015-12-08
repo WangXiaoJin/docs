@@ -109,7 +109,7 @@ Nginx版本：nginx-1.8.0
    
    * `--with-http_auth_request_module` 启用ngx_http_auth_request_module模块
    
-   * `--with-http_random_index_module` 启用ngx_http_random_index_module模块（从目录中随机挑选一个目录索引）
+   * `--with-http_random_index_module` 启用ngx_http_random_index_module模块。从目录中随机挑选一个文件作为index文件
    
    * `--with-http_secure_link_module` 启用ngx_http_secure_link_module模块（计算和检查要求所需的安全链接网址）
    
@@ -131,7 +131,7 @@ Nginx版本：nginx-1.8.0
    
    * `--without-http_auth_basic_module` 禁用ngx_http_auth_basic_module模块（该模块是可以使用用户名和密码基于http基本认证方法来保护你的站点或其部分内容）
    
-   * `--without-http_autoindex_module` 禁用ngx_http_autoindex_module模块（该模块用于自动生成目录列表，只在ngx_http_index_module模块未找到索引文件时发出请求。）
+   * `--without-http_autoindex_module` 禁用ngx_http_autoindex_module模块。该模块用于自动生成目录列表。只有在ngx_http_index_module模块未找到索引文件时才会触发
    
    * `--without-http_geo_module` 禁用ngx_http_geo_module模块（创建一些变量，其值依赖于客户端的IP地址）
    
