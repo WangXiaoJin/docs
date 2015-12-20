@@ -120,7 +120,7 @@ var c = document.cookie;
 Set-Cookie: name=Nicholas; HttpOnly
 ```
 
-###5. Nginx添加Cookie
+###6. Nginx添加Cookie
 
 ```nginx
 add_header Set-Cookie "name=wang";
