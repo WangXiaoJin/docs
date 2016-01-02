@@ -3,6 +3,9 @@
 #####　`【参考】` <http://stackoverflow.com/questions/31679375/grunt-contrib-watch-doesnt-see-new-files> 、 <http://stackoverflow.com/questions/24296839/why-dont-newly-added-files-trigger-my-gulp-watch-task>
 ---
 
+grunt-contrib-watch：v0.6.1  
+gaze：v0.5.2
+
 当使用grunt-contrib-watch模块监听文件变动时，你可能会碰到创建新文件时，并没有触发`added`事件。这个问题归根于grunt-contrib-watch模块使用了`gaze`模块，而`gaze`存在如下问题：
 
 1. 当路径以`./`开头，不触发`added`事件（**解决方案**：去除`./`）
