@@ -59,7 +59,7 @@ cd memcached-1.x.x
 		</property>
 	</bean>
 	```
-3. JAVA注解使用
+3. JAVA注解
 
 	```java
 	@Override
@@ -67,6 +67,21 @@ cd memcached-1.x.x
 	public Role load(@ParameterValueKeyProvider Integer id) {
 		return super.get(id, CloseStatus.OPEN, CloseStatus.CLOSE);
 	}
+	```
+	
+	```java
+	//测试代码    ======= 显示Memcached所有的key - value
+	public void listCacheObjs() throws Exception {
+		final String ip = "10.0.11.135:11211";
+		
+		MemcachedClientBuilder builder = new XMemcachedClientBuilder(AddrUtil.getAddresses(ip));
+		MemcachedClient client = builder.build();
+		KeyIterator it = client.getKeyIterator(AddrUtil.getOneAddress(ip));
+		while (it.hasNext()) {
+			String key = it.next();
+			LOG.info("====== Key/value : {0} / {1}", key, client.get(key));
+		}
+    }
 	```
 	
 使用就是这么简单，但功能也比较单一，适合简单的key-value场景。
