@@ -1,10 +1,113 @@
 ## MySQL Server、MySQL Utilities安装及使用
 
-##### `【原创】` :heart_eyes:
----
-
 　　最近正在研究MySQl的高可用性、负载均衡、分库分表，借此机会记录下自己
 粗陋的理解。
+
+### Linux安装MySQL Server
+在安装之前确定系统是否预装了Mysql，如果已经安装请先卸载。
+
+```bash
+shell> rpm -qa | grep mysql	 #确认是否安装
+shell> rpm -e mysql   #普通卸载模式
+shell> rpm -e --nodeps mysql  #强力卸载模式，无论是否有依赖项，强制卸载
+```
+
+Mysql在初始化Data目录、启动服务时依赖`libaio`库，所以确保系统已安装此库：
+
+```bash
+shell> yum search libaio  # 查看是否已安装
+shell> yum install libaio # 安装此库
+```
+	
+或者，基于APT的系统：
+
+```bash
+shell> apt-cache search libaio # 查看是否已安装
+shell> apt-get install libaio1 # 安装此库
+```
+
+执行安装命令：
+
+```bash
+shell> groupadd mysql
+shell> useradd -r -g mysql -s /bin/false mysql
+shell> cd /usr/local
+shell> tar zxvf /path/to/mysql-VERSION-OS.tar.gz
+shell> ln -s full-path-to-mysql-VERSION-OS mysql
+shell> cd mysql
+shell> mkdir mysql-files
+shell> chmod 750 mysql-files
+shell> chown -R mysql .
+shell> chgrp -R mysql .
+shell> bin/mysql_install_db --user=mysql    # Before MySQL 5.7.6
+shell> bin/mysqld --initialize --user=mysql # MySQL 5.7.6 and up，执行这步会生成一个随机密码，请备份此密码。例：root@localhost: YwtE,aPqN8!d
+shell> bin/mysql_ssl_rsa_setup              # MySQL 5.7.6 and up
+shell> chown -R root .
+shell> chown -R mysql mysql-files
+shell> cp support-files/mysql.server /etc/init.d/mysqld
+shell> chkconfig mysqld on		#开机自启Mysql服务
+```
+
+设置Mysql环境变量：
+
+```bash
+shell> vim /etc/profile
+shell> # 在文件末尾加上：export PATH=$PATH:/usr/local/mysql/bin
+shell> source /etc/profile #使环境变量生效
+```
+
+配置my.cnf：
+
+```bash
+[client]
+port=3306
+socket=/var/lib/mysql/mysql.sock
+default-character-set=utf8
+
+[mysqld]
+# 当本服务器不能连接到外网时，去掉以下注释，能跳过域名反解析，这样能加快数据库连接速度
+#skip-name-resolve
+port=3306
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+character-set-server=utf8
+
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+```
+
+开启Mysqld服务：
+
+```bash
+shell> service mysqld start
+```
+
+修改root初始密码：
+
+```bash
+shell> mysql -u root -p
+shell> # 输入--initialize生成的密码
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';
+```
+
+修改防火墙规则：
+
+```bash
+shell> vim /etc/sysconfig/iptables
+shell> # 加入：-A INPUT -m state --state NEW -m tcp -p tcp --dport 3306 -j ACCEPT
+shell> service iptables restart
+```
+
+允许Mysql远程访问（根据个人情况而定）：
+
+```bash
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;
+mysql> FLUSH PRIVILEGES;
+```
 
 ### Windows安装MySQL Server
 Windows安装分为两种方式：一种是以msi结尾的可视化安装程序；另一种是免安装包
