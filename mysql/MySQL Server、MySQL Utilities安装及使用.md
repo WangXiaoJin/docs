@@ -80,6 +80,9 @@ log-error=/var/log/mysqld.log
 pid-file=/var/run/mysqld/mysqld.pid
 ```
 
+> mysqld的参数可以通过`mysqld --verbose --help`、`mysql --help`、`show variables like '%';`等来显示有哪些参数可以设置。  
+> 注意：你可能会发现`mysqld --verbose --help`显示的是中划线，例：`character-set-server`；而`show variables like '%';`显示的是下划线，例：`character_set_server`。经测试发现两种参数格式都有效。
+
 开启Mysqld服务：
 
 ```bash
