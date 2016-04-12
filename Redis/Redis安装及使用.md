@@ -27,7 +27,7 @@ cp redis.conf /etc/redis/6379.conf
 	* `sysctl vm.overcommit_memory=1`，重启会失效
 	* `echo 1 > /proc/sys/vm/overcommit_memory`， 重启会失效
 
-* 确保关闭linux内核特性：`transparent huge pages`，不然启动Redis服务会提示警告信息。请参考[关闭TransparentHugePages (THP)](..linux/关闭TransparentHugePages (THP).md)、<http://blog.csdn.net/chosen0ne/article/details/46625359>
+* 确保关闭linux内核特性：`transparent huge pages`，不然启动Redis服务会提示警告信息。请参考[关闭TransparentHugePages (THP)](../linux/关闭TransparentHugePages (THP).md)、<http://blog.csdn.net/chosen0ne/article/details/46625359>
 
 * `somaxconn`定义了系统中每一个端口最大的监听队列的长度,这是个全局的参数,默认值为128。而Redis的配置为511，所以启动Redis服务时会有警告提示。执行如下命令就OK了：
 	
