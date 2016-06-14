@@ -1,5 +1,7 @@
 ## Redis安装及使用
 
+**以下文件名不必已端口号结尾，因我是在同一机器上测试多个服务，所以才已端口结尾作区分。**
+
 ### Redis安装
 
 ```bash
@@ -68,6 +70,13 @@ maxmemory-policy allkeys-lru
 #save 60 10000
 #Redis存放RDB、AOF的目录
 dir /var/redis/6379
+# 记录的日志级别
+loglevel notice
+# 日志路径，根路径基于dir
+logfile redis.log
+#适用于网络不稳定的情况
+#min-slaves-to-write 1
+
 ```
 
 2.Slave需要修改配置
@@ -90,6 +99,10 @@ slaveof 192.168.1.1 6379
 #save 60 10000
 #Redis存放RDB、AOF的目录
 dir /var/redis/6379
+# 记录的日志级别
+loglevel notice
+# 日志路径，根路径基于dir
+logfile redis.log
 ```
 
 ----------***Session服务配置***--------------
@@ -110,6 +123,12 @@ maxmemory-policy noeviction
 appendonly yes
 #Redis存放RDB、AOF的目录
 dir /var/redis/6379
+# 记录的日志级别
+loglevel notice
+# 日志路径，根路径基于dir
+logfile redis.log
+#适用于网络不稳定的情况
+#min-slaves-to-write 1
 ```
 
 2.Slave需要修改配置
@@ -128,6 +147,10 @@ maxmemory-policy noeviction
 slaveof 192.168.1.2 6379
 #Redis存放RDB、AOF的目录
 dir /var/redis/6379
+# 记录的日志级别
+loglevel notice
+# 日志路径，根路径基于dir
+logfile redis.log
 ```
 
 Redis安装目录会有个redis.conf文件，里面包含各种配置参数及讲解，非常详细，我觉得Redis这点做的非常好。配置文件的格式非常简单，参数名和参数值以空格隔开，如果想参数值包含字符窜，则参数值加上引号：`requirepass "hello world"`  
@@ -155,6 +178,10 @@ maxmemory值为0时，内存使用没有限制。64位系统默认为0，32位�
 * **maxmemory-samples 5**  
 当需要剔除数据时，挑出5条数据依据maxmemory-policy策略删除一条。为什么每次只取样5个来删除数据呢？官方的解释是：这样性能更快。典型的拿准确率换性能。
 
+* **min-slaves-to-write 0**  
+如果你的网络不稳定，经常会出现服务器之间通信断开，请设置此参数当一个master和两个slave通信断开后，你的应用中可能会出现两个master，old master此时可能会写入数据，当服务器通信正常后，old master会变成new master的slave，此时old master写入的数据回丢失。
+例：`min-slaves-to-write 1` master至少与1个slave通信时，才会接受write操作。
+
 具体请参考官方文档：<http://redis.io/topics/lru-cache>
 
 ### 运行Redis
@@ -176,3 +203,146 @@ OK
 redis> get foo
 "bar"
 ```
+
+### 防火墙配置Redis的client端口
+
+```bash
+shell> vim /etc/sysconfig/iptables
+# 端口号根据自己的配置而定
+shell> # 加入：-A INPUT -m state --state NEW -m tcp -p tcp --dport 6379 -j ACCEPT
+shell> service iptables restart
+```
+
+### 启用Sentinel
+
+默认情况下，Replication是不会自动failover的，所以需要Sentinel启动此功能。
+
+创建notify.sh，当Sentinel监测到Redis异常后发送邮件给管理员：
+
+```bash
+shell> vim /etc/redis/notify.sh
+
+# 插入以下内容：
+#############################################
+#!/bin/sh
+
+mail_to="xjwang@domain.com"
+mail_subject="【Redis Notification】:【$1】"
+
+if [ "$#" = "2" ]; then
+    mail_body=`cat << EOB
+============================================
+Redis Notification Script called by Sentinel
+============================================
+Event Type: ${1}
+Event Description: ${2}
+Check the redis status.
+EOB`
+
+    echo "${mail_body}" | mail -s "${mail_subject}" "${mail_to}"
+
+fi
+#############################################
+
+shell> chmod -R 755 /etc/redis/notify.sh
+```
+
+> 注：发送邮件部分请参考：[Linux发送邮件](../linux/发送邮件.md)
+
+配置sentinel.conf文件：
+
+```bash
+# 拷贝一份默认配置的sentinel文件
+shell> cp sentinel.conf /etc/redis/sentinel_26379.conf
+```
+
+```bash
+# 已守护进程运行
+daemonize yes
+#此值应该与对应的/etc/init.d/redis_sentinel*的PIDFILE参数值相同
+pidfile /var/run/redis_sentinel_26379.pid
+# 默认规则为redis的端口数值加上20000
+port 26379
+dir /var/redis
+# 日志路径，根路径基于dir
+logfile redis_sentinel_26379.log
+# 只有在使用NAT、docker时才需要如下配置
+# sentinel announce-ip <ip>
+# sentinel announce-port <port>
+# 配置master地址,最后一个参数为需要2个sentinel标记同一master无效后，才能人执行failover
+sentinel monitor pro-master 127.0.0.1 6379 2
+# 如果redis使用了密码，则需要如下配置
+# sentinel auth-pass <master-name> <password>
+# 当Sentinel触发了WARNING事件（例：-sdown, -odown）后会执行notify.sh脚本
+sentinel notification-script pro-master /etc/redis/notify.sh
+
+```
+
+> 注：redis.conf中的配置可用于sentinel.conf配置中。
+
+启动sentinel：
+
+1. 直接命令行启动  
+	```bash
+	shell> redis-sentinel /etc/redis/sentinel_26379.conf
+	```
+
+2. 配置成服务启动  
+	```bash
+	shell> cp utils/redis_init_script /etc/init.d/redis_sentinel_26379
+	```
+	
+	redis_sentinel_26379文件内容修改为：
+	
+	```bash
+	#!/bin/sh
+
+	PORT=26379
+	EXEC=/usr/local/bin/redis-sentinel
+	CLIEXEC=/usr/local/bin/redis-cli
+	
+	PIDFILE=/var/run/redis_sentinel_${PORT}.pid
+	CONF="/etc/redis/sentinel_${PORT}.conf"
+	
+	case "$1" in
+	    start)
+	        if [ -f $PIDFILE ]
+	        then
+	                echo "$PIDFILE exists, process is already running or crashed"
+	        else
+	                echo "Starting Redis Sentinel server..."
+	                $EXEC $CONF
+	        fi
+	        ;;
+	    stop)
+	        if [ ! -f $PIDFILE ]
+	        then
+	                echo "$PIDFILE does not exist, process is not running"
+	        else
+	                PID=$(cat $PIDFILE)
+	                echo "Stopping ..."
+	                $CLIEXEC -p $PORT shutdown
+	                while [ -x /proc/${PID} ]
+	                do
+	                    echo "Waiting for Redis Sentinel to shutdown ..."
+	                    sleep 1
+	                done
+	                echo "Redis Sentinel stopped"
+	        fi
+	        ;;
+	    *)
+	        echo "Please use start or stop as first argument"
+	        ;;
+	esac
+	```
+	
+
+### 防火墙配置Sentinel端口
+
+```bash
+shell> vim /etc/sysconfig/iptables
+# 端口号根据自己的配置而定
+shell> # 加入：-A INPUT -m state --state NEW -m tcp -p tcp --dport 26379 -j ACCEPT
+shell> service iptables restart
+```
+

@@ -68,7 +68,7 @@ default-character-set=utf8
 # 当本服务器不能连接到外网时，去掉以下注释，能跳过域名反解析，这样能加快数据库连接速度
 #skip-name-resolve
 port=3306
-datadir=/var/lib/mysql
+datadir=/data/mysql/data
 socket=/var/lib/mysql/mysql.sock
 character-set-server=utf8
 
@@ -76,7 +76,7 @@ character-set-server=utf8
 symbolic-links=0
 
 [mysqld_safe]
-log-error=/var/log/mysqld.log
+log-error=/data/mysql/log/mysqld.log
 pid-file=/var/run/mysqld/mysqld.pid
 ```
 
