@@ -48,13 +48,17 @@ $(document).off(".repeatSubmit").on({
             opts.IngClass = opts.IngClass == null ? "submiting" : opts.IngClass + " submiting";
 
             if (opts.submitBtn.data("submiting")) {
+            	opts.submitBtn.data("submiting", opts.submitBtn.data("submiting") + 1);
                 jqXHR.abort();
                 return false;
             }
             function changeVal($btn, isSbmtBtn) {
                 var data = $btn.data();
-                if (data.submiting) return false;
-                data.submiting = true;
+                if (data.submiting) {
+                	data.submiting++;
+                	return false;
+                }
+                data.submiting = 1;
                 if (!data.hasOwnProperty("originalText")) {
                     data.valProp = $btn[0].tagName == "INPUT" || $btn[0].tagName == "TEXTAREA" ? true : false;
                     data.disabledProp = data.valProp || $btn[0].tagName == "BUTTON" ? true : false;
@@ -81,10 +85,14 @@ $(document).off(".repeatSubmit").on({
     },
     "ajaxComplete.repeatSubmit": function (event, jqXHR, opts) {
         if (opts.submitBtn && opts.submitBtn.data("submiting")) {
+        	var submitBtnData = opts.submitBtn.data();
+        	if(--submitBtnData.submiting) return;
             function changeVal($btn, isSbmtBtn) {
                 var data = $btn.data();
-                if (!data.submiting) return false;
-                data.submiting = false;
+                if(!isSbmtBtn && !data.submiting) {
+                	return false;
+                }
+                data.submiting = 0;
                 $btn.removeClass(opts.IngClass);
                 if (isSbmtBtn) {
                     if (data.valProp) {
