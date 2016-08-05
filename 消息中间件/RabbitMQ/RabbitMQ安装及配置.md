@@ -88,4 +88,46 @@
 	> 注：fs.file-max值必须大于ulimit值，ulimit的hard值大于等于soft值。  
 		
 
+### 配置
 
+1. 文件路径
+	
+    Generic UNIX - $RABBITMQ_HOME/etc/rabbitmq/
+    Debian - /etc/rabbitmq/
+    RPM - /etc/rabbitmq/
+    Mac OS X (Homebrew) - ${install_prefix}/etc/rabbitmq/, the Homebrew prefix is usually /usr/local
+    Windows - %APPDATA%\RabbitMQ\
+	
+	> 注：默认情况下配置文件没有创建。可手动创建rabbitmq-env.conf（windows文件名rabbitmq-env.bat）【环境变量配置文件】、rabbitmq.config，
+	修改后需要重启服务，windows需要re-install service。  
+	> `rabbitmq.config`配置文件有一个例子，文件地址：`/usr/share/doc/rabbitmq-server-*.*.*/rabbitmq.config.example`
+
+	**Generic Unix Default Locations**
+	
+	|Name	| Location|
+	| ------------- | ------------- |
+	|RABBITMQ_BASE 	|(Not used)|
+	|RABBITMQ_CONFIG_FILE 	|$RABBITMQ_HOME/etc/rabbitmq/rabbitmq|
+	|RABBITMQ_MNESIA_BASE 	|$RABBITMQ_HOME/var/lib/rabbitmq/mnesia|
+	|RABBITMQ_MNESIA_DIR 	|$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME|
+	|RABBITMQ_LOG_BASE 	|$RABBITMQ_HOME/var/log/rabbitmq|
+	|RABBITMQ_LOGS 	|$RABBITMQ_LOG_BASE/$RABBITMQ_NODENAME.log|
+	|RABBITMQ_SASL_LOGS 	|$RABBITMQ_LOG_BASE/$RABBITMQ_NODENAME-sasl.log|
+	|RABBITMQ_PLUGINS_DIR 	|$RABBITMQ_HOME/plugins|
+	|RABBITMQ_PLUGINS_EXPAND_DIR 	|$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME-plugins-expand|
+	|RABBITMQ_ENABLED_PLUGINS_FILE 	|$RABBITMQ_HOME/etc/rabbitmq/enabled_plugins|
+	|RABBITMQ_PID_FILE 	|$RABBITMQ_MNESIA_DIR.pid|
+
+	** 可以通过日志查看启动服务所用的配置文件路径：**
+	
+	```
+	node           : rabbit@example
+	home dir       : /var/lib/rabbitmq
+	config file(s) : /etc/rabbitmq/rabbitmq.config
+	```
+	
+	
+	
+	
+	
+	
