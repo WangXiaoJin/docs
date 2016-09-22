@@ -35,15 +35,14 @@ shell> cd /usr/local
 shell> tar zxvf /path/to/mysql-VERSION-OS.tar.gz
 shell> ln -s full-path-to-mysql-VERSION-OS mysql
 shell> cd mysql
-shell> mkdir mysql-files
-shell> chmod 750 mysql-files
+shell> mkdir -p /data/mysql/data #为了存放表数据
+shell> mkdir -p /data/mysql/log #为了存放日志
 shell> chown -R mysql .
 shell> chgrp -R mysql .
-shell> bin/mysql_install_db --user=mysql    # Before MySQL 5.7.6
-shell> bin/mysqld --initialize --user=mysql # MySQL 5.7.6 and up，执行这步会生成一个随机密码，请备份此密码。例：root@localhost: YwtE,aPqN8!d
+shell> bin/mysql_install_db --user=mysql --datadir=/data/mysql/data # Before MySQL 5.7.6
+shell> bin/mysqld --initialize --user=mysql --datadir=/data/mysql/data # MySQL 5.7.6 and up，执行这步会生成一个随机密码，请备份此密码。例：root@localhost: YwtE,aPqN8!d
 shell> bin/mysql_ssl_rsa_setup              # MySQL 5.7.6 and up
 shell> chown -R root .
-shell> chown -R mysql mysql-files
 shell> cp support-files/mysql.server /etc/init.d/mysqld
 shell> chkconfig mysqld on		#开机自启Mysql服务
 ```
