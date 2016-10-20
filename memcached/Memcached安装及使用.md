@@ -65,7 +65,7 @@ cd memcached-1.x.x
 	@Override
 	@ReadThroughSingleCache(namespace = GlobalConstants.CACHE_KEY_ROLE)
 	public Role load(@ParameterValueKeyProvider Integer id) {
-		return super.get(id, CloseStatus.OPEN, CloseStatus.CLOSE);
+		return super.get(id, OpenClose.OPEN, OpenClose.CLOSE);
 	}
 	```
 	
