@@ -8,6 +8,7 @@
 wget http://download.redis.io/releases/redis-3.0.7.tar.gz
 tar xzf redis-3.0.7.tar.gz
 cd redis-3.0.7
+#如果执行make时报错"#error Newer version of jemalloc required"，则改用make MALLOC=libc，我在CentOS上安装redis-3.2.6出现了此问题
 make
 #可选操作。把Redis二进制可执行文件塞入/usr/local/bin,redis_init_script中默认可执行文件路径就为/usr/local/bin。make PREFIX=xxx install参数可重新指定bin文件安装目录
 make install
@@ -33,10 +34,26 @@ cp redis.conf /etc/redis/6379.conf
 
 * `somaxconn`定义了系统中每一个端口最大的监听队列的长度,这是个全局的参数,默认值为128。而Redis的配置为511，所以启动Redis服务时会有警告提示。执行如下命令就OK了：
 	
-	> echo 511 > /proc/sys/net/core/somaxconn
+	> echo 511 > /proc/sys/net/core/somaxconn  
 	> echo "net.core.somaxconn = 551" >> /etc/sysctl.conf
 
 * 确保系统中设置了**swap**（官方建议swap的大小和内存差不多大）。如果你没有设置swap，当内存使用过多时会内存溢出导致服务崩溃或Linux kernel OOM killer将可能会杀掉Redis进程
+
+* 修改文件描述符配置:
+	
+	```
+	修改fs.file-max：
+		1. `echo 6553560 > /proc/sys/fs/file-max` 当前有效，重启无效
+		2. 修改`/etc/sysctl.conf`，加入`fs.file-max = 6553560`。重启生效
+	
+	修改`/etc/security/limits.conf`，加入以下配置，重启生效：
+		* soft nofile 65536
+		* hard nofile 65536
+	
+	ulimit -SHn 65536 当前Session有效
+	```
+	
+	> 注：fs.file-max值必须大于ulimit值，ulimit的hard值大于等于soft值。
 
 * 最好设置maxmemory参数来控制Redis最大使用内存
 
@@ -74,8 +91,6 @@ dir /var/redis/6379
 loglevel notice
 # 日志路径，根路径基于dir
 logfile redis.log
-#适用于网络不稳定的情况
-#min-slaves-to-write 1
 
 ```
 
@@ -103,6 +118,7 @@ dir /var/redis/6379
 loglevel notice
 # 日志路径，根路径基于dir
 logfile redis.log
+
 ```
 
 ----------***Session服务配置***--------------
@@ -151,6 +167,8 @@ dir /var/redis/6379
 loglevel notice
 # 日志路径，根路径基于dir
 logfile redis.log
+#适用于网络不稳定的情况
+#min-slaves-to-write 1
 ```
 
 Redis安装目录会有个redis.conf文件，里面包含各种配置参数及讲解，非常详细，我觉得Redis这点做的非常好。配置文件的格式非常简单，参数名和参数值以空格隔开，如果想参数值包含字符窜，则参数值加上引号：`requirepass "hello world"`  
@@ -179,7 +197,7 @@ maxmemory值为0时，内存使用没有限制。64位系统默认为0，32位�
 当需要剔除数据时，挑出5条数据依据maxmemory-policy策略删除一条。为什么每次只取样5个来删除数据呢？官方的解释是：这样性能更快。典型的拿准确率换性能。
 
 * **min-slaves-to-write 0**  
-如果你的网络不稳定，经常会出现服务器之间通信断开，请设置此参数当一个master和两个slave通信断开后，你的应用中可能会出现两个master，old master此时可能会写入数据，当服务器通信正常后，old master会变成new master的slave，此时old master写入的数据回丢失。
+如果你的网络不稳定，经常会出现服务器之间通信断开，请设置此参数当一个master和两个slave通信断开后，你的应用中可能会出现两个master，old master此时可能会写入数据，当服务器通信正常后，old master会变成new master的slave，此时old master写入的数据回丢失。如果Redis是作为纯cache使用则配置为`0`，如果你当DB使用则最好设置此值。
 例：`min-slaves-to-write 1` master至少与1个slave通信时，才会接受write操作。
 
 具体请参考官方文档：<http://redis.io/topics/lru-cache>

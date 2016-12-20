@@ -83,6 +83,8 @@
 	修改`/etc/security/limits.conf`，加入以下配置，重启生效：
 		* soft nofile 65536
 		* hard nofile 65536
+	
+	ulimit -SHn 65536 当前Session有效
 	```
 	
 	> 注：fs.file-max值必须大于ulimit值，ulimit的hard值大于等于soft值。  
