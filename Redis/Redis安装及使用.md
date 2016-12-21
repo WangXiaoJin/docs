@@ -368,7 +368,7 @@ sentinel notification-script pro-master /etc/redis/notify.sh
 
 ### 配置使用Cluster
 
-配置使用Cluster非常简单，网上一搜一堆，在这就不说了。参考链接：<http://blog.csdn.net/dc_726/article/details/48552531>
+配置使用Cluster非常简单，网上一搜一堆，在这就不说了。参考链接：<http://blog.csdn.net/dc_726/article/details/48552531>、<http://justuno.github.io/2015/09/28/redis-cluster-1/>
 
 	```bash
 	#安装ruby环境，redis-trib.rb需要
