@@ -173,6 +173,8 @@ logfile redis.log
 
 Redis安装目录会有个redis.conf文件，里面包含各种配置参数及讲解，非常详细，我觉得Redis这点做的非常好。配置文件的格式非常简单，参数名和参数值以空格隔开，如果想参数值包含字符窜，则参数值加上引号：`requirepass "hello world"`  
 
+授权验证：master和slave都需要配置requirepass、masterauth 参数，因为当master挂了后，会从slave里面重选出master，如果new master没有requirepass配置，则client不需要验证身份直接就可以修改数据了
+
 当然你也可以在启动服务时设置参数：`./redis-server --port 6380 --slaveof 127.0.0.1 6379`。在参数名前加上`--`就行了  
 
 当Redis服务正在运行时，你同样可以设置参数，且不会影响Redis的运行。设置参数命令为`CONFIG SET`，获取参数命令为`CONFIG GET`。有一点需要注意，通过`CONFIG SET`修改的参数，在你重启服务时此参数不会生效，除非你同事修改了redis.conf文件。
@@ -357,10 +359,24 @@ sentinel notification-script pro-master /etc/redis/notify.sh
 
 ### 防火墙配置Sentinel端口
 
-```bash
-shell> vim /etc/sysconfig/iptables
-# 端口号根据自己的配置而定
-shell> # 加入：-A INPUT -m state --state NEW -m tcp -p tcp --dport 26379 -j ACCEPT
-shell> service iptables restart
-```
+	```bash
+	shell> vim /etc/sysconfig/iptables
+	# 端口号根据自己的配置而定
+	shell> # 加入：-A INPUT -m state --state NEW -m tcp -p tcp --dport 26379 -j ACCEPT
+	shell> service iptables restart
+	```
 
+### 配置使用Cluster
+
+配置使用Cluster非常简单，网上一搜一堆，在这就不说了。参考链接：<http://blog.csdn.net/dc_726/article/details/48552531>
+
+	```bash
+	#安装ruby环境，redis-trib.rb需要
+	shell> yum install ruby rubygems
+	shell> gem install redis
+	shell> #启动redis服务
+	shell> #redis-trib.rb启动cluster服务
+	```
+
+> Tips: The command port and cluster bus port offset is fixed and is always 10000.
+> To obtain the Redis Cluster port, 10000 should be added to the normal commands port.
