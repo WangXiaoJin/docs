@@ -27,10 +27,10 @@
 	> 如果你下载的是`erlang-18.*`高版本，需要升级glibc到2.15，推荐下载`erlang-17.4-1.el6.x86_64.rpm`
 	
 	内置版本安装
-    For Homebrew on OS X: brew install erlang
-    For MacPorts on OS X: port install erlang
-    For Ubuntu and Debian: apt-get install erlang
-    For Fedora: yum install erlang
+    For Homebrew on OS X: brew install erlang  
+    For MacPorts on OS X: port install erlang  
+    For Ubuntu and Debian: apt-get install erlang  
+    For Fedora: yum install erlang  
     For FreeBSD: pkg install erlang
 	
 2. 安装。下载rabbitmq <https://www.rabbitmq.com/download.html>，并执行以下命令：
@@ -94,10 +94,10 @@
 
 1. 文件路径
 	
-    Generic UNIX - $RABBITMQ_HOME/etc/rabbitmq/
-    Debian - /etc/rabbitmq/
-    RPM - /etc/rabbitmq/
-    Mac OS X (Homebrew) - ${install_prefix}/etc/rabbitmq/, the Homebrew prefix is usually /usr/local
+    Generic UNIX - $RABBITMQ_HOME/etc/rabbitmq/  
+    Debian - /etc/rabbitmq/  
+    RPM - /etc/rabbitmq/  
+    Mac OS X (Homebrew) - ${install_prefix}/etc/rabbitmq/, the Homebrew prefix is usually /usr/local  
     Windows - %APPDATA%\RabbitMQ\
 	
 	> 注：默认情况下配置文件没有创建。可手动创建rabbitmq-env.conf（windows文件名rabbitmq-env.bat）【环境变量配置文件】、rabbitmq.config，
