@@ -45,7 +45,7 @@
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver" />
 
 	<!-- freemarker的配置 -->
-	<bean id="freemarkerConfig" class="com.easycodebox.common.web.springmvc.FreeMarkerConfigurer"
+	<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer"
 		p:freemarkerVariables-ref="properties"
 		p:templateLoaderPath="${freemarker.loader_path}"
 		p:defaultEncoding="${freemarker.default_encoding}" />
