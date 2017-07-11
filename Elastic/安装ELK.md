@@ -344,6 +344,14 @@
     }
     ```
     
+    **防火墙配置：**
+    ```bash
+    shell> vim /etc/sysconfig/iptables
+    # 端口号根据自己的配置而定，增加下面配置
+    -A INPUT -m state --state NEW -m tcp -p tcp --dport 5044 -j ACCEPT
+    shell> service iptables restart
+    ```
+    
     > `bin/logstash`命令[参考文档](https://www.elastic.co/guide/en/logstash/current/running-logstash-command-line.html)，或者通过`bin/logstash --help`查看帮助信息。  
     
     > [`Config File`语法](https://www.elastic.co/guide/en/logstash/current/configuration.html)，包含此链接下所有的二级目录。
