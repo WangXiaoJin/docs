@@ -307,6 +307,7 @@
       
       if [app] {
         # 这里使用dissect而不用grok的原因是，grok用正则来匹配，比较耗性能，grok适用于复杂格式
+        # dissect表达式中间的空格字符可以匹配多个空格，grok想匹配多个空格必须通过正则来实现
         # 解析格式：2017-07-10 18:59:49.147 INFO [{Hostname}] [{PID}] [{ThreadName}] c.e.u.c.SpringMvcConfig : xxxxx
         dissect {
           mapping => {
