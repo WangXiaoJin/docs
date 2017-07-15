@@ -240,6 +240,7 @@
 	shell> tar -xvf logstash-5.5.0.tar.gz
 	shell> cd logstash-5.5.0
 	shell> bin/logstash-plugin update logstash-filter-dissect #更新dissect插件，5.5.0版本需要自己更新
+	shell> bin/logstash-plugin update logstash-input-dead_letter_queue #更新dead_letter_queue插件，5.5.0版本需要自己更新
 	shell> nohup bin/logstash -f logstash.conf &   #执行之前修改下logstash.yml、logstash.conf配置文件
 	```
 	
@@ -337,9 +338,61 @@
     }
     ```
     
+    **新建`es-template-dlq.json`文件（`dead_letter_queue`）：**
+    ```json
+    {
+      "template" : "dlq-*",
+      "version" : 50001,
+      "settings" : {
+        "index.refresh_interval" : "5s"
+      },
+      "mappings" : {
+        "_default_" : {
+          "_all" : {"enabled" : true, "norms" : false}, 
+          "dynamic_templates" : [ {
+            "message_field" : {
+              "path_match" : "message",
+              "match_mapping_type" : "string",
+              "mapping" : {
+                "type" : "text",
+                "norms" : false
+              }
+            }
+          }, {
+            "string_fields" : {
+              "match" : "*",
+              "match_mapping_type" : "string",
+              "mapping" : {
+                "type" : "text", "norms" : false,
+                "fields" : {
+                  "keyword" : { "type": "keyword", "ignore_above": 256 }
+                }
+              }
+            }
+          } ],
+          "properties" : {
+            "@timestamp": { "type": "date", "include_in_all": false },
+            "@version": { "type": "keyword", "include_in_all": false },
+            "type": { "type": "keyword", "include_in_all": false },
+            "host": { "type": "keyword" },
+            "dead_letter_queue": {
+              "properties": {
+                "plugin_id": { "type": "keyword" },
+                "reason": { "type": "text" },
+                "entry_time": { "type": "date" },
+                "plugin_type": { "type": "keyword" }
+              }
+            }
+          }
+        }
+      }
+    }
+    ```
+    
     **手动加载ES Template：**
     ```bash
     shell> curl -H 'Content-Type: application/json' -XPUT 'http://192.168.206.130:9200/_template/app' -d@es-template-app.json
+    shell> curl -H 'Content-Type: application/json' -XPUT 'http://192.168.206.130:9200/_template/dlq' -d@es-template-dlq.json
     ```
     
     **配置`logstash.conf`文件，文本必须使用UTF-8格式：**
@@ -349,52 +402,63 @@
         port => 5044
       }
       
-      #dead_letter_queue {
-        #path => "/data/logstash/dead_letter_queue" 
-      #}
+      # 5.5.0支持的特性
+      dead_letter_queue {
+        path => "/data/logstash/dead_letter_queue" 
+      }
     }
     
     filter {
-      if [@metadata][beat] == "filebeat" {
-        # 当前版本[type]属性值和[@metadata][type]由FileBeat自动赋值
+      if [@metadata][dead_letter_queue] {
+        # 处理dead_letter_queue Event
         mutate {
-          add_field => { "[beat][source]" => "%{source}" }
-        }
-        mutate {
-          rename => { "input_type" => "[beat][input_type]" }
-          # source路径格式 /data/logs/app/{env}/{project}/{log-name}.log
-          split => { "source" => "/" }
+          copy => { "[@metadata][dead_letter_queue]" => "dead_letter_queue" }
           add_field => {
-            "env" => "%{source[4]}"
-            "app" => "%{source[5]}"
-            "[@metadata][index]" => "app-%{env}"
+            "[@metadata][index]" => "dlq"
           }
-          remove_field => [ "source" ]
         }
-        mutate {
-          replace => { "type" => "%{app}" }
+      } else {
+        if [@metadata][beat] == "filebeat" {
+          # 当前版本[type]属性值和[@metadata][type]由FileBeat自动赋值
+          mutate {
+            add_field => { "[beat][source]" => "%{source}" }
+          }
+          mutate {
+            rename => { "input_type" => "[beat][input_type]" }
+            # source路径格式 /data/logs/app/{env}/{project}/{log-name}.log
+            split => { "source" => "/" }
+            add_field => {
+              "env" => "%{source[4]}"
+              "app" => "%{source[5]}"
+              "[@metadata][index]" => "app-%{env}"
+            }
+            remove_field => [ "source" ]
+          }
+          mutate {
+            replace => { "type" => "%{app}" }
+          }
         }
-      }
+        
+        if [app] {
+          # 这里使用dissect而不用grok的原因是，grok用正则来匹配，比较耗性能，grok适用于复杂格式
+          # dissect表达式中间的空格字符可以匹配多个空格，grok想匹配多个空格必须通过正则来实现
+          # 解析格式：2017-07-10 18:59:49.147 INFO [{Hostname}] [{PID}] [{ThreadName}] c.e.u.c.SpringMvcConfig : xxxxx
+          dissect {
+            mapping => {
+              "message" => "%{ts} %{+ts} %{logLevel} [%{logHost}] [%{pid}] [%{threadName}] %{msg}"
+            }
+            convert_datatype => {
+              "pid" => "int"
+            }
+          }
+        }
       
-      if [app] {
-        # 这里使用dissect而不用grok的原因是，grok用正则来匹配，比较耗性能，grok适用于复杂格式
-        # dissect表达式中间的空格字符可以匹配多个空格，grok想匹配多个空格必须通过正则来实现
-        # 解析格式：2017-07-10 18:59:49.147 INFO [{Hostname}] [{PID}] [{ThreadName}] c.e.u.c.SpringMvcConfig : xxxxx
-        dissect {
-          mapping => {
-            "message" => "%{ts} %{+ts} %{logLevel} [%{logHost}] [%{pid}] [%{threadName}] %{msg}"
+        # [ts]替换掉[@timestamp]值
+        if [ts] {
+          date {
+            match => [ "ts", "ISO8601" ]
+            remove_field => [ "ts"]
           }
-          convert_datatype => {
-            "pid" => "int"
-          }
-        }
-      }
-      
-      # [ts]替换掉[@timestamp]值
-      if [ts] {
-        date {
-          match => [ "ts", "ISO8601" ]
-          remove_field => [ "ts"]
         }
       }
     }
