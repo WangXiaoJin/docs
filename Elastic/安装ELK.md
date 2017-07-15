@@ -160,7 +160,78 @@
 	> 注：ES的索引名(_index)必须为小写字母，不能以下划线开头，且不能包含逗号。  
 	> 类型名(_type)可以为大、小写字母，不能以下划线或句点开头，且不能包含逗号，长度限制在256个字符之内
 
-2. 安装Logstash
+2. 安装Kibana
+
+    ```bash
+    shell> wget https://artifacts.elastic.co/downloads/kibana/kibana-5.5.0-linux-x86_64.tar.gz
+    shell> sha1sum kibana-5.5.0-linux-x86_64.tar.gz
+    shell> tar -xzf kibana-5.5.0-linux-x86_64.tar.gz
+    shell> mkdir -p /data/logs/kibana  #创建Kibana日志目录
+    ## chown -R kibana:kibana /data/logs/kibana kibana-5.5.0-linux-x86_64 #当你用kibana用户起动Kibana时需要此步骤，否则不需要
+    shell> cd kibana-5.5.0-linux-x86_64
+    shell> nohup ./bin/kibana &
+    ```
+    
+    * 修改`kibana.yml`配置：
+    
+        ```yaml
+        server.port: 5601
+        server.host: "192.168.206.136"
+        elasticsearch.url: "http://192.168.206.136:9200"
+        pid.file: /var/run/kibana.pid
+        logging.dest: /data/logs/kibana/kibana.log
+        #i18n.defaultLocale: "en"
+        ```
+    
+    * 防火墙配置：
+        
+        ```bash
+        shell> vim /etc/sysconfig/iptables
+        -A INPUT -m state --state NEW -m tcp -p tcp --dport 5601 -j ACCEPT
+        shell> service iptables restart
+        ```
+    
+    * 负载均衡配置 - 因Kibana不支持直接连接配置多个ES地址，所以当前最优方案是Kibana于ES集群分开部署，在当前Kibana机器部署一个ES协调节点，此ES Node负责分发Kibana请求，
+    不参与ES集群的数据存储等相关操作。配置参考如下：
+        ```yaml
+        cluster.name: es-easycode
+        node.name: node-kibana-1
+        path.data: /data/elasticsearch
+        path.logs: /data/logs/elasticsearch
+        network.host: 192.168.206.136
+        http.port: 9200
+        transport.tcp.port: 9300
+        # 如果在启动ES时抛出“unable to install syscall filter”警告，则禁用system_call_filter。
+        # 因为某些系统（CentOS6）不支持seccomp，而ES默认开启system_call_filter，所以会抛出警告
+        #bootstrap.system_call_filter: false
+        #当填写域名时循环处理多个IP。端口号依次取值1.transport.profiles.default.port 2.transport.tcp.port
+        discovery.zen.ping.unicast.hosts: ["192.168.206.130", "192.168.206.134", "192.168.206.135"]
+        #不配置此参数时，默认为1。计算公式：(master_eligible_nodes / 2) + 1，master_eligible_nodes为master候选节点数
+        discovery.zen.minimum_master_nodes: 2
+        node.master: false
+        node.data: false
+        node.ingest: false
+        ```
+    
+    * 访问`http://192.168.206.136:5601/status` ，显示服务状态、资源使用情况及已安装插件
+
+    * 第一次访问Kibana需要配置默认`index pattern`
+        
+        * 配置`Index name or pattern`值为`app-*`（依据存入ES索引名而定）
+        * `Time Filter field name`选择`@timestamp`
+        * 点击`Create`按钮
+    
+    * Kibana高级配置：
+        * `Management` > `Advanced Settings` > `dateFormat` : `YYYY-MM-DD HH:mm:ss.SSS`
+        * 格式化字段 - [文档](https://www.elastic.co/guide/en/kibana/current/field-formatters-string.html)
+        * 脚本字段 - [文档](https://www.elastic.co/guide/en/kibana/current/scripted-fields.html)
+
+    * 推荐插件
+        * [LogTrail](https://github.com/sivasamyk/logtrail) - 实时查看、分析日志，类似于tail命令。灵感来自于[Papertrail](https://papertrailapp.com/)
+        * [Own Home](https://github.com/wtakase/kibana-own-home) - 提供登录、多租户功能
+        * [X-Pack](https://www.elastic.co/cn/products/x-pack) - 官方插件，收费插件。提供登录、角色、权限、实时监控、表报生成、机器学习
+
+3. 安装Logstash
 
 	Logstash-5.4依赖Java 8，不支持Java 9。
 	
@@ -359,7 +430,7 @@
 
     > [plugins文档](https://www.elastic.co/guide/en/logstash/current/working-with-plugins.html)
 
-3. 安装Beats
+4. 安装Beats
     
     Beats不依赖于JDK，相对于Logstash来说，Beats更轻量级且消耗更少的系统资源。
     
