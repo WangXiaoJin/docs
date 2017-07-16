@@ -404,7 +404,7 @@
       
       # 5.5.0支持的特性
       # 开启commit_offsets时（默认开启），只有在Logstash关闭时才会把记录的状态写入sincedb中。
-      # 当出现非正常关闭Logstash（断电、kill -9等），下次启动Logstash会出现相同Event重复处理的现象。
+      # 当出现非正常关闭Logstash（宕机、kill -9等），下次启动Logstash会出现相同Event重复处理的现象。
       # 希望官方以后能对此插件优化，周期性更新状态到sincedb中，而不是等到关闭Logstash时才更新。
       dead_letter_queue {
         path => "/data/logstash/dead_letter_queue"
