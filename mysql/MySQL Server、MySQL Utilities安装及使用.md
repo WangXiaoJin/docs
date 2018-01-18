@@ -41,7 +41,7 @@ shell> chown -R mysql .
 shell> chgrp -R mysql .
 shell> bin/mysql_install_db --user=mysql --datadir=/data/mysql/data # Before MySQL 5.7.6
 shell> bin/mysqld --initialize --user=mysql --datadir=/data/mysql/data # MySQL 5.7.6 and up，执行这步会生成一个随机密码，请备份此密码。例：root@localhost: YwtE,aPqN8!d
-shell> bin/mysql_ssl_rsa_setup              # MySQL 5.7.6 and up
+shell> bin/mysql_ssl_rsa_setup --datadir=/data/mysql/data           # MySQL 5.7.6 and up
 shell> chown -R root .
 shell> cp support-files/mysql.server /etc/init.d/mysqld
 shell> chkconfig mysqld on		#开机自启Mysql服务
