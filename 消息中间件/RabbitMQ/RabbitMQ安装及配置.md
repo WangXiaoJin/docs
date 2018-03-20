@@ -43,7 +43,7 @@
 	> 如果安装时报`Requires: socat`异常，需要安装socat：
 	
 	```bash
-	wget –no-cache http://www.convirture.com/repos/definitions/rhel/6.x/convirt.repo -O /etc/yum.repos.d/convirt.repo
+	wget --no-cache http://www.convirture.com/repos/definitions/rhel/6.x/convirt.repo -O /etc/yum.repos.d/convirt.repo
 	yum makecache
 	yum install -y socat
 	```
