@@ -1,5 +1,11 @@
 ## Curator使用注意事项
 
+1. 【重要】- 不建议配置ZooKeeper url为域名，建议用IP，除非你的域名解析非常稳定
+
+    ZooKeeper首先会把域名解析成对应的IP，解析成功后再持续监听连接状态，当网络断开后恢复时能使ZooKeeper重新恢复连接状态。
+    如果网络恢复时，此时ZooKeeper会close之前的连接，重新创建新的连接，在创建新的连接时会继续进行域名解析。如果此时你的
+    DNS服务不稳定，解析域名失败，导致创建新的连接失败，固ZooKeeper就不能恢复网络连接，哪怕后面域名解析正常了，也不会恢复。
+
 1. 分布式锁使用注意事项
     
     Curator中`所有`分布式锁（例：`InterProcessMutex`/`InterProcessSemaphoreMutex`等）不能在`Watcher`/`CuratorWatcher`
