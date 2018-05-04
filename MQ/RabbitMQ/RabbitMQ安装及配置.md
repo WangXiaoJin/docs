@@ -47,6 +47,14 @@
 	yum makecache
 	yum install -y socat
 	```
+	
+	> 如果www.convirture.com仓库地址无效了，则手动安装[下载地址](https://centos.pkgs.org/7/centos-x86_64/socat-1.7.3.2-2.el7.x86_64.rpm.html)
+	
+	```bash
+    rpm -ivh socat-1.7.3.2-2.el7.x86_64.rpm
+    ```
+	
+	
 
 3. 启动服务
 
