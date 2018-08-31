@@ -99,8 +99,6 @@
         #相对路径或绝对路径，启动sonarqube的用户需要data、temp文件夹的写权限
         #sonar.path.data=data
         #sonar.path.temp=temp
-        # 禁止匿名用户访问SonarQube UI和特定的Web API。也可通过 SonarQube U --> Configuration --> Security 来设置
-        sonar.forceAuthentication=true
         ```
         
         你还可以修改其他配置项：数据库连接池；JVM参数；绑定IP；Web配置；SSO；LDAP；日志；
@@ -131,7 +129,7 @@
         ```bash
         shell> $SONAR_HOME/bin/linux-x86-64/sonar.sh start
         ```
-        项目启动成功后，访问[http://localhost:9000]()页面，使用`账号：admin 密码：admin`登录系统
+        项目启动成功后，访问<http://localhost:9000>页面，使用`账号：admin 密码：admin`登录系统
         
     * Running SonarQube as a Service（可选）
     
@@ -204,10 +202,21 @@
         
         > 注：安装商业版的插件，需要在`Administration > Configuration > License Manager`里设置许可密钥。
         
+3. UI界面配置
+    
+    * 配置项目默认为私有(Private)项目：
+        
+        `Administration -> Projects -> Management -> Default visibility of new projects -> 选择Private`
+    
+    * 禁止匿名用户访问SonarQube UI和特定的Web API：
+    
+        `Administration -> Configuration -> General Settings -> Security -> Force user authentication（开启）`
+        
+        或者也可在Sonar Web配置文件中增加此项：`sonar.forceAuthentication=true`
     
 3. Web API
 
-    * 直接访问地址：[http://localhost:9000/web_api]()
+    * 直接访问地址：<http://localhost:9000/web_api>
     * 直接点击Sonar UI底部的`Web API`链接
     * 访问`http://localhost:9000/api`，返回的是JSON数据结构
     
@@ -440,7 +449,10 @@
 
     * 在解析已集成`SCM`的项目时，如果报没有权限操作`SCM`，则可配置如下参数
         
-        SVN：配置`sonar.svn.username`/`sonar.svn.password.secured`，[参考源码](https://github.com/SonarSource/sonar-scm-svn/blob/462d14c36f4d2c9fdd8847a95aaf04538f062f0c/sonar-scm-svn-plugin/src/main/java/org/sonar/plugins/scm/svn/SvnConfiguration.java)
+        SVN：可在执行命令时传参数或在`UI->Administration->SCM`页面配置`sonar.svn.username`/`sonar.svn.password.secured`，[参考源码](https://github.com/SonarSource/sonar-scm-svn/blob/462d14c36f4d2c9fdd8847a95aaf04538f062f0c/sonar-scm-svn-plugin/src/main/java/org/sonar/plugins/scm/svn/SvnConfiguration.java)
+        
+        集成 `SVN SCM`错误内容：Failed to execute goal org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.1.1168:sonar (default-cli) on project xxxx: 
+        Error when executing blame for file src/main/java/...: svn: E170001: Authentication required for '<http://xxx.com:80> Repository' -> [Help 1]
         
 * 文档
     
