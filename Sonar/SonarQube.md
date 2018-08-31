@@ -68,8 +68,8 @@
         shell> wget https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-7.3.zip
         shell> unzip sonarqube-7.3.zip -d /usr/local
         shell> cd /usr/local && mv sonarqube-7.3 sonar
-        shell> chown -R sonar:sonar sonar
         shell> useradd sonar -s /sbin/nologin
+        shell> chown -R sonar:sonar sonar
         ```
     
     * 安装Mysql - [参考文档](../mysql/MySQL%20Server、MySQL%20Utilities安装及使用.md)，创建user、database：
