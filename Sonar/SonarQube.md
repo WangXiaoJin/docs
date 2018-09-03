@@ -202,17 +202,33 @@
         
         > 注：安装商业版的插件，需要在`Administration > Configuration > License Manager`里设置许可密钥。
         
-3. UI界面配置
+3. UI界面配置 - **以下配置根据自己的需求而定**
     
     * 配置项目默认为私有(Private)项目：
         
         `Administration -> Projects -> Management -> Default visibility of new projects -> 选择Private`
     
-    * 禁止匿名用户访问SonarQube UI和特定的Web API：
+    * 禁止`匿名用户`访问SonarQube UI和特定的Web API：
     
         `Administration -> Configuration -> General Settings -> Security -> Force user authentication（开启）`
         
         或者也可在Sonar Web配置文件中增加此项：`sonar.forceAuthentication=true`
+    
+    * 配置`Default template`【禁止`sonar-users组（任意用户）`/允许`sonar-administrators`】访问`project`及项目源码：
+        
+        `Administration -> Security -> Permission Templates -> Default template`
+        
+        * `sonar-administrators` ：`勾选` `Browse` 、 `See Source Code`
+        * `sonar-users` ：`反选` `Browse` 、 `See Source Code`
+    
+    * 禁止`Anyone`（任意用户）创建project，只分配权限给`sonar-administrators`
+        
+        `Administration -> Security -> Global Permissions`
+        
+        * `Anyone` ：`反选` `Create Projects`
+        * `sonar-administrators` ：`勾选` `Create Projects`
+        
+        
     
 3. Web API
 
