@@ -230,7 +230,7 @@
         
         
     
-3. Web API
+4. Web API
 
     * 直接访问地址：<http://localhost:9000/web_api>
     * 直接点击Sonar UI底部的`Web API`链接
@@ -252,8 +252,7 @@
         shell> curl -u MY_LOGIN:MY_PASSWORD https://sonarqube.com/api/user_tokens/search
         ```
     
-
-4. 文档
+5. 文档
 
     * [Benchmark](https://docs.sonarqube.org/display/SONAR/Benchmark)
     * [Concepts -【重要】](https://docs.sonarqube.org/display/SONAR/Concepts)
@@ -270,7 +269,7 @@
     * [Rules Types and Severities定义 - 【Bugs/Vulnerabilities/Security Hotspots/Code Smells】](https://docs.sonarqube.org/display/SONAR/Rules+Types+and+Severities)
     * [Metric Definitions -【重要】](https://docs.sonarqube.org/display/SONAR/Metric+Definitions)
     * [指定解析范围](https://docs.sonarqube.org/display/SONAR/Narrowing+the+Focus)
-    * [Webhooks](https://docs.sonarqube.org/display/SONAR/Webhooks)
+    * [Webhooks -【重要】](https://docs.sonarqube.org/display/SONAR/Webhooks)
     * [Adding Hooks](https://docs.sonarqube.org/display/DEV/Adding+Hooks)
     * [Custom Measures](https://docs.sonarqube.org/display/SONAR/Custom+Measures)
     * [快照（分析报告）删除策略](https://docs.sonarqube.org/display/SONAR/Housekeeping)
@@ -295,7 +294,7 @@
         * [Adding Coding Rules using `Java`](https://docs.sonarqube.org/display/DEV/Adding+Coding+Rules+using+Java)
     * [Extending Web Application](https://docs.sonarqube.org/display/DEV/Extending+Web+Application)
     
-5. FAQ
+6. FAQ
 
     * 误操作导致自己没有管理员权限
     
@@ -433,6 +432,8 @@
     > 注：[项目多模块结构、命令行配置](https://docs.sonarqube.org/display/SCAN/Advanced+SonarQube+Scanner+Usages)
     
     > 注：执行SonarQube Scanner报错：`Please provide compiled classes of your project with sonar.java.binaries property` 参考[官方文档](https://docs.sonarqube.org/display/PLUG/SonarJava)
+    
+    > 注：执行SonarQube Scanner时**增加自定义数据**，用于WebHook：`sonar-scanner -Dsonar.analysis.scmRevision=628f5175ada0d685fd7164baa7c6382c1f25cab4 -Dsonar.analysis.buildNumber=12345`
     
 * Analyzing with SonarQube Scanner for `Maven`【重要】 : [官方文档](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Maven)
 * Analyzing with SonarQube Scanner for `Gradle`【重要】 : [官方文档](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle)
