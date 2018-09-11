@@ -228,6 +228,12 @@
         * `Anyone` ：`反选` `Create Projects`
         * `sonar-administrators` ：`勾选` `Create Projects`
         
+    * 配置Sonar服务的域名地址，用于Webhook及邮件内容中指定Sonar服务地址
+        
+        `Administration -> Configuration -> General Settings -> General -> Server base URL`
+        
+        * 配置当前服务的域名地址，如：`http://192.168.1.100:9000`
+        
         
     
 4. Web API
