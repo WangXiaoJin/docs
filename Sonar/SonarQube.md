@@ -25,8 +25,8 @@
             
             以**root**用户通过以下命令动态修改当前session配置：
             ```bash
-            shell> sysctl -w vm.max_map_count = 262144
-            shell> sysctl -w fs.file-max = 65536
+            shell> sysctl -w vm.max_map_count=262144
+            shell> sysctl -w fs.file-max=65536
             shell> ulimit -n 65536
             shell> ulimit -u 2048
             ```
