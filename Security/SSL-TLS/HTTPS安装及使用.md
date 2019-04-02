@@ -80,4 +80,68 @@ acme.sh 实现了 acme 协议, 可以从 letsencrypt 生成免费的证书。
     * [官方文档](https://github.com/Neilpang/acme.sh/wiki/%E8%AF%B4%E6%98%8E)
     * [Nginx配置HTTPS服务器](https://aotu.io/notes/2016/08/16/nginx-https/index.html)
 
-###openssl生成证书 - [示例连接](https://github.com/vmware/harbor/blob/master/docs/configure_https.md)
+###OpenSSL
+
+```bash
+# 1.生成私钥
+openssl genrsa -out rsa_private_key.pem 1024
+# 2.生成公钥
+openssl rsa -in rsa_private_key.pem -pubout -out rsa_public_key.pem
+```
+
+```bash
+# 生成内容文件
+echo 123456 > data.txt
+# 1.公钥加密
+openssl rsautl -encrypt -pubin -inkey rsa_public_key.pem -in data.txt -out data.enc
+# 2.私钥解密
+openssl rsautl -decrypt -inkey rsa_private_key.pem -in data.enc -out data.dec
+```
+
+```bash
+# 生成内容文件
+echo 123456 > data.txt
+# 1.私钥加密（实际还是由公钥加密，此公钥从私钥自动生成）
+openssl rsautl -encrypt -inkey rsa_private_key.pem -in data.txt -out data.enc
+# 2.私钥解密
+openssl rsautl -decrypt -inkey rsa_private_key.pem -in data.enc -out data.dec
+```
+
+```bash
+# 生成内容文件
+echo 123456 > data.txt
+# 1.私钥签名
+openssl rsautl -sign -inkey rsa_private_key.pem -in data.txt -out data.sign
+# 2.公钥验证
+openssl rsautl -verify -pubin -inkey rsa_public_key.pem -in data.sign -out data.verify
+```
+
+```bash
+# 生成内容文件
+echo 123456 > data.txt
+# 1.私钥签名
+openssl rsautl -sign -inkey rsa_private_key.pem -in data.txt -out data.sign
+# 2.私钥验证（实际还是由公钥验证，此公钥从私钥自动生成）
+openssl rsautl -verify -inkey rsa_private_key.pem -in data.sign -out data.verify
+```
+
+
+* [openssl生成证书 - Configuring Harbor with HTTPS Access](https://github.com/vmware/harbor/blob/master/docs/configure_https.md)
+* [Openssl 生成rsa私钥、公钥和证书](http://www.fzb.me/2015-1-15-openssl-rsa.html)
+
+### keytool - Key and Certificate Management Tool
+
+```bash
+# 生成证书
+keytool -genkeypair -alias easy -keyalg RSA -keystore d:\mykeystore.keystore -dname "CN=localhost, OU=SelfOrganizationUnit, O=SelfOrganizationName, L=WuXi, ST=JiangSu, C=CN" -keypass 123456 -storepass 123456 -validity 365
+# 导出证书（二进制公钥）
+keytool -export -alias easy -keystore d:\mykeystore.keystore -file d:\easy.crt -storepass 123456
+# 以RFC格式导出证书（可打印的Base64公钥）
+keytool -export -rfc -alias easy -keystore d:\mykeystore.keystore -file d:\easy.crt -storepass 123456
+```
+
+> 注：keytool不支持文件导出私钥，想获取私钥请使用代码获取，参考`spring-security-oauth2-autoconfigure`项目的`JwtKeyStoreConfiguration.accessTokenConverter()`方法。
+  
+* [Java keytool官方文档](https://docs.oracle.com/javase/6/docs/technotes/tools/solaris/keytool.html)
+* [证书及证书管理(keytool工具实例)](https://www.cnblogs.com/benwu/articles/4891758.html)
+* [Java Keytool工具简介](https://blog.csdn.net/liumiaocn/article/details/61921014)
