@@ -44,6 +44,7 @@
 	
 	```bash
 	wget --no-cache http://www.convirture.com/repos/definitions/rhel/6.x/convirt.repo -O /etc/yum.repos.d/convirt.repo
+	yum clean all
 	yum makecache
 	yum install -y socat
 	```

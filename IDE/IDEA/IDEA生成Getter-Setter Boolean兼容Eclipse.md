@@ -34,7 +34,7 @@ class Test {
 点击`+`按钮 --> 分别添加如下模板：
 
 * Name：`Boolean Getter - Eclipse`
-    ```java
+    ```
     #if($field.modifierStatic)
     static ##
     #end
@@ -53,7 +53,7 @@ class Test {
     ```
 
 * Name：`Boolean Setter - Eclipse`
-    ```java
+    ```
     #set($paramName = $helper.getParamName($field, $project))
     #if($field.modifierStatic)
     static ##
@@ -74,4 +74,5 @@ class Test {
     $field.name = $paramName;
     }
     ```
-        
+
+> 注：更好的方案是POJO中禁止`boolean/Boolean`类型的属性以`is`开头，属性名用形容词格式。

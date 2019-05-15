@@ -490,6 +490,7 @@
     -A INPUT -m state --state NEW -m tcp -p tcp --dport 5044 -j ACCEPT
     shell> service iptables restart
     ```
+    > 注：如果想Logstash直接解析JSON格式数据，请参考案例[JSON Logback with Logstash](https://cloud.spring.io/spring-cloud-static/Finchley.SR2/single/spring-cloud.html#_json_logback_with_logstash)
     
     > `bin/logstash`命令[参考文档](https://www.elastic.co/guide/en/logstash/current/running-logstash-command-line.html)，或者通过`bin/logstash --help`查看帮助信息。  
     

@@ -276,7 +276,7 @@
 
 8. 安装`Docker Machine`（可选）
 
-    * 安装`command completion` - 参考[Docker-compose安装及使用](./Docker-compose安装及使用.md)安装`command completion`
+    * 安装`command completion` - 参考[Docker-compose安装及使用](Docker-compose安装及使用.md)安装`command completion`
     * 安装`Docker Machine`，[Github下载地址](https://github.com/docker/machine/releases/)
         ```bash
         shell> curl -L https://github.com/docker/machine/releases/download/v0.13.0/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine &&

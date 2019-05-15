@@ -48,10 +48,8 @@
 * [Expression-Based Access Control - Spirng EL表达式权限控制 - 【非常重要】](https://docs.spring.io/spring-security/site/docs/5.1.4.RELEASE/reference/htmlsingle/#el-access)
 
 * [Filter配置顺序 - 【重要】](https://docs.spring.io/spring-security/site/docs/5.1.4.RELEASE/reference/htmlsingle/#filter-ordering)
-* [Filter执行顺序及自定义Filter](https://docs.spring.io/spring-security/site/docs/5.1.4.RELEASE/reference/htmlsingle/#ns-custom-filters)
+* [Filter执行顺序及自定义Filter - 参考`org.springframework.security.config.annotation.web.builders.FilterComparator`类](https://docs.spring.io/spring-security/site/docs/5.1.4.RELEASE/reference/htmlsingle/#ns-custom-filters)
 * [Spring Security集成单元测试 - 【重要】](https://docs.spring.io/spring-security/site/docs/5.1.4.RELEASE/reference/htmlsingle/#test)
-* [Spring Security相关所有demo - 【重要】](https://github.com/spring-projects/spring-security/tree/master/samples)
-/ [spring-security-oauth demo](https://github.com/spring-projects/spring-security-oauth/tree/master/samples)
 
 * [JSP Tag Libraries - 重要](https://docs.spring.io/spring-security/site/docs/5.1.4.RELEASE/reference/htmlsingle/#taglibs)
 * [Spring MVC Integration - 集成mvcMatchers/@AuthenticationPrincipal/CsrfToken/Async至SpringMVC -【重要】](https://docs.spring.io/spring-security/site/docs/5.1.4.RELEASE/reference/htmlsingle/#mvc)
@@ -251,6 +249,10 @@ this path will then have no authentication or authorization services applied and
   }
   ```
 
+* 如果容器中只包含一个`RoleHierarchy` Bean，则会被`GlobalMethodSecurityConfiguration#afterSingletonsInstantiated`/`ExpressionUrlAuthorizationConfigurer#getExpressionHandler`
+获取到，用于配置中，支持角色的继承。且每次角色验证时都会整合一遍角色，**所以不建议暴露`RoleHierarchy` Bean**，
+**建议直接在server端使用`RoleHierarchyAuthoritiesMapper`**，一次性把所有角色都分析好，返回给client。
+
 * 记不清OAuth2有哪些grant_type？
   
   查看`BaseOAuth2ProtectedResourceDetails`所有实现类调用`setGrantType()`方法传入的值，包含：
@@ -259,6 +261,19 @@ this path will then have no authentication or authorization services applied and
   * `implicit`
   * `password`
   * `refresh_token`（附带）
+
+* `AccessTokenProvider.obtainAccessToken()`用户获取AccessToken，`AccessTokenProvider.supportsRefresh()`用于判断是否支持刷新AccessToken。
+`AccessTokenProviderChain.obtainAccessToken()`方法中增加了刷新AccessToken逻辑。所有想要支持RefreshToken功能，
+`OAuth2RestTemplate`/`OAuth2FeignRequestInterceptor`的`AccessTokenProvider accessTokenProvider`属性需要为`AccessTokenProviderChain`对象。
+
+  `OAuth2RestTemplate`默认是由`ResourceServerTokenServicesConfiguration.userInfoRestTemplateFactory()`工厂类创建，
+  此工厂类创建`OAuth2RestTemplate`时，accessTokenProvider属性为`AuthorizationCodeAccessTokenProvider`，而不是`AccessTokenProviderChain`，
+  所以由`DefaultUserInfoRestTemplateFactory`工厂创建的`OAuth2RestTemplate`并不支持RefreshToken功能。
+  
+  且`AuthorizationServerEndpointsConfigurer endpoints`需要配置`userDetailsService`后，RefreshToken才会生效，
+  否则会因为在执行RefreshToken时获取不到用户信息导致重新走整个获取AccessToken流程。
+  `AuthorizationServerSecurityConfiguration.configure(HttpSecurity)`默认设置的userDetailsService对象是`WebSecurityConfigurerAdapter.userDetailsService()`
+  方法中的代理对象，因为被代理的对象没有配置`DefaultUserDetailsService`，会导致获取用户信息时报错。
 
 * spring-security-oauth2中所有`endpoint`定义都在`org.springframework.security.oauth2.provider.endpoint`包下，方便追踪每个endpoint的具体实现。
 如：`AuthorizationEndpoint`。
@@ -279,6 +294,132 @@ this path will then have no authentication or authorization services applied and
 
 * `FilterChainProxy`类是SpringSecurity处理请求的Filter链路，用于决定当前请求会被什么Filter拦截。
 
+* **`FilterSecurityInterceptor`**用于拦截Http请求。**`MethodSecurityInterceptor`**用于拦截方法调用。
+
+#### Method Security
+
+* `EnableGlobalMethodSecurity`会导入`GlobalMethodSecuritySelector`，而`GlobalMethodSecuritySelector`决定了会导入哪些`Configuration Class`。
+默认会导入`GlobalMethodSecurityConfiguration` Bean，如果想自定义此Bean，参考如下：
+
+  ```java
+  @EnableGlobalMethodSecurity(...)
+  public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
+      @Override
+      protected MethodSecurityExpressionHandler createExpressionHandler() {
+          // ... create and return custom MethodSecurityExpressionHandler ...
+          return expressionHandler;
+      }
+  }
+  ```
+
+* 开启secured
+
+  ```java
+  @EnableGlobalMethodSecurity(securedEnabled = true)
+  ```
+  
+  ```java
+  public interface BankService {
+  
+    @Secured("IS_AUTHENTICATED_FULLY")
+    Account updateAccount(Account account);
+  
+    @Secured("IS_AUTHENTICATED_REMEMBERED")
+    Account readAccount(Long id);
+    
+    @Secured("IS_AUTHENTICATED_ANONYMOUSLY")
+    Account[] findAccounts();
+    
+    @Secured("ROLE_TELLER")
+    Account post(Account account, double amount);
+  }
+  ```
+  
+  > 注：注解可以加载接口或类的方法上。项目启动时通过`SecuredAnnotationSecurityMetadataSource.processAnnotation()`获取注解数据。
+
+* 开启JSR-250
+
+  ```java
+  @EnableGlobalMethodSecurity(jsr250Enabled = true)
+  ```
+  
+  ```java
+  public interface BankService {
+    
+    @PermitAll
+    Account readAccount(Long id);
+  
+    @RolesAllowed("ROLE_TELLER")
+    Account post(Account account, double amount);
+  }
+  ```
+
+* 开启PrePost，支持表达式语言
+
+  ```java
+  @EnableGlobalMethodSecurity(prePostEnabled = true)
+  ```
+  
+  ```java
+  public interface BankService {
+  
+    @PreAuthorize("isAnonymous()")
+    Account readAccount(Long id);
+    
+    @PreAuthorize("hasRole('USER')")
+    Account[] findAccounts();
+    
+    @PreAuthorize("hasAuthority('ROLE_TELLER')")
+    Account post(Account account, double amount);
+    
+    @PreAuthorize("#contact.name == authentication.name")
+    void doSomething(Contact contact);
+    
+    @PreAuthorize("hasRole('USER') and #c.name == authentication.name")
+    void doSomething(@P("c") Contact contact);
+  }
+  ```
+  
+  > 注：[Expression-Based Access Control - 官方文档 - 【重要】](https://docs.spring.io/spring-security/site/docs/5.1.4.RELEASE/reference/htmlsingle/#el-access)
+
+  > 项目启动时通过`PrePostAnnotationSecurityMetadataSource.getAttributes()`获取注解的数据。
+
+* 定义通用权限注解
+
+  ```java
+  @Retention(RetentionPolicy.RUNTIME)
+  @PreAuthorize("#contact.name == authentication.name")
+  public @interface ContactPermission {}
+  ```
+  
+  > 注：JSR-250注释不支持这种方式
+
+* 获取URI数据及引用Bean
+
+  ```java
+  @Component
+  public class WebSecurity {
+    public boolean checkUserId(Authentication authentication, int id) {
+      ...
+    }
+  }
+  
+  http.authorizeRequests()
+    .antMatchers("/user/{userId}/**").access("@webSecurity.checkUserId(authentication,#userId)")
+  ```
+
+* 如果开启了`@EnableGlobalMethodSecurity`且存在`OAuth2AccessToken`类，则会把`DefaultMethodSecurityExpressionHandler`
+替换成`OAuth2MethodSecurityExpressionHandler`。由此表达式中可以使用`oauth2`变量（`OAuth2SecurityExpressionMethods`）。
+参考`OAuth2MethodSecurityConfiguration.OAuth2ExpressionHandlerInjectionPostProcessor.getExpressionHandler()`及`OAuth2MethodSecurityExpressionHandler`。
+
+  ```java
+  @PreAuthorize("#oauth2.hasScope('USER')")
+  ```
+  
+  > 注：当启用了`@EnableResourceServer`时，`ResourceServerConfiguration`会使用`ResourceServerSecurityConfigurer`对象配置，
+  而`ResourceServerSecurityConfigurer`默认会使用`OAuth2WebSecurityExpressionHandler`作为`expressionHandler`，**所以
+  你可以在HTTP URL中使用oauth2变量**，`.antMatchers("/user/**").access("#oauth2.hasScope('USER')")`。
+
 #### OAuth Server
 
 * 如果你没有提供`AuthorizationServerConfigurer`实例时，`spring-security-oauth2-autoconfigure`默认给你创建
@@ -287,6 +428,118 @@ this path will then have no authentication or authorization services applied and
 
 * 有关`OAuth2 Authorization Server`相关接口的用户认证使用`ClientDetailsService`(参考`AuthorizationServerSecurityConfigurer.init()`)，其他的则用`UserDetailsService`。
 
+* 扩展用户信息，两种方案：
+  
+  1. 自定义`UserAuthenticationConverter`（**推荐**）
+    
+      * `UserAuthenticationConverter#convertUserAuthentication(Authentication userAuthentication)`存储额外用户信息至Map中
+      * `UserAuthenticationConverter#extractAuthentication(Map<String, ?> map)`从Server返回的Token数据中解析成特有的Authentication对象
+      
+      ```java
+      JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+      // 自定义 UserAuthenticationConverter，用于扩展用户信息
+      DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
+      tokenConverter.setUserTokenConverter(new AuthUserAuthenticationConverter());
+      converter.setAccessTokenConverter(tokenConverter);
+      ```
+      
+      AuthUserAuthenticationConverter类的两个接口实现：
+      
+      ```java
+      @Override
+      @SuppressWarnings("unchecked")
+      public Map<String, ?> convertUserAuthentication(Authentication authentication) {
+          Map<String, Object> response = new LinkedHashMap<>();
+          Object principal = authentication.getPrincipal();
+          if (principal instanceof UserDetails) {
+              // 如果 principal 为 UserDetails 实例，则获取 UserDetails 所有的属性
+              HashMap<String, Object> principalMap = objectMapper.convertValue(principal, HashMap.class);
+              // 删除 authorities 数据，因为格式不对，authorities 数据在下面设置值
+              principalMap.remove(AUTHORITIES);
+              response.putAll(principalMap);
+          } else {
+              response.put(USERNAME, authentication.getName());
+          }
+      
+          if (authentication.getAuthorities() != null && !authentication.getAuthorities().isEmpty()) {
+              response.put(AUTHORITIES, AuthorityUtils.authorityListToSet(authentication.getAuthorities()));
+          }
+          return response;
+      }
+      
+      @Override
+      public Authentication extractAuthentication(Map<String, ?> map) {
+          if (map.containsKey(USERNAME)) {
+              Object principal = objectMapper.convertValue(map, AuthUser.class);
+              Collection<? extends GrantedAuthority> authorities = getAuthorities(map);
+              if (userDetailsService != null) {
+                  UserDetails user = userDetailsService.loadUserByUsername((String) map.get(USERNAME));
+                  authorities = user.getAuthorities();
+                  principal = user;
+              }
+              return new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
+          }
+          return null;
+      }
+      ```
+  
+  2. 配置`tokenEnhancer` + `UserAuthenticationConverter`
+  
+      ```java
+      public class UserTokenEnhancer implements TokenEnhancer {
+      
+          @Override
+          public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+              Object principal = authentication.getPrincipal();
+              if (principal instanceof SecurityUser) {
+                  SecurityUser user = (SecurityUser) principal;
+                  Map<String, Object> info = new HashMap<>();
+                  info.put("userId", user.getUserId());
+                  info.put("realname", user.getRealname());
+                  info.put("nickname", user.getNickname());
+                  ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
+              }
+              return accessToken;
+          }
+      }
+      ```
+  
+      ```java
+      @Override
+          public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+              TokenEnhancerChain enhancerChain = new TokenEnhancerChain();
+              // 扩展用户信息。注：UserTokenEnhancer必须放在前面，否则 JwtAccessTokenConverter 会提前生成token value，
+              // 导致 token value 不会包含 UserTokenEnhancer 中的额外信息。
+              enhancerChain.setTokenEnhancers(Arrays.asList(new UserTokenEnhancer(), jwtTokenEnhancer()));
+      
+              endpoints.accessTokenConverter(jwtTokenEnhancer())
+                  .tokenEnhancer(enhancerChain)
+                  .tokenStore(jwtTokenStore());
+          }
+      ```
+
+      > 注：OAuth2 的Client、Resource Server需要配置`DefaultAccessTokenConverter.userTokenConverter`属性，不能使用
+      默认的`DefaultUserAuthenticationConverter`（因为它只会封装用户名和权限属性）。需要自行扩展
+      `UserAuthenticationConverter#extractAuthentication(Map<String, ?> map)`方法，参考如下：
+      
+        ```java
+        @Override
+        public Authentication extractAuthentication(Map<String, ?> map) {
+            if (map.containsKey(USERNAME)) {
+                 // principal 为 AuthUser对象，存放扩展信息
+                Object principal = objectMapper.convertValue(map, AuthUser.class);
+                Collection<? extends GrantedAuthority> authorities = getAuthorities(map);
+                if (userDetailsService != null) {
+                    UserDetails user = userDetailsService.loadUserByUsername((String) map.get(USERNAME));
+                    authorities = user.getAuthorities();
+                    principal = user;
+                }
+                return new UsernamePasswordAuthenticationToken(principal, "N/A", authorities);
+            }
+            return null;
+        }
+        ```
+      
 #### OAuth Resource
 
 * `jwt.keyUri`/`jwk.keySetUri`/`userInfoUri`/`tokenInfoUri`四种验证及获取用户信息方式，参考`ResourceServerProperties.doValidate()`方法查看验证规则。
@@ -302,6 +555,17 @@ this path will then have no authentication or authorization services applied and
   > 注：[参考文档](https://docs.spring.io/spring-security-oauth2-boot/docs/current/reference/htmlsingle/#boot-features-security-oauth2-resource-server)
   
   > `OAuth2ClientAuthenticationProcessingFilter.attemptAuthentication()`方法中`OAuth2Authentication result = tokenServices.loadAuthentication(accessToken.getValue())`用到了相关逻辑
+
+### 官方文档
+
+* [Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
+* [Spring Security Reference](https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/)
+* [OAuth2 Boot](https://docs.spring.io/spring-security-oauth2-boot/docs/current-SNAPSHOT/reference/htmlsingle/)
+* [OAuth 2 Developers Guide](https://projects.spring.io/spring-security-oauth/docs/oauth2.html)
+* [Spring Cloud Security](https://spring.io/projects/spring-cloud-security#overview)
+* [Spring Security相关所有demo - 【重要】](https://github.com/spring-projects/spring-security/tree/master/samples)
+/ [spring-security-oauth demo](https://github.com/spring-projects/spring-security-oauth/tree/master/samples)
+
 
 ### 非官方参考文档
 

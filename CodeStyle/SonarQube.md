@@ -131,6 +131,8 @@
         ```
         项目启动成功后，访问<http://localhost:9000>页面，使用`账号：admin 密码：admin`登录系统
         
+        > 注：如果本地防火墙启动，且拦截了127.0.0.1时，则sonar启动不了。任何友好提示信息都没有，只有jvm timeout信息。
+        
     * Running SonarQube as a Service（可选）
     
         创建`/etc/init.d/sonar`文件：
@@ -233,8 +235,6 @@
         `Administration -> Configuration -> General Settings -> General -> Server base URL`
         
         * 配置当前服务的域名地址，如：`http://192.168.1.100:9000`
-        
-        
     
 4. Web API
 
@@ -258,6 +258,12 @@
         shell> curl -u MY_LOGIN:MY_PASSWORD https://sonarqube.com/api/user_tokens/search
         ```
     
+5. Sonar集成SpotBugs, FindSecBugs, PMD, Checkstyle的两种方式
+  
+    1. 已插件形式安装PMD、Checkstyle等，参考上面的文档。在SonarQube7.3版本不支持`sonar-checkstyle:4.11`，
+    因为其还在使用Sonar已废弃的API。[Sonar各版本兼容插件](https://docs.sonarqube.org/display/PLUG/Plugin+Version+Matrix)
+    2. [直接导入SpotBugs, FindSecBugs, PMD, Checkstyle Issues Reports至Sonar](https://docs.sonarqube.org/display/PLUG/Importing+SpotBugs%2C+FindSecBugs%2C+PMD%2C+Checkstyle+Issues+Reports)
+
 5. 文档
 
     * [Benchmark](https://docs.sonarqube.org/display/SONAR/Benchmark)
@@ -273,6 +279,10 @@
         * [Security Hotspots / Security Auditor / Security Reports](https://docs.sonarqube.org/display/SONAR/Security+Audit+and+Reports)
         * [Security-related rules / CWE / SANS Top 25 / OWASP Top 10](https://docs.sonarqube.org/display/SONAR/Security-related+rules)
     * [Rules Types and Severities定义 - 【Bugs/Vulnerabilities/Security Hotspots/Code Smells】](https://docs.sonarqube.org/display/SONAR/Rules+Types+and+Severities)
+        * Code Smell (Maintainability domain)
+        * Bug (Reliability domain)
+        * Vulnerability (Security domain)
+        * Security Hotspot (Security domain)
     * [Metric Definitions -【重要】](https://docs.sonarqube.org/display/SONAR/Metric+Definitions)
     * [指定解析范围](https://docs.sonarqube.org/display/SONAR/Narrowing+the+Focus)
     * [Webhooks -【重要】](https://docs.sonarqube.org/display/SONAR/Webhooks)
@@ -448,8 +458,6 @@
 * Analyzing with SonarQube Scanner for `MSBuild` : [官方文档](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+MSBuild)
 * Analyzing with SonarQube Scanner for `VSTS/TFS` : [官方文档](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Extension+for+VSTS-TFS)
 
-    
-
 * FAQ
 
     * Java heap space error or java.lang.OutOfMemoryError
@@ -492,5 +500,7 @@
 * [`Visual Studio`使用`SonarLint`插件文档](https://www.sonarlint.org/visualstudio/)
 * [`VS Code`使用`SonarLint`插件文档](https://www.sonarlint.org/vscode/)
 * [`Atom`使用`SonarLint`插件文档](https://www.sonarlint.org/atom/)
+
+* [`Eclipse` 在线/离线 安装`SonarLint`](https://blog.csdn.net/limm33/article/details/51166840)
 
 
