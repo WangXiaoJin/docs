@@ -97,4 +97,5 @@
 * Swagger Plugin 
 * vue.js
 * Eclipse Code Formatter 
+* Nginx Support - 支持Nginx配置自动补全、开启/关闭Nginx服务
 
