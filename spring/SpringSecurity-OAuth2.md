@@ -1,4 +1,4 @@
-## Spring Security
+## SpringSecurity and SpringOAuth2
 
 ### Spring Security
 
@@ -558,6 +558,7 @@ this path will then have no authentication or authorization services applied and
 
 ### 官方文档
 
+* [Spring Security and Angular - 【非常重要】 - 讲解SpringSecurity与单页面应用集成的各个场景（包含OAuth2登出功能）及Demo](https://spring.io/guides/tutorials/spring-security-and-angular-js/)
 * [Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
 * [Spring Security Reference](https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/)
 * [OAuth2 Boot](https://docs.spring.io/spring-security-oauth2-boot/docs/current-SNAPSHOT/reference/htmlsingle/)
