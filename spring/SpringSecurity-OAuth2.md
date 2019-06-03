@@ -556,6 +556,40 @@ this path will then have no authentication or authorization services applied and
   
   > `OAuth2ClientAuthenticationProcessingFilter.attemptAuthentication()`方法中`OAuth2Authentication result = tokenServices.loadAuthentication(accessToken.getValue())`用到了相关逻辑
 
+#### SpringSecurity 集成 SpringSession
+
+```java
+@Configuration
+public class SecurityConfiguration<S extends Session>
+		extends WebSecurityConfigurerAdapter {
+
+	@Autowired
+	private FindByIndexNameSessionRepository<S> sessionRepository;
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		// @formatter:off
+		http
+			// other config goes here...
+			.sessionManagement()
+				.maximumSessions(2)
+				.sessionRegistry(sessionRegistry());
+		// @formatter:on
+	}
+
+	/**
+     * 使用{@link SpringSessionBackedSessionRegistry}替换默认的{@link SessionRegistryImpl}，用于集群部署场景。
+     * 因为{@link SessionRegistryImpl}数据只保存在当前服务的内存中，当集群部署时无效。
+     *
+     * @return SpringSessionBackedSessionRegistry
+     */
+	@Bean
+	public SpringSessionBackedSessionRegistry<S> sessionRegistry() {
+		return new SpringSessionBackedSessionRegistry<>(this.sessionRepository);
+	}
+}
+```
+
 ### 官方文档
 
 * [Spring Security and Angular - 【非常重要】 - 讲解SpringSecurity与单页面应用集成的各个场景（包含OAuth2登出功能）及Demo](https://spring.io/guides/tutorials/spring-security-and-angular-js/)
