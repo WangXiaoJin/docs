@@ -29,7 +29,11 @@
 * Plugins
     
     * [`Plugins详细列表` / `怎么配置Plugins` - 【重要】](https://babeljs.io/docs/en/plugins)
+    * [`@babel/cli`](https://babeljs.io/docs/en/babel-cli)
+    * [`@babel/polyfill`](https://babeljs.io/docs/en/babel-polyfill)
     * [`@babel/node`](https://babeljs.io/docs/en/babel-node)
+    * [`@babel/plugin-transform-runtime`](https://babeljs.io/docs/en/babel-plugin-transform-runtime)
+    * [`@babel/register`](https://babeljs.io/docs/en/babel-register)
 
 * [Presets - 配置常用的Plugins集合](https://babeljs.io/docs/en/presets)
 
@@ -67,7 +71,7 @@
         * `Using the CLI (@babel/cli)`
         * `Using the API (@babel/core)`
         
-    * [Config Files](https://babeljs.io/docs/en/config-files)
+    * [Config Files - 配置文件的加载规则及配置方法 -【重要】](https://babeljs.io/docs/en/config-files)
         
         Babel has two parallel config file formats, which can be used together, or independently.
         
