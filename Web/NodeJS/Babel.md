@@ -30,10 +30,28 @@
     
     * [`Plugins详细列表` / `怎么配置Plugins` - 【重要】](https://babeljs.io/docs/en/plugins)
     * [`@babel/cli`](https://babeljs.io/docs/en/babel-cli)
-    * [`@babel/polyfill`](https://babeljs.io/docs/en/babel-polyfill)
-    * [`@babel/node`](https://babeljs.io/docs/en/babel-node)
-    * [`@babel/plugin-transform-runtime`](https://babeljs.io/docs/en/babel-plugin-transform-runtime)
-    * [`@babel/register`](https://babeljs.io/docs/en/babel-register)
+    * [`@babel/polyfill`](https://babeljs.io/docs/en/babel-polyfill) - 
+        提供ES6 API（Babel默认只转换ES6语法，API不做处理），兼容于ES5，会污染全局变量。
+        This will emulate a full ES2015+ environment (no < Stage 4 proposals) 
+        and is intended to be used in an application rather than a library/tool. 
+        (this polyfill is **automatically** loaded when using `babel-node`).
+        
+        > 参考：[Babel学习系列4-polyfill和runtime差别(必看)](https://zhuanlan.zhihu.com/p/58624930)
+        
+    * [`@babel/plugin-transform-runtime`](https://babeljs.io/docs/en/babel-plugin-transform-runtime) - 
+        结合`@babel/runtime`一起使用，功能与`@babel/polyfill`类似，但不会污染全局变量。
+        常用于插件和组件开发。此方案不适用于实例方法，例：`"foobar".includes("foo")`。
+        
+        > 参考：[Babel学习系列4-polyfill和runtime差别(必看)](https://zhuanlan.zhihu.com/p/58624930)
+        
+    * [`@babel/node`](https://babeljs.io/docs/en/babel-node) - 
+        `babel-node`是一个命令行功能，类似`node`命令，在运行node之前通过Babel presets/plugins编译源码。
+        不建议用于生产环境，部署生产环境之前建议提前编译好。
+        
+    * [`@babel/register`](https://babeljs.io/docs/en/babel-register) - 
+        通过`require`钩子使用Babel，此钩子会绑定到`node require`，且运行时编译require资源。
+        All subsequent files required by node with the extensions `.es6`, `.es`, `.jsx`, `.mjs`, and `.js` will be transformed by Babel.
+        
 
 * [Presets - 配置常用的Plugins集合](https://babeljs.io/docs/en/presets)
 
@@ -41,7 +59,8 @@
     * [@babel/preset-flow](https://babeljs.io/docs/en/babel-preset-flow)
     * [@babel/preset-react](https://babeljs.io/docs/en/babel-preset-react)
     * [@babel/preset-typescript](https://babeljs.io/docs/en/babel-preset-typescript)
-    * [babel-preset-minify](https://babeljs.io/docs/en/babel-preset-minify)
+    * [babel-preset-minify](https://babeljs.io/docs/en/babel-preset-minify) - 
+        压缩/混淆文件
     * Stage-X (`Experimental Presets`)
         * [Stage 0](https://babeljs.io/docs/en/babel-preset-stage-0) - 
             Strawman: just an idea, possible Babel plugin.
@@ -80,6 +99,27 @@
             * `.babelrc` (and `.babelrc.js`) files
             * `package.json` files with a `"babel"` key
 
+* Tooling
+    
+    * [`@babel/core`](https://babeljs.io/docs/en/babel-core) - 
+        用于解析、转换代码，依赖`parser`、`code-frame`、`generator`、`helpers`、`types`等组件
+    * [`@babel/parser`](https://babeljs.io/docs/en/babel-parser) - 
+        解析代码生成AST格式数据
+    * [`@babel/generator`](https://babeljs.io/docs/en/babel-generator) -
+        依据AST数据生成代码
+    * [`@babel/code-frame`](https://babeljs.io/docs/en/babel-code-frame) - 
+        输出源码行/列相关信息
+    * [`@babel/helpers`](https://babeljs.io/docs/en/babel-helpers) - 
+        一系列预定义的`@babel/template`模板方法
+    * [`@babel/runtime`](https://babeljs.io/docs/en/babel-runtime) - 
+        结合`@babel/plugin-transform-runtime`一起使用
+    * [`@babel/template`](https://babeljs.io/docs/en/babel-template) - 
+        用于快速创建AST的模板
+    * [`@babel/traverse`](https://babeljs.io/docs/en/babel-traverse) - 
+        用于遍历操作AST数据 
+    * [`@babel/types`](https://babeljs.io/docs/en/babel-types) - 
+        AST操作工具库，包括判断、断言、创建3类API
+
 ### Online Tool
 
 * [Babel线上代码转换](https://babeljs.io/repl)
@@ -97,6 +137,8 @@
     
     > You can use the npm package runner that comes with npm@5.2.0 to shorten that command by 
     replacing `./node_modules/.bin/babel` with `npx babel`
+
+* [Babel快速指南](https://www.colabug.com/4811194.html)
 
 * [ECMAScript 2015 特性](https://babeljs.io/docs/en/learn)
 
