@@ -119,9 +119,12 @@
 * [`Can I Use` -【重要】](https://caniuse.com/) - Web特性在各浏览器中的支持情况
 * [`compat-table` -【重要】](https://kangax.github.io/compat-table/es6/) - 各浏览器支持ES6语法的对比 
 
+* [`KeyboardEvent.key` - Web中键盘按键对应的值](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values)
+* [KeyCode - 在浏览器上按任意键后显示对应的keyCode](http://keycode.info/)
+
 * [Mozilla参考文档 - 前端大全](https://developer.mozilla.org/zh-CN/)
   * [Mozilla 对 ECMAScript 6 的支持](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/New_in_JavaScript/ECMAScript_6_support_in_Mozilla)
-
+  
 * [`strict mode` - 严格模式](http://www.ruanyifeng.com/blog/2013/01/javascript_strict_mode.html)
 
 * [ECMA-262最新版 -【Draft】](https://tc39.github.io/ecma262/)
@@ -130,6 +133,7 @@
 * [ECMAScript® 2015 Language Specification - 【ECMAScript 6.0】](http://www.ecma-international.org/ecma-262/6.0/)
 
 * [ECMAScript 6 入门 - 阮一峰](http://es6.ruanyifeng.com/)
+* [ES6 静态`import`和动态`import()`区别](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import)
 * [ECMAScript 2015 特性 - Babel官网](https://babeljs.io/docs/en/learn)
     * `Arrows and Lexical This`
     * `Classes`
@@ -153,3 +157,7 @@
     * `Promises`
     * `Reflect API`
     * `Tail Calls`
+
+* [What is the difference between `properties` and `attributes` in HTML?](https://stackoverflow.com/questions/6003819/what-is-the-difference-between-properties-and-attributes-in-html#answer-6004028)
+
+* [Using CORS - 跨域请求详解](https://www.html5rocks.com/en/tutorials/cors/)

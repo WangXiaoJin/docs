@@ -385,6 +385,11 @@
         a Maven Build Step in a Jenkins job to run analysis. Otherwise, use Java Options to set a higher value. 
         Note that details of setting Java Options are omitted here because they vary depending on the environment.
 
+    * Unexpected EOF read on the socket
+        * [SonarScanner MSBuild: Socket Error while uploading report to server](https://community.sonarsource.com/t/sonarscanner-msbuild-socket-error-while-uploading-report-to-server/2091)
+
+    * 设置`sonar.ws.timeout`：[文档](https://docs.sonarqube.org/latest/analysis/analysis-parameters/)
+
 #### SonarQube Scanners
 
 * SonarQube Scanner`命令行模式`
@@ -452,6 +457,16 @@
     > 注：执行SonarQube Scanner时**增加自定义数据**，用于WebHook：`sonar-scanner -Dsonar.analysis.scmRevision=628f5175ada0d685fd7164baa7c6382c1f25cab4 -Dsonar.analysis.buildNumber=12345`
     
 * Analyzing with SonarQube Scanner for `Maven`【重要】 : [官方文档](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Maven)
+    * 输出DEBUG日志
+        
+        Regarding debug logs this is an expected behavior. We are now writing logs in the Maven logger (no more directly to System.out). 
+        It brings a lot of good side effects (better integration, support of log colorizer) but on the other side if you don't enable Maven DEBUG logs you won't see SQ DEBUG logs.
+        
+        * `mvn sonar:sonar -Dsonar.verbose=true` => SQ write DEBUG logs but Maven doesn't display them
+        * `mvn sonar:sonar -Dsonar.verbose=true -X` => works fine
+        * `mvn sonar:sonar -X` => works fine since we are automatically enabling SQ DEBUG logs when -X is used.
+        
+        
 * Analyzing with SonarQube Scanner for `Gradle`【重要】 : [官方文档](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle)
 * Analyzing with SonarQube Scanner for `Jenkins`【重要】 : [官方文档](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Jenkins)
 * Analyzing with SonarQube Scanner for `Ant` : [官方文档](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Ant)
@@ -484,7 +499,7 @@
         
         集成 `SVN SCM`错误内容：Failed to execute goal org.sonarsource.scanner.maven:sonar-maven-plugin:3.4.1.1168:sonar (default-cli) on project xxxx: 
         Error when executing blame for file src/main/java/...: svn: E170001: Authentication required for '<http://xxx.com:80> Repository' -> [Help 1]
-        
+    
 * 文档
     
     * [Analysis Parameters](https://docs.sonarqube.org/display/SONAR/Analysis+Parameters)

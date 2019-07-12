@@ -30,6 +30,9 @@ Webpack用于打包源码，不会修改任何代码（除了`import`/`export`�
     * [Environment Variables - 执行webpack传递参数](https://webpack.js.org/guides/environment-variables/)
     * [Build Performance - 提升性能的措施](https://webpack.js.org/guides/build-performance/)
     * [Content Security Policies](https://webpack.js.org/guides/csp/)
+    * [Dependency Management](https://webpack.js.org/guides/dependency-management/)
+        * `require with expression`
+        * `require.context`
     * [Tree Shaking - 打包时删除依赖库中没有用到的`export`代码](https://webpack.js.org/guides/tree-shaking/)
     * [Production - `开发/生产`环境怎么配置Webpack](https://webpack.js.org/guides/production/)
     * [Shimming](https://webpack.js.org/guides/shimming/)

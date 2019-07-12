@@ -46,6 +46,9 @@
 ### 常用插件
 
 * [`npm-check`](https://www.npmjs.com/package/npm-check) - `npm install -g npm-check`，检查`过期的`/`不正确的`/`没有使用的`插件、支持交互式更新插件。
+* `serve` - 启用 HTTP Server 功能（推荐）
+* `http-server` - 启用 HTTP Server 功能
+
 
 
 ### 文档
