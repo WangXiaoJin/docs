@@ -161,3 +161,5 @@
 * [What is the difference between `properties` and `attributes` in HTML?](https://stackoverflow.com/questions/6003819/what-is-the-difference-between-properties-and-attributes-in-html#answer-6004028)
 
 * [Using CORS - 跨域请求详解](https://www.html5rocks.com/en/tutorials/cors/)
+
+* [`debounce` / `throttle ` / `requestAnimationFrame (rAF)` 详解](https://css-tricks.com/debouncing-throttling-explained-examples/)
