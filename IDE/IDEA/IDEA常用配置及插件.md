@@ -73,6 +73,31 @@
     
     > 注：如果你想默认使用系统的时间格式，请换成`${DATE} ${TIME}`
 
+* 使用`Live Templates`自动生成`@author`、`@date`等一系列JavaDoc
+
+    `File | Settings | Editor | Live Templates`
+    
+    1. 点击右侧 `+` 选择 `Template Group` ，输入`注释`，点击 `OK`
+    
+    2. 在新建的`注释`组下面，新建`@author` Live Template
+        * `Abbreviation`：`@author`
+        * `Description`: `生成@author 注解`
+        * `Template text`: `@author $author$`
+        * `Define applicable contexts`: 选择所有
+        * 选中`Reformat according to style`
+        * 点击`Edit variables` -> `Expression` -> `author`: `user()`
+        
+    3. 在新建的`注释`组下面，新建`@date` Live Template
+        * `Abbreviation`：`@date`
+        * `Description`: `生成@date 注释`
+        * `Template text`: `@date $date$ $time$`
+        * `Define applicable contexts`: 选择所有
+        * 选中`Reformat according to style`
+        * 点击`Edit variables` -> `Expression`
+            * `date`: `date("yyyy-MM-dd")`
+            * `time`: `time()`
+
+
 ### Inspections
 
 * Serializable类必须包含serialVersionUID属性
