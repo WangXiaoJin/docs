@@ -1,6 +1,6 @@
-## IDEA常用配置及插件
+# IDEA常用配置及插件
 
-### 快捷键
+## 快捷键
 
 复制一份Default快捷键配置，在新拷贝的配置中修改：
 
@@ -18,7 +18,7 @@
 * Main menu | Code | Completion | Cyclic Expand Word = Alt+.
 * Main menu | Code | Completion | Cyclic Expand Word (Backward) = Alt+Shift+.
 
-### 常用配置
+## 常用配置
 
 * 当SCM子文件有改变时，上级所有文件夹都标记
 
@@ -98,7 +98,7 @@
             * `time`: `time()`
 
 
-### Inspections
+## Inspections
 
 * Serializable类必须包含serialVersionUID属性
 
@@ -108,7 +108,24 @@
 
     `File | Settings | Editor | Inspections | Java | Imports | Unused import | Severity -> Error`
 
-### Plugins
+
+## 常见问题
+
+#### IDEA 2018 字体模糊，尤其在使用Markdown时。解决方案是删除 IDEA 安装目录下的`jre64`：[参考地址](https://blog.csdn.net/zaemyn2015/article/details/84584458)
+
+注：下载`Markdown Navigator`也可解决此字体模糊的问题，需要禁用默认的`Markdown support`。但`Markdown Navigator` 的
+`Preview Browser` 默认为 `Default - swing`，在预览外网的图片时非常卡。建议切换到`JavaFX WebView`模式，
+在此模式下预览外网图片不会卡顿，但你此时发现字体又模糊了。`Markdown Navigator`比IDEA原有Markdown功能强大，
+所以最终建议方案是：  
+
+1. 删除 IDEA 安装目录下的`jre64`
+2. 安装`Markdown Navigator`插件，禁用原有的`Markdown support`
+3. `File | Settings | Languages & Frameworks | Markdown | Preview`
+* `Preview Browser` - 选择 `JavaFX WebView`
+* `Page Zoom` - 填 `1.2` （用于放大预览页面的字体）
+
+
+## Plugins
 
 * Auto filling Java call arguments - 自动填充调用的方法、构造函数参数
 * BashSupport - Bash语法及高亮显
