@@ -51,7 +51,4 @@ spring:
 ```
 > [Escaping a dot in a Map key in Yaml in Spring Boot - 解决YAML Key包含特殊字符问题](https://stackoverflow.com/questions/34070987/escaping-a-dot-in-a-map-key-in-yaml-in-spring-boot/34082891#34082891)
 
-### 配置`cors` - 跨域请求
-
-* [HTTP 请求头 `Access-Control-*` 文档](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Access-Control-Max-Age)
 
