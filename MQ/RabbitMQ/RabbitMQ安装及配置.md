@@ -1,6 +1,6 @@
-## RabbitMQ安装及配置
+# RabbitMQ安装及配置
 
-### Windows环境
+## Windows环境
 
 1. 下载并安装Erlang的windows环境二进制可执行文件<http://www.erlang.org/downloads>
 
@@ -19,7 +19,7 @@
 	> 可通过修改配置文件来修改端口号，具体请往下看
 
 
-### CentOS环境
+## CentOS环境
 
 1. 下确保已安装Erlang，下载地址：<https://www.rabbitmq.com/releases/erlang/>  
 
@@ -99,7 +99,7 @@
 	> 注：fs.file-max值必须大于ulimit值，ulimit的hard值大于等于soft值。  
 		
 
-### 配置
+## 配置
 
 1. 文件路径
 	
@@ -136,7 +136,16 @@
 	home dir       : /var/lib/rabbitmq
 	config file(s) : /etc/rabbitmq/rabbitmq.config
 	```
-	
+
+
+## 参考文档
+
+* [Downloading and Installing RabbitMQ](https://www.rabbitmq.com/download.html)
+  * [RabbitMQ Changelog](https://www.rabbitmq.com/changelog.html)
+    * [Server release notes](https://github.com/rabbitmq/rabbitmq-server/releases)
+    * [Java client release notes](https://github.com/rabbitmq/rabbitmq-java-client/releases)
+* [ Which protocols does RabbitMQ support? ](https://www.rabbitmq.com/protocols.html)
+* [官网博客](https://www.rabbitmq.com/blog/)
 	
 	
 	
