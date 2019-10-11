@@ -76,6 +76,11 @@
 
 * [npm install 两个依赖包的Peer Dependencies冲突该怎么解决？](https://segmentfault.com/q/1010000011571000/a-1020000011575690)
 
+* 共享`node_modules`或基础组件
+    
+    * 使用系统软链接，Windows：`mklink /j "node_modules" "../project1/node_modules"`
+    * 使用`npm link`
+
 ## 文档
 
 * [淘宝 NPM 镜像](http://npm.taobao.org/)
