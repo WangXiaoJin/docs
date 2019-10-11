@@ -29,23 +29,25 @@
 
 * `npm init`创建`package.json`
 
-* 使用npm help <command>可查看某条命令的详细帮助，例如npm help install。
+* 使用`npm help <command>`可查看某条命令的详细帮助，例如npm help install。
 
-* 在package.json所在目录下使用npm install . -g可先在本地安装当前命令行程序，可用于发布前的本地测试。
+* 在package.json所在目录下使用`npm install . -g`可先在本地安装当前命令行程序，可用于发布前的本地测试。
 
 * `npm ci` - 和 `npm install` 类似，但它不会改变 `npm-shrinkwrap.json`、`package-lock.json`，适用于构建服务器、持续集成、自动化部署。
 * 使用 `npm help ci` 查看文档解释
 * [`npm i` changed my npm-shrinkwrap/package-lock, why?](https://npm.community/t/npm-i-changed-my-npm-shrinkwrap-package-lock-why/190)
-* [package-lock 和 npm-shrinkwrap](https://xwenliang.cn/p/5cbd98b57eb9de0c54000003)
+* [`package-lock` 和 `npm-shrinkwrap`](https://xwenliang.cn/p/5cbd98b57eb9de0c54000003)
 * [`npm install` `模块依赖`算法 -【重要】](https://docs.npmjs.com/cli/install.html#algorithm)
 
-* 使用npm update <package>可以把当前目录下node_modules子目录里边的对应模块更新至最新版本。
+* 使用`npm update <package>`可以把当前目录下node_modules子目录里边的对应模块更新至最新版本。
 
-* 使用npm update <package> -g可以把全局安装的对应命令行程序更新至最新版。
+* 使用`npm update <package> -g`可以把全局安装的对应命令行程序更新至最新版。
 
-* 使用npm cache clear可以清空NPM本地缓存，用于对付使用相同版本号发布新版本代码的人。
+* 使用`npm cache clear`可以清空NPM本地缓存，用于对付使用相同版本号发布新版本代码的人。
 
-* 使用npm unpublish <package>@<version>可以撤销发布自己发布过的某个版本代码。
+* 使用`npm unpublish <package>@<version>`可以撤销发布自己发布过的某个版本代码。
+
+* 使用`npx`执行`./node_modules/.bin/`下面的命令，如：`npx babel` => `./node_modules/.bin/babel` 
 
 ### 包依赖 / `package-lock` / `npm-shrinkwrap`
     
@@ -70,7 +72,9 @@
 * `serve` - 启用 HTTP Server 功能（推荐）
 * `http-server` - 启用 HTTP Server 功能
 
+## 常见问题
 
+* [npm install 两个依赖包的Peer Dependencies冲突该怎么解决？](https://segmentfault.com/q/1010000011571000/a-1020000011575690)
 
 ## 文档
 

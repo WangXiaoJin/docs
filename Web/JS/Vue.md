@@ -134,3 +134,5 @@
     如果你遇到了编译方面的问题，记得先删掉缓存目录之后再试试看。
     
     * `thread-loader` - 会在多核 CPU 的机器上为 Babel/TypeScript 转译开启。
+
+* `npx vue-cli-service inspect` 检查并输出webpack配置。`npx vue-cli-service inspect --help`输出帮助信息。
