@@ -136,3 +136,6 @@
     * `thread-loader` - 会在多核 CPU 的机器上为 Babel/TypeScript 转译开启。
 
 * `npx vue-cli-service inspect` 检查并输出webpack配置。`npx vue-cli-service inspect --help`输出帮助信息。
+
+* Vue CLI 使用了 [`webpack-merge`](https://github.com/survivejs/webpack-merge) 合并webpack配置项 / 
+[`webpack-chain`](https://github.com/neutrinojs/webpack-chain) 配置webpack配置项

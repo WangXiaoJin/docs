@@ -18,7 +18,7 @@
 	echo 'export JVMFLAGS="-Xmx3072m"' > conf/java.env
 	```
 	
-	**`conf/zoo.cfg`（安装目录下有`conf/zoo_sample.cfg`）,具体请查阅<https://zookeeper.apache.org/doc/trunk/zookeeperAdmin.html#sc_configuration>：**
+	**`conf/zoo.cfg`（安装目录下有`conf/zoo_sample.cfg`）,具体请查阅<http://zookeeper.apache.org/doc/r3.4.8/zookeeperAdmin.html#sc_configuration>：**
 	
 	```bash
 	# 单位：毫秒 - 用于心跳检测。最小的session超时为 tickTime*2

@@ -19,7 +19,8 @@
             elasticsearch soft nproc 10240
             elasticsearch hard nproc 10240
             ```
-        注：[参考链接](http://kumu1988.blog.51cto.com/4075018/1091369)。`10240`这个值根据使用的具体情况而定
+        注：[参考链接](http://kumu1988.blog.51cto.com/4075018/1091369)。`10240`这个值根据使用的具体情况而定。
+        (note that you might have to increase the limits for the root `user` too)
     * Disable swapping - 有三种禁用swap方案，参考链接：[Disable swapping](https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration-memory.html)
         
 	```bash

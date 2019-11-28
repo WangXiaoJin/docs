@@ -124,6 +124,7 @@
 * `Preview Browser` - 选择 `JavaFX WebView`
 * `Page Zoom` - 填 `1.2` （用于放大预览页面的字体）
 
+> Markdown 超出当前可见视图则自动换行显示：`File | Settings | Languages & Frameworks | Markdown | Editor` => `Soft Wrap: Enabled`
 
 ## Plugins
 

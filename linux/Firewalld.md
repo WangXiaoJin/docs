@@ -1,6 +1,6 @@
 ## 防火墙
 
-###CentOS7 - Firewall
+### CentOS7 - Firewall
 
 1. 开放防火墙端口
 
@@ -80,3 +80,4 @@
     shell> firewall-cmd --reload
     ```
 
+> 注：[Firewall - 官方文档](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html-single/security_guide/index#sec-Using_Firewalls)

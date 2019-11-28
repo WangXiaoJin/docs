@@ -15,6 +15,10 @@
 
 ### `npm config ls` 显示当前配置。`npm config ls -l`显示当前配置及`默认配置`。
 
+* `npm help config` - config命令，配置会保存到文件中
+* [npm-config](https://docs.npmjs.com/misc/config) - 【非常重要】**命令行使用配置及配置详解**
+    * `npm ci --verbose` - `-dd, --verbose、--loglevel verbose`，配置LogLevel
+
 ### 配置`prefix`/`cache`参数
 
   ```bash
@@ -24,6 +28,40 @@
   # 缓存路径，默认值 ~AppData\Roaming\npm-cache
   npm config set cache "D:\Program Files\node-v10.15.3\node_cache"
   ```
+
+### `package.json vars` / `configuration`
+
+The `package.json` fields are tacked onto the `npm_package_` prefix. So, for instance, if you had **{"name":"foo", "version":"1.2.5"}** in your package.json file, then your package scripts would have the `npm_package_name` environment variable set to “foo”, and the `npm_package_version` set to “1.2.5”. You can access these variables in your code with `process.env.npm_package_name`` and process.env.npm_package_version`, and so on for other fields.
+
+Configuration parameters are put in the environment with the `npm_config_` prefix. For instance, you can view the effective `root` config by checking the `npm_config_root` environment variable.
+
+> 使用`npm run env`查看所有的环境变量
+
+### Special: package.json “config” object
+
+The package.json “config” keys are overwritten in the environment if there is a config param of `<name>[@<version>]:<key>`. For example, if the package.json has this:
+
+```json
+{ "name" : "foo"
+, "config" : { "port" : "8080" }
+, "scripts" : { "start" : "node server.js" } }
+```
+and the server.js is this:
+```
+http.createServer(...).listen(process.env.npm_package_config_port)
+```
+then the user could change the behavior by doing:
+```
+npm config set foo:port 80
+```
+
+### `current lifecycle event` / `HOOK SCRIPTS`
+
+The `npm_lifecycle_event` environment variable is set to whichever stage of the cycle is being executed. So, you could have a single script used for different parts of the process which switches based on what’s currently happening.
+
+> [`current lifecycle event` - 文档](https://docs.npmjs.com/misc/scripts#current-lifecycle-event)
+
+> [HOOK SCRIPTS - 文档](https://docs.npmjs.com/misc/scripts#hook-scripts)
 
 ### npm 常用命令
 
@@ -48,6 +86,10 @@
 * 使用`npm unpublish <package>@<version>`可以撤销发布自己发布过的某个版本代码。
 
 * 使用`npx`执行`./node_modules/.bin/`下面的命令，如：`npx babel` => `./node_modules/.bin/babel` 
+
+* `npm run env` - 内嵌脚本命令，用于查看当前所有的环境变量。详情查看`npm help run`。
+
+* `npm help npm-scripts` - 脚本的生命周期
 
 ### 包依赖 / `package-lock` / `npm-shrinkwrap`
     
@@ -83,8 +125,13 @@
 
 ## 文档
 
-* [淘宝 NPM 镜像](http://npm.taobao.org/)
+* [Nexus Npm Registry](https://help.sonatype.com/repomanager3/formats/npm-registry) -【重要】在Nexus上使用Npm仓库
+
 * [npm官网](https://docs.npmjs.com/)
+    * [npm-scope](https://docs.npmjs.com/misc/scope) - 讲解`scoped packages`发布、安装及配置
+    
+* [淘宝 NPM 镜像](http://npm.taobao.org/)
 * [NodeJS中文文档 - 【重要】](http://nodejs.cn/api/util.html)
 * [runoob.com简易文档](https://www.runoob.com/nodejs/nodejs-http-server.html)
 * [npm11个提供工作效率的用法](https://leokongwq.github.io/2016/10/21/npm-11-useful-tips.html)
+

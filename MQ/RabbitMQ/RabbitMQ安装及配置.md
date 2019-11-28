@@ -144,7 +144,18 @@
   * [RabbitMQ Changelog](https://www.rabbitmq.com/changelog.html)
     * [Server release notes](https://github.com/rabbitmq/rabbitmq-server/releases)
     * [Java client release notes](https://github.com/rabbitmq/rabbitmq-java-client/releases)
+
 * [ Which protocols does RabbitMQ support? ](https://www.rabbitmq.com/protocols.html)
+    * `AMQP 0-9-1 and extensions` - [AMQP 0-9-1 Model Explained](https://www.rabbitmq.com/tutorials/amqp-concepts.html)
+    * `STOMP`
+    * `MQTT`
+    * `AMQP 1.0`
+    * `HTTP and WebSockets`
+
+* [Clients Libraries and Developer Tools -【重要】](https://www.rabbitmq.com/devtools.html)
+
+* Plugins
+
 * [官网博客](https://www.rabbitmq.com/blog/)
 	
 	
