@@ -1,2 +1,0 @@
-# sqlserver
-sqlserver文档

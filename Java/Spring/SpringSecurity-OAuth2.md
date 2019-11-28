@@ -157,35 +157,36 @@
   matches at the top. You can also add a method attribute to limit the match to a particular HTTP method (GET, POST, PUT etc.).
 
   ```xml
-  <beans:beans xmlns="http://www.springframework.org/schema/security"
-    xmlns:beans="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
-          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-          http://www.springframework.org/schema/security
-          http://www.springframework.org/schema/security/spring-security.xsd">
-  
-    <http>
-      <intercept-url pattern="/dbAdmin/**" access="hasRole('DB_ADMIN')" method="GET"/>
-      <intercept-url pattern="/**" access="hasRole('USER')" method="GET"/>
-      <form-login/>
-      <logout/>
-    </http>
-  
-    <authentication-manager>
-      <authentication-provider>
-        <user-service>
-          <!-- Password is prefixed with {noop} to indicate to DelegatingPasswordEncoder that
-          NoOpPasswordEncoder should be used. This is not safe for production, but makes reading
-          in samples easier. Normally passwords should be hashed using BCrypt -->
-          <user name="jimi" password="{noop}jimispassword" authorities="ROLE_USER, ROLE_ADMIN"/>
-          <user name="bob" password="{noop}bobspassword" authorities="ROLE_USER"/>
-        </user-service>
-      </authentication-provider>
-    </authentication-manager>
-  
-  </beans:beans>
-  ```
+  ```xml
+    <beans:beans xmlns="http://www.springframework.org/schema/security"
+      xmlns:beans="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.springframework.org/schema/security
+            http://www.springframework.org/schema/security/spring-security.xsd">
+    
+      <http>
+        <intercept-url pattern="/dbAdmin/**" access="hasRole('DB_ADMIN')" method="GET"/>
+        <intercept-url pattern="/" access="hasRole('USER')" method="GET"/>
+        <form-login/>
+        <logout/>
+      </http>
+    
+      <authentication-manager>
+        <authentication-provider>
+          <user-service>
+            <!-- Password is prefixed with {noop} to indicate to DelegatingPasswordEncoder that
+            NoOpPasswordEncoder should be used. This is not safe for production, but makes reading
+            in samples easier. Normally passwords should be hashed using BCrypt -->
+            <user name="jimi" password="{noop}jimispassword" authorities="ROLE_USER, ROLE_ADMIN"/>
+            <user name="bob" password="{noop}bobspassword" authorities="ROLE_USER"/>
+          </user-service>
+        </authentication-provider>
+      </authentication-manager>
+    
+    </beans:beans>
+    ```
   
   You can use multiple authentication-provider elements, in which case the providers will be queried in the order they are declared.
 

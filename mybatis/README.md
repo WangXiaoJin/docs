@@ -1,2 +1,0 @@
-# mybatis
-mybatis文档
