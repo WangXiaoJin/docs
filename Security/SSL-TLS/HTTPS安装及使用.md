@@ -1,6 +1,6 @@
 ## HTTPS安装及使用
 
-###安装Certbot
+### 安装Certbot
 
 运行环境：`Nginx`、`CentOS7`
 
@@ -56,7 +56,7 @@
     * [certbot官方文档](https://certbot.eff.org/docs/using.html#nginx)
     
 
-###acme.sh生成证书 - 【推荐】
+### acme.sh生成证书 - 【推荐】
 
 acme.sh 实现了 acme 协议, 可以从 letsencrypt 生成免费的证书。
 
@@ -80,7 +80,7 @@ acme.sh 实现了 acme 协议, 可以从 letsencrypt 生成免费的证书。
     * [官方文档](https://github.com/Neilpang/acme.sh/wiki/%E8%AF%B4%E6%98%8E)
     * [Nginx配置HTTPS服务器](https://aotu.io/notes/2016/08/16/nginx-https/index.html)
 
-###OpenSSL
+### OpenSSL
 
 ```bash
 # 1.生成私钥
@@ -145,3 +145,14 @@ keytool -export -rfc -alias easy -keystore d:\mykeystore.keystore -file d:\easy.
 * [Java keytool官方文档](https://docs.oracle.com/javase/6/docs/technotes/tools/solaris/keytool.html)
 * [证书及证书管理(keytool工具实例)](https://www.cnblogs.com/benwu/articles/4891758.html)
 * [Java Keytool工具简介](https://blog.csdn.net/liumiaocn/article/details/61921014)
+
+### 参考文档
+
+* [Jetty配置SSL/TLS](http://www.eclipse.org/jetty/documentation/current/configuring-ssl.html)
+* [Java Secure Socket Extension (JSSE) Reference Guide](https://docs.oracle.com/javase/8/docs/technotes/guides/security/jsse/JSSERefGuide.html#CustomizingStores)
+* [SSL Certificate Guide](https://support.sonatype.com/hc/en-us/articles/213465768-SSL-Certificate-Guide?_ga=2.251496708.346890334.1575246796-534816866.1574671641) - 使用`keytool`
+    * Generating Self Signed Server TLS Certificates
+    * Where does a Java client load trusted certificates from?
+    * Explicitly Trusting a Self-Signed or Private Certificate in a Java Based Client
+    * Forcing Apache Maven to Implicitly Trust a Self-Signed Certificate
+    * Querying Remote SSL Protocol and Cipher Support
