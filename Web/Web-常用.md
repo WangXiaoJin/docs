@@ -13,3 +13,9 @@
 * `compression`
 * `caching`
 * `authentication`
+
+## 参考链接
+
+* [Web technology (MDN)](https://developer.mozilla.org/en-US/docs/Web) -【重要】Web 参考文献
+
+* [Is JavaScript Single-Threaded?](https://www.red-gate.com/simple-talk/dotnet/asp-net/javascript-single-threaded/) - 讲解`Event loop`及JS单线程执行原理
