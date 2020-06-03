@@ -1,2 +1,0 @@
-# linux
-linux文档

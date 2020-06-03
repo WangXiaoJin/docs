@@ -46,7 +46,29 @@
 
 ### [`Vue.config.errorHandler`](https://cn.vuejs.org/v2/api/#errorHandler) - 指定组件的渲染和观察期间未捕获错误的处理函数
 
+### `<keep-alive>`缓存及组件名
+
+注意这个 `<keep-alive>` 要求被切换到的组件都有自己的名字，不论是通过组件的 `name` 选项还是局部/全局注册，否则页面缓存无效，
+所有的组件都会重新渲染。且在`Vue Router`中不同路由切换时不会触发 `watch.$route`/`activated`/`deactivated`。
+
+> 当`keep-alive`中组件配置了`name`属性时，无论从当前组件切出去或切进来都会触发`watch.$route`。
+
+> 当使用了`keep-alive`的缓存时，切换路由时会触发`watch.$route`，即`$route`对象会改变，那么依赖`$route`对象属性的组件也会触发更新。
+所以当切换路由离开此缓存组件时，依赖`this.$route.params`属性的组件会触发更新，此更新如导致向后端发送请求，会引起BUG。  
+有一种简陋方案：把`this.$route`中的属性值赋值给组件的`data`属性（`id: this.$route.params.id`），这样切换路由时就不会触发依赖组件更新，
+但又一点要注意，使用此方案后，切换路由时`data.id`属性永远不会更新。
+
+> `Vue Router`中同一个路由如果产生多个`tab`项时（如：`/user/:id`形式），即使此路由组件没有启用缓存（如：组件名没配置），
+产生的多个tab页面之间切换时也会触发`watch.$route`，与其他路由组件间切换并不会触发`watch.$route`。
+
+* [`keep-alive` API](https://cn.vuejs.org/v2/api/#keep-alive)
+* [`name` API](https://cn.vuejs.org/v2/api/#name)
+* [在动态组件上使用-keep-alive](https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%9C%A8%E5%8A%A8%E6%80%81%E7%BB%84%E4%BB%B6%E4%B8%8A%E4%BD%BF%E7%94%A8-keep-alive)
+* [Vue Router数据获取](https://router.vuejs.org/zh/guide/advanced/data-fetching.html)
+
 ### 文档
+
+* [Vue实现`全局事件总线`](https://cn.vuejs.org/v2/guide/migration.html#dispatch-%E5%92%8C-broadcast-%E6%9B%BF%E6%8D%A2)
 
 * [`KeyboardEvent.key` - Web中键盘按键对应的值](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values)
 * [KeyCode - 在浏览器上按任意键后显示对应的keyCode](http://keycode.info/)
@@ -59,6 +81,7 @@
     * [Get standalone Electron app (works with any environment!)](https://github.com/vuejs/vue-devtools/blob/master/shells/electron/README.md)
 
 * [awesome-vue - 资源及组件列表](https://github.com/vuejs/awesome-vue)
+* [在线搜索Vue相关组件](https://awesomejs.dev/for/vue/)
 
 * [`风格指南` - 提供了很多代码规约](https://cn.vuejs.org/v2/style-guide/)
 * [VueJs API](https://cn.vuejs.org/v2/api/)

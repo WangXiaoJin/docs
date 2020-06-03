@@ -62,3 +62,10 @@ Any unicode character can be used in a path subject to the following constraints
     * `dataLength` - The length of the data field of this znode.
     * `numChildren` - The number of children of this znode.
 
+* 从`3.5.0`版本开始，ZooKeeper支持动态配置，这方便了ZooKeeper动态增加、删除Server节点。在`3.5.0`版本之前ZK的各服务间的关系及配置都是静态的，
+只能通过重启来加载新的配置。
+
+  `3.5.0`版本之前如果需要动态增加Server节点，只能一个节点一个节点的增加，新节点在所有节点上都增加且重启完成后才能生效，
+  且节点的重启是有顺序的，否则会出现服务没Leader或出现脑裂。
+
+  > [ZooKeeper Dynamic Reconfiguration - 官方文档](http://zookeeper.apache.org/doc/r3.5.5/zookeeperReconfig.html)

@@ -46,7 +46,13 @@
 
 * ES6指数运算符: `**` - `2 ** 3 === 8` / `Math.pow(2, 3) === 2 ** 3`
 
-#### 语法
+* [分析Array.apply(null, { length: 20 })](https://segmentfault.com/a/1190000011435501)
+
+* [深入浅出Object.defineProperty()](https://www.jianshu.com/p/8fe1382ba135)
+
+* [为什么使用 Object.prototype.hasOwnProperty.call(myObj, prop) 而不是 myObj.hasOwnProperty(prop)?](https://juejin.im/post/5aac8162f265da239a5f9306)
+
+## 语法
 
 * [`Abstract Equality Comparison` and `Strict Equality Comparison`](https://tc39.github.io/ecma262/#sec-abstract-equality-comparison)
 
@@ -114,7 +120,7 @@
     }
     ```
 
-#### 参考文档
+## 参考文档
 
 * [`Can I Use` -【重要】](https://caniuse.com/) - Web特性在各浏览器中的支持情况
 * [`compat-table` -【重要】](https://kangax.github.io/compat-table/es6/) - 各浏览器支持ES6语法的对比 

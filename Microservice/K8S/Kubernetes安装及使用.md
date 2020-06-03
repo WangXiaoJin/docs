@@ -3,17 +3,17 @@
 ### 安装`kubeadm`
 
 1. 准备工作
-    * 支持以下系统
-        * Ubuntu 16.04+
-        * Debian 9
-        * CentOS 7
-        * RHEL 7
-        * Fedora 25/26 (best-effort)
-        * HypriotOS v1.0.1+
-        * Container Linux (tested with 1576.4.0)
-    * 每台机子需要2GB或以上内存
-    * 2核或以上CPU
-    * 集群中所有机器间的网络必须通畅
+  * 支持以下系统
+    * Ubuntu 16.04+
+    * Debian 9
+    * CentOS 7
+    * RHEL 7
+    * Fedora 25/26 (best-effort)
+    * HypriotOS v1.0.1+
+    * Container Linux (tested with 1576.4.0)
+  * 每台机子需要2GB或以上内存
+  * 2核或以上CPU
+  * 集群中所有机器间的网络必须通畅
 
 2. 系统配置
 
@@ -640,79 +640,123 @@
 
 ### 使用及文档
 
-1. 常用
+#### 常用
 
-    * [K8S各种使用例子](https://github.com/kubernetes/examples/tree/master/staging)
+* [K8S各种使用例子](https://github.com/kubernetes/examples/tree/master/staging)
+
+* Migrating from imperative commands to imperative object configuration
+
+    Migrating from imperative commands to imperative object configuration involves several manual steps.
+
+    1. Export the live object to a local object configuration file:
+
+        ```bash
+        kubectl get <kind>/<name> -o yaml --export > <kind>_<name>.yaml
+        ```
+
+    2. Manually remove the status field from the object configuration file.
+
+    3. For subsequent object management, use `replace` exclusively.
+
+        ```bash
+        kubectl replace -f <kind>_<name>.yaml
+        ```
+
+#### 概念 - 架构
     
-    * Migrating from imperative commands to imperative object configuration
-        
-        Migrating from imperative commands to imperative object configuration involves several manual steps.
-        
-        1. Export the live object to a local object configuration file:
-        
-            ```bash
-            kubectl get <kind>/<name> -o yaml --export > <kind>_<name>.yaml
-            ```
-            
-        2. Manually remove the status field from the object configuration file.
-        
-        3. For subsequent object management, use `replace` exclusively.
-        
-            ```bash
-            kubectl replace -f <kind>_<name>.yaml
-            ```
+* [Nodes - 【重要】](https://kubernetes.io/docs/concepts/architecture/nodes/)
+* [Images](https://kubernetes.io/docs/concepts/containers/images/)
+   ：K8S加载私有仓库镜像配置
+* [Pod解析](https://kubernetes.io/docs/concepts/workloads/pods/pod/)
+   ：此链接的同级目录都比较重要（包含POD生命周期等）
+* [Container Lifecycle Hooks](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
+   ：容器的生命周期及钩子实现
+* [Object Names and IDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/)
+* [Namespaces](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+* [Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) - 自定义标签及通过标签快速定位资源
+* [Annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/)
+* [Federation - 【重要】](https://kubernetes.io/docs/concepts/cluster-administration/federation/)
+   ：多集群管理
 
-2. 概念 - 架构
-    
-    * [Nodes - 【重要】](https://kubernetes.io/docs/concepts/architecture/nodes/)
-    * [Images](https://kubernetes.io/docs/concepts/containers/images/)
-       ：K8S加载私有仓库镜像配置
-    * [Pod解析](https://kubernetes.io/docs/concepts/workloads/pods/pod/)
-       ：此链接的同级目录都比较重要（包含POD生命周期等）
-    * [Container Lifecycle Hooks](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
-       ：容器的生命周期及钩子实现
-    * [Names](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/)
-    * [Namespaces](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
-    * [Labels and Selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/)
-    * [Annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/)
-    * [Federation - 【重要】](https://kubernetes.io/docs/concepts/cluster-administration/federation/)
-       ：多集群管理
+#### 文档
 
-3. 文档
+* Resources
+    * [Managing Compute Resources for Containers](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/) -
+    分配容器资源（CPU、内存等）
+    * [Resource Quotas](https://kubernetes.io/docs/concepts/policy/resource-quotas/) -
+根据`namespace`分配资源
+* [Configuring kubelet Garbage Collection - 【重要】](https://kubernetes.io/docs/concepts/cluster-administration/kubelet-garbage-collection/) -
+回收镜像/容器资源
+* [Troubleshooting your application](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-application/) -
+Useful for users who are deploying code into Kubernetes and wondering why it is not working.
+* [Troubleshooting your cluster](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/) -
+Useful for cluster administrators and people whose Kubernetes cluster is unhappy.
+* [Creating a Custom Cluster from Scratch](https://kubernetes.io/docs/getting-started-guides/scratch/)
+* [Building Large Clusters](https://kubernetes.io/docs/admin/cluster-large/)
+* [Running in Multiple Zones](https://kubernetes.io/docs/admin/multiple-zones/)
+* [Building High-Availability Clusters](https://kubernetes.io/docs/admin/high-availability/)
+* [Accessing Clusters - 【重要】](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#python-client)
+* [修改/etc/hosts - 【重要】](https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/)
+* [Pod层面配置DNS - 【重要】](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+* [Auditing - 提供`Log backend`/`Webhook backend`监控事件](https://kubernetes.io/docs/tasks/debug-application-cluster/audit/)
+* [调试Services及网络问题](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-service/)
+* [Pod运行失败及定制错误信息](https://kubernetes.io/docs/tasks/debug-application-cluster/determine-reason-pod-failure/)
+* [`Horizontal Pod Autoscaler` 扩容/缩容 算法](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/autoscaling/horizontal-pod-autoscaler.md#autoscaling-algorithm)
 
-    * [JSONPath -【重要】](https://kubernetes.io/docs/reference/kubectl/jsonpath/) - 处理JSON数据接口
-    * [过滤K8S输出的内容](List All Container Images Running in a Cluster)
-    * Resources
-        * [Managing Compute Resources for Containers](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/) - 
-        分配容器资源（CPU、内存等）
-        * [Resource Quotas](https://kubernetes.io/docs/concepts/policy/resource-quotas/) - 
-    根据`namespace`分配资源
-    * [Configuring kubelet Garbage Collection - 【重要】](https://kubernetes.io/docs/concepts/cluster-administration/kubelet-garbage-collection/) - 
-    回收镜像/容器资源
-    * [Troubleshooting your application](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-application/) - 
-    Useful for users who are deploying code into Kubernetes and wondering why it is not working.
-    * [Troubleshooting your cluster](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/) - 
-    Useful for cluster administrators and people whose Kubernetes cluster is unhappy.
-    * [Creating a Custom Cluster from Scratch](https://kubernetes.io/docs/getting-started-guides/scratch/)
-    * [Building Large Clusters](https://kubernetes.io/docs/admin/cluster-large/)
-    * [Running in Multiple Zones](https://kubernetes.io/docs/admin/multiple-zones/)
-    * [Building High-Availability Clusters](https://kubernetes.io/docs/admin/high-availability/)
-    * [API Conventions](https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md)
-    * [Community Contributors(各种规范文档)](https://github.com/kubernetes/community/tree/master/contributors)
-    * [Accessing Clusters - 【重要】](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/#python-client)
-    * [修改/etc/hosts - 【重要】](https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/)
-    * [Pod层面配置DNS - 【重要】](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
-    * [Auditing - 提供`Log backend`/`Webhook backend`监控事件](https://kubernetes.io/docs/tasks/debug-application-cluster/audit/)
-    * [调试Services及网络问题](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-service/)
-    * [Pod运行失败及定制错误信息](https://kubernetes.io/docs/tasks/debug-application-cluster/determine-reason-pod-failure/)
-    * [`Horizontal Pod Autoscaler` 扩容/缩容 算法](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/autoscaling/horizontal-pod-autoscaler.md#autoscaling-algorithm)
+#### 规范及API
 
+* [Community Contributors(各种规范文档)](https://github.com/kubernetes/community/tree/master/contributors)
+* [API Conventions -【重要】](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md) - K8S API规范，适用于调用K8S接口的开发人员
+  * `HTTP Status codes`
+  * `Response Status Kind`
+* [REST API documentation](https://kubernetes.io/docs/reference/)
+  * [API规范](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.17/)
 
+* [JSONPath Support -【重要】](https://kubernetes.io/docs/reference/kubectl/jsonpath/) - Use the `JSONPath template` in `kubectl CLI`
 
+#### 使用`patch`更新K8S对象
 
+K8S提供了三种类型去局部更新对象：
 
+* `Strategic merge patch`
+* `JSON Merge Patch`
+* `JSON Patch`
 
+> API请求时三种类型的`Content-Type`配置：[PATCH operations](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#patch-operations)
 
+各个资源对象的属性`patchStrategy`值可从源码中查看，通过 `filename:types.go "type PodSpec struct"` 搜索。含义：搜索所有的
+`types.go`文件中包含`type PodSpec struct`字符窜（有时会搜索不出来，需要多搜索几次），即查看`PodSpec`对象所有属性的`patchStrategy`。
+[源码地址](https://github.com/kubernetes/kubernetes)
+
+下面的例子中，PodSpec的Containers属性patchStrategy为merge，且`patchMergeKey`为`name`：
+
+```
+type PodSpec struct {
+  Containers []Container `json:"containers" patchStrategy:"merge" patchMergeKey:"name" protobuf:"bytes,2,rep,name=containers"`
+}
+```
+
+> 建议使用源码中的`OpenApi spec swagger`规范查看，非常方便 - [链接](https://raw.githubusercontent.com/kubernetes/kubernetes/master/api/openapi-spec/swagger.json)
+
+```
+"io.k8s.api.core.v1.PodSpec": {
+    ...
+     "containers": {
+      "description": "List of containers belonging to the pod. ...
+      },
+      "x-kubernetes-patch-merge-key": "name",
+      "x-kubernetes-patch-strategy": "merge"
+     },
+```
+
+> 详情请参考下面的官方文档
+
+* [Update API Objects in Place Using kubectl patch - 官方文档](https://kubernetes.io/docs/tasks/run-application/update-api-object-kubectl-patch/)
+  * [JSON Patch规范](https://tools.ietf.org/html/rfc6902)
+  * [Merge Patch规范](https://tools.ietf.org/html/rfc7386)
+  * [JSON Patch and JSON Merge Patch](http://erosb.github.io/post/json-patch-vs-merge-patch/) - 简单对比
+
+* [`Strategic Merge Patch`详解 -【重要】](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-api-machinery/strategic-merge-patch.md)
 
 
 

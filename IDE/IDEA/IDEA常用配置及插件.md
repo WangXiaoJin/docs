@@ -20,6 +20,12 @@
 
 ## 常用配置
 
+* 配置Webpack的`alias`功能
+
+    `File | Settings | Languages & Frameworks | JavaScript | Webpack | webpack configuration file` ==> 项目中`alias.config.js`
+
+    > 配置完成后IDEA使用这些别名后会有自动提示功能
+
 * 当SCM子文件有改变时，上级所有文件夹都标记
 
     `File | Settings | Version Control | 勾选Show directories with changed descendants`
@@ -39,10 +45,6 @@
 * Terminal使用Linux环境
 
     `File | Settings | Tools | Terminal | Shell path | "C:\Program Files\Git\bin\sh.exe" -login -i`
-
-* SCM忽略IDEA自动生成的*.iml文件
-
-    `File | Settings | Version Control | Ignored Files | 点击新增按钮 | 选择Ignore all files matching | 输入 *.iml`
 
 * IDEA转换*.properties中文
 
@@ -111,7 +113,7 @@
 
 ## 常见问题
 
-#### IDEA 2018 字体模糊，尤其在使用Markdown时。解决方案是删除 IDEA 安装目录下的`jre64`：[参考地址](https://blog.csdn.net/zaemyn2015/article/details/84584458)
+### IDEA 2018 字体模糊，尤其在使用Markdown时。解决方案是删除 IDEA 安装目录下的`jre64`：[参考地址](https://blog.csdn.net/zaemyn2015/article/details/84584458)
 
 注：下载`Markdown Navigator`也可解决此字体模糊的问题，需要禁用默认的`Markdown support`。但`Markdown Navigator` 的
 `Preview Browser` 默认为 `Default - swing`，在预览外网的图片时非常卡。建议切换到`JavaFX WebView`模式，
@@ -125,6 +127,15 @@
 * `Page Zoom` - 填 `1.2` （用于放大预览页面的字体）
 
 > Markdown 超出当前可见视图则自动换行显示：`File | Settings | Languages & Frameworks | Markdown | Editor` => `Soft Wrap: Enabled`
+
+### 执行Maven命令时出现中文乱码
+
+`File | Settings | Build, Execution, Deployment | Build Tools | Maven | Runner | VMOptions` => `-Dfile.encoding=GB2312`
+
+### IDEA在提交svn代码或查看svn历史版本提交记录时，非常卡
+
+打开`Version Control`面板，切换到`Local Changes` Tab想，看下你的 `Unversioned Files`项是否有太多的文件。如果这些文件你不想提交到
+服务器，则`ignore`这些文件。
 
 ## Plugins
 
@@ -141,4 +152,5 @@
 * vue.js
 * Eclipse Code Formatter 
 * Nginx Support - 支持Nginx配置自动补全、开启/关闭Nginx服务
+* Codota - Get AI Code Completions for your IDE - [文档](https://www.codota.com/user-guide/introduction)
 
