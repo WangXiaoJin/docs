@@ -99,6 +99,18 @@
             * `date`: `date("yyyy-MM-dd")`
             * `time`: `time()`
 
+* Code Completion
+
+    `File | Settings | Editor | General | Code Completion`
+    - 勾选 `Show the documentation popup in 1000 ms`
+    - Machine learning-Assisted Completion
+        - 勾选 `Rank completion suggestions based on Machine Learning`
+            - 勾选 `Java`
+            - 勾选 `kotlin`
+        - 勾选 `Show position changes in completion popup`
+    - Parameter Info
+        - 勾选 `Show parameter name hints on completion`
+        - 勾选 `Show full method signatures`
 
 ## Inspections
 

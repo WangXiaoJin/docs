@@ -677,6 +677,9 @@
 * [Annotations](https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/)
 * [Federation - 【重要】](https://kubernetes.io/docs/concepts/cluster-administration/federation/)
    ：多集群管理
+* [K8S的 QoS策略](https://www.dazhuanlan.com/2019/12/05/5de8b4375fc6a/)
+* [K8s GC设计原则](https://kb.cnblogs.com/page/651942/)
+
 
 #### 文档
 

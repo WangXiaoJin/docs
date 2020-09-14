@@ -65,6 +65,21 @@ the users to directly edit a class file as other editors.
 * [javassist使用全解析](https://www.cnblogs.com/rickiyang/p/11336268.html)
 
 
+### HTTP Request
+
+#### Spring RestTemplate
+#### Apache HttpClient
+* [How to send HTTP request GET/POST in Java](https://mkyong.com/java/how-to-send-http-request-getpost-in-java/)
+#### OkHttp
+* [How to send HTTP request GET/POST in Java](https://mkyong.com/java/how-to-send-http-request-getpost-in-java/)
+#### Java11 HttpClient
+* [How to send HTTP request GET/POST in Java](https://mkyong.com/java/how-to-send-http-request-getpost-in-java/)
+#### JDK HttpUrlConnection
+* [How to use java.net.URLConnection to fire and handle HTTP requests?](https://stackoverflow.com/questions/2793150/how-to-use-java-net-urlconnection-to-fire-and-handle-http-requests/2793153#2793153)
+* [Do a Simple HTTP Request in Java](https://www.baeldung.com/java-http-request)
+* [How to send HTTP request GET/POST in Java](https://mkyong.com/java/how-to-send-http-request-getpost-in-java/)
+
+
 ### JSON
 
 * [JsonUnit](https://github.com/lukas-krecan/JsonUnit) - Compare JSON in your Unit Tests

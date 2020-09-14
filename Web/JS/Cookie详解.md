@@ -1,11 +1,12 @@
 ## Cookie详解
 
-#####　参考文章：<http://curl.haxx.se/rfc/cookie_spec.html>, <https://www.nczonline.net/blog/2009/05/05/http-cookies-explained/>
 ---
+
+参考文章：<http://curl.haxx.se/rfc/cookie_spec.html>, <https://www.nczonline.net/blog/2009/05/05/http-cookies-explained/>
 
 　　本文类容摘自上面两篇文章。上两篇文章写得非常详细，有兴趣的可以看看原文。
 
-###1. Cookie语法
+### 1. Cookie语法
 
 ```
 Set-Cookie: NAME=VALUE[; expires=DATE][; domain=DOMAIN][; path=PATH][; secure]
@@ -45,7 +46,7 @@ Set-Cookie: NAME=VALUE[; expires=DATE][; domain=DOMAIN][; path=PATH][; secure]
    
    默认情况下，在HTTPS中的Cookie会自动被设置为secure
 
-###2. HTTP Request Header中Cookie格式
+### 2. HTTP Request Header中Cookie格式
 
 ```
 Cookie: value1; name1=value1; name2=value2 ...
@@ -53,7 +54,7 @@ Cookie: value1; name1=value1; name2=value2 ...
 
 当客户端发送请求给服务器时，会搜索所有匹配的Cookie，包含进HTTP Request Header中，一起发送到服务器。多个值由分号和空格隔开。
 
-###3. Cookie的维护和生命周期
+### 3. Cookie的维护和生命周期
 
 Cookie用四个属性来标识它的唯一性：`name`、`domain`、`path`、`secure`。为了以后修改某个Cookie的值，你只需要`Set-Cookie`一个Cookie值，必须确保这个Cookie的`name`、`domain`、`path`是一样的，不然你会发现以前的Cookie值没有改变，反而又新增了一个Cookie。
 
@@ -99,7 +100,7 @@ Set-Cookie: name=Matt
 * 每个server或domain最多20个cookie。（最多20个cookie是早期的浏览器限制，IE7、IE8最多50个，火狐最多50个，Opera最多30个，Safari和Chrome没有限制。**此数据为2009统计，可能现在有点不准。我也懒得去验证正确性，因为如果你使用的cookie太多话，那你的设计就出了问题。cookie数越多会越影响性能。**）
 
 
-###4. JavaScript中使用Cookie
+### 4. JavaScript中使用Cookie
 
 你可以通过`document.cookie`来创建、修改、删除Cookie（当然最方便的是使用JS框架来操作）。此功能和`Set-Cookie`一样，操作Cookie的语法格式也是一样：
 
@@ -113,15 +114,31 @@ document.cookie="name=Nicholas; domain=nczonline.net; path=/";
 var c = document.cookie;
 ```
 
-###5. HTTP-Only cookies
+### 5. HTTP-Only cookies
 微软在Internet explorer 6 SP1引入了一个新的特性：HTTP-only cookies。就是说这个Cookie不能通过js的`document.cookie`获取。新增的这个特性是为了跨域脚本攻击。谷歌、火狐等浏览器都支持此特性。例：
 
 ```
 Set-Cookie: name=Nicholas; HttpOnly
 ```
 
-###6. Nginx添加Cookie
+### 6. Nginx添加Cookie
 
 ```nginx
 add_header Set-Cookie "name=wang";
 ```
+
+### 7. SameSite cookies
+
+如跨站请求报如下错误（A cookie associated with a cross-site resource at http://xxx.com/ was set without the `SameSite` attribute.
+It has been blocked, as Chrome now only delivers cookies with cross-site requests if they are set with `SameSite=None` and `Secure`.）。
+解决方案：
+* 服务端设置Cookie时增加`SameSite=None; Secure`配置
+* 禁用谷歌浏览器的`SameSite by default cookies` ： <chrome://flags/#same-site-by-default-cookies>
+
+参考链接：
+* [SameSite cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite)
+* [Cookie 的 SameSite 属性](https://www.ruanyifeng.com/blog/2019/09/cookie-samesite.html)
+* [SameSite Cookie，防止 CSRF 攻击 - 紫云飞](https://www.cnblogs.com/ziyunfei/p/5637945.html)
+* [SameSite - 了解篇](https://juejin.im/post/6844904090355367949)
+
+> `SameSite`用于配置`跨站`而不是`跨域`
