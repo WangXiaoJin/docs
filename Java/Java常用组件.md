@@ -27,44 +27,6 @@ the most comprehensive tool in this field!
 
 * [Immutables官网](http://immutables.github.io/)
 
-### ASM
-
-ASM用于修改class的二进制数据
-
-* [ASM官网](https://asm.ow2.io/)
-* [ASM Core Api 详解](https://www.jianshu.com/p/abd1b1b8d3f3)
-* [ASM 库的介绍和使用](https://www.jianshu.com/p/905be2a9a700)
-
-### Byte Buddy
-Byte Buddy is a code generation and manipulation library for creating and modifying Java classes during the runtime of
-a Java application and without the help of a compiler. Other than the code generation utilities that [ship with the Java Class Library](https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Proxy.html),
-Byte Buddy allows the creation of arbitrary classes and is not limited to implementing interfaces
-for the creation of runtime proxies. Furthermore, Byte Buddy offers a convenient API for changing classes either manually,
-using a Java agent or during a build.
-
-* [Github地址](https://github.com/raphw/byte-buddy)
-
-### Javassist
-
-Javassist (`Java Programming Assistant`) makes Java bytecode manipulation simple. It is a class library for editing
-`bytecodes` in Java; it enables Java programs to define a new class at runtime and to modify a class file when the JVM
-loads it. Unlike other similar bytecode editors, Javassist provides two levels of API: `source level` and `bytecode
-level`. If the users use the source-level API, they can edit a class file without knowledge of the specifications of the
-Java bytecode. The whole API is designed with only the vocabulary of the Java language. You can even specify inserted
-bytecode in the form of source text; Javassist compiles it on the fly. On the other hand, the bytecode-level API allows
-the users to directly edit a class file as other editors.
-
-* [Javassist官网](https://www.javassist.org/)
-* 使用手册
-  * [Javassist 使用指南（一）](https://www.jianshu.com/p/43424242846b)
-  * [Javassist 使用指南（二）](https://www.jianshu.com/p/b9b3ff0e1bf8)
-  * [Javassist 使用指南（三）](https://www.jianshu.com/p/7803ffcc81c8)
-  * [tutorial（一）- 英文版](https://www.javassist.org/tutorial/tutorial.html)
-  * [tutorial（二）- 英文版](https://www.javassist.org/tutorial/tutorial2.html)
-  * [tutorial（三）- 英文版](https://www.javassist.org/tutorial/tutorial3.html)
-* [javassist使用全解析](https://www.cnblogs.com/rickiyang/p/11336268.html)
-
-
 ### HTTP Request
 
 #### Spring RestTemplate

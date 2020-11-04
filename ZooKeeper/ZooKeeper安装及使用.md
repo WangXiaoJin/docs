@@ -44,9 +44,9 @@
 	server.3=192.168.1.103:2888:3888
 	
 	# The number of snapshots to retain in dataDir
-	#autopurge.snapRetainCount=3
+	autopurge.snapRetainCount=8
 	# Purge task interval in hours. Set to "0" to disable auto purge feature
-	#autopurge.purgeInterval=1
+	autopurge.purgeInterval=6
 	```
 
 	> 注： 集群配置项中第一个port为zookeeper各服务间日常通信使用，第二个port用于选举leader时使用。  
