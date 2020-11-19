@@ -390,6 +390,10 @@
 
     * 设置`sonar.ws.timeout`：[文档](https://docs.sonarqube.org/latest/analysis/analysis-parameters/)
 
+    * `Null pointers should not be dereferenced`(`java:S2259`) 误报解决方案 - [Overriding a java rule with a custom version](https://community.sonarsource.com/t/overriding-a-java-rule-with-a-custom-version/623)
+
+
+
 #### SonarQube Scanners
 
 * SonarQube Scanner`命令行模式`
