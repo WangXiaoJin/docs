@@ -19,3 +19,6 @@
 * [Web technology (MDN)](https://developer.mozilla.org/en-US/docs/Web) -【重要】Web 参考文献
 
 * [Is JavaScript Single-Threaded?](https://www.red-gate.com/simple-talk/dotnet/asp-net/javascript-single-threaded/) - 讲解`Event loop`及JS单线程执行原理
+
+* [URI Template](https://tools.ietf.org/html/rfc6570) - A URI Template is a compact sequence of characters for describing
+a range of Uniform Resource Identifiers through variable expansion.

@@ -42,9 +42,16 @@ the most comprehensive tool in this field!
 * [How to send HTTP request GET/POST in Java](https://mkyong.com/java/how-to-send-http-request-getpost-in-java/)
 
 
-### JSON
+### 对象转换
 
+#### JSON
 * [JsonUnit](https://github.com/lukas-krecan/JsonUnit) - Compare JSON in your Unit Tests
+
+#### ModelMapper
+ModelMapper is an intelligent object mapping library that automatically maps objects to each other. It uses a convention
+based approach while providing a simple refactoring safe API for handling specific use cases.
+> [ModelMapper官网](http://modelmapper.org/getting-started/)
+
 
 
 ### XML
