@@ -311,6 +311,11 @@ configured to be at least the number of worker threads in the thread pool plus t
 connections if your application is also making frequent calls to the scheduler API. If you are using JobStoreCMT, 
 the "non managed" datasource should have a max connection size of at least four.
 
+* Quartz Reschedule CronJob导致立即执行原理
+
+    ![QuartzRescheduleCronJob导致立即执行原理](../imgs/QuartzRescheduleCronJob导致立即执行原理.png)
+
+
 
 
 

@@ -22,3 +22,9 @@
 * [Where is my safepoint?](https://psy-lob-saw.blogspot.com/2014/03/where-is-my-safepoint.html)
 * [Wait For It: Counted/Uncounted loops, Safepoints and OSR Compilation](http://psy-lob-saw.blogspot.com/2016/02/wait-for-it-counteduncounted-loops.html)
 * [Why (Most) Sampling Java Profilers Are Fucking Terrible](http://psy-lob-saw.blogspot.com/2016/02/why-most-sampling-java-profilers-are.html)
+
+### Metaspace
+* [深入理解堆外内存 Metaspace](https://www.javadoop.com/post/metaspace)
+* [What is Metaspace?](https://stuefe.de/posts/metaspace/what-is-metaspace/)
+
+

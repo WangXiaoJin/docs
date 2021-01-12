@@ -23,6 +23,15 @@ either block tags, such as `@todo`, or inline tags, such as `{@underline}`.
 * [Javadoc Technology](https://docs.oracle.com/javase/7/docs/technotes/guides/javadoc/index.html)
 * [javadoc - The Java API Documentation Generator](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html) - 详解
 
+### Java 获取 `Content-Type` / `MimeType`
+
+* `java.net.URLConnection.guessContentTypeFromName(fileName)`
+* `java.net.URLConnection.guessContentTypeFromStream(InputStream)`
+* `java.nio.file.Files.probeContentType(Path)`
+* `org.springframework.http.MediaTypeFactory.getMediaType(org.springframework.core.io.Resource)`
+* `org.springframework.http.MediaTypeFactory.getMediaType(java.lang.String)`
+
+
 ## 文档
 
 * [官方文档](https://docs.oracle.com/en/java/javase/) - 可选择你需要的JDK版本
