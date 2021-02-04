@@ -1,8 +1,5 @@
 ## 安装Nginx、Tengine
 
-##### `【原创】` :heart_eyes:
----
-
 ### Linux安装Nginx
 Linux版本：CentOS release 6.7 (Final)  
 Nginx版本：nginx-1.8.0
