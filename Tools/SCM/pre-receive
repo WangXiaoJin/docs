@@ -1,0 +1,57 @@
+#!/bin/bash
+# git pre-receive hook例子，把修改数据发送至web服务，通过web服务判断有没有权限提交。
+
+set -euo pipefail
+
+if [[ "$GL_USERNAME" =~ ^root|admin$ ]]; then
+  # root或admin用户任何情况下都有权限
+  exit 0
+fi
+
+# hash-object为0的对象，代表git库中无此对象
+zero=$(git hash-object --stdin </dev/null | tr '[0-9a-f]' '0')
+
+post_data="{\"user\": \"${GL_USERNAME}\", \"project\": \"${GL_PROJECT_PATH}\", \"changes\": []}"
+
+while read old_obj new_obj ref; do
+	if [ "$new_obj" = "$zero" ]; then
+    echo "GL-HOOK-ERR: 您没有权限删除分支：$ref" >&2
+		exit 1
+	else
+		if [ "$old_obj" = "$zero" ]; then
+			# 新建分支
+			range="$new_obj"
+		else
+			# 更新已有分支
+			range="$old_obj..$new_obj"
+		fi
+		# 提取变更文件
+    files=$(git diff --name-only "$range")
+    # 需要把jq命令拷贝至 /var/opt/gitlab/gitlab-shell目录下，或者直接在镜像中安装jq指令
+		post_data=$(echo $post_data | /var/opt/gitlab/gitlab-shell/jq --compact-output --arg ref "$ref" --arg files "$files" '.changes += [{branch: $ref, files: ($files / "\n")}]')
+	fi
+done
+
+# 通过Web服务验证权限，发送数据格式：
+# {"user": "${GL_USERNAME}", "project": "${GL_PROJECT_PATH}", "changes": [{"branch": "master", "files": ["xxx", "yyy"]}, {"branch": "branch1", "files": ["zzz", "aaa"]}]}
+# Web服务可响应字符窜数据，此数据会显示给用户
+response=$(curl -X POST -Ss -w "%{http_code}" "http://xxx.com/debug" -H 'Content-Type: application/json' -d"$post_data"  2>&1)
+# 提取最后三位的状态码
+http_code=${response: -3}
+# 截取最后三位的http状态码
+response=${response%$http_code}
+
+if ((http_code >= 200 && http_code < 300)); then
+  echo "您有权限推送此次提交"
+  if [ -n "$response" ]; then
+    echo "$response"
+  fi
+  exit 0
+else
+  if [ -n "$response" ]; then
+    echo "GL-HOOK-ERR: $response" >&2
+  else
+    echo "GL-HOOK-ERR: 您没有权限推送此次提交。" >&2
+  fi
+  exit 1
+fi
