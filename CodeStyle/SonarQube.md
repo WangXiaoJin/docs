@@ -235,7 +235,16 @@
         `Administration -> Configuration -> General Settings -> General -> Server base URL`
         
         * 配置当前服务的域名地址，如：`http://192.168.1.100:9000`
-    
+
+    * 忽略POJO类的重复代码块分析
+
+        `Administration -> Configuration -> General Settings -> Analysis Scope -> Duplications` 增加下面配置：
+        * `**/dto/*.java`
+        * `**/model/*.java`
+        * `**/query/*.java`
+        * `**/entity/*.java`
+        * `**/vo/*.java`
+
 4. Web API
 
     * 直接访问地址：<http://localhost:9000/web_api>

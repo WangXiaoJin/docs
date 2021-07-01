@@ -31,6 +31,11 @@ either block tags, such as `@todo`, or inline tags, such as `{@underline}`.
 * `org.springframework.http.MediaTypeFactory.getMediaType(org.springframework.core.io.Resource)`
 * `org.springframework.http.MediaTypeFactory.getMediaType(java.lang.String)`
 
+> [Getting a File’s Mime Type in Java](https://www.baeldung.com/java-file-mime-type)
+
+### Java编译后获取方法的参数名
+
+* [为何Spring MVC可获取到方法参数名，而MyBatis却不行？](https://cloud.tencent.com/developer/article/1497751)
 
 ## 文档
 
@@ -42,3 +47,6 @@ either block tags, such as `@todo`, or inline tags, such as `{@underline}`.
 
 * [主流浏览器附件下载中文乱码](http://www.zhushiyao.com/?p=5017)
 
+* SecureRandom
+    * [The Right Way to Use SecureRandom](https://tersesystems.com/blog/2015/12/17/the-right-way-to-use-securerandom/)
+    * [使用 SecureRandom 产生随机数采坑记录](https://cloud.tencent.com/developer/article/1558293)

@@ -706,6 +706,7 @@ Useful for cluster administrators and people whose Kubernetes cluster is unhappy
 * [Pod运行失败及定制错误信息](https://kubernetes.io/docs/tasks/debug-application-cluster/determine-reason-pod-failure/)
 * [`Horizontal Pod Autoscaler` 扩容/缩容 算法](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/autoscaling/horizontal-pod-autoscaler.md#autoscaling-algorithm)
 
+
 #### 规范及API
 
 * [Community Contributors(各种规范文档)](https://github.com/kubernetes/community/tree/master/contributors)
