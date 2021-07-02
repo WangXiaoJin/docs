@@ -60,6 +60,12 @@
 
 * [GitLab 502问题的解决](https://www.cnblogs.com/linkenpark/p/8405327.html)
 
+* 解决Github被墙后push报443错误
+    ```shell script
+    # 配置代理到本地的SSR
+    git config http.proxy 127.0.0.1:1080
+    ```
+
 ### 参考文档
 
 * [官方文档](https://docs.gitlab.com/)
