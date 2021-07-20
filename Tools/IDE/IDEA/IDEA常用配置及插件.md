@@ -151,18 +151,18 @@
 
 ## Plugins
 
-* Auto filling Java call arguments - 自动填充调用的方法、构造函数参数
-* BashSupport - Bash语法及高亮显
-* CheckStyle-IDEA - CheckStyle
-* Alibaba Java Coding Guidelines - 阿里代码规范
-* Kubernetes and OpenShift Resource Support - 编辑K8S、OpenShift资源文件
-* Lombok Plugin 
-* Maven Helper 
-* SonarLint 
-* String Manipulation - 字符窜各种大小写/驼峰规则转换
-* Swagger Plugin 
-* vue.js
-* Eclipse Code Formatter 
-* Nginx Support - 支持Nginx配置自动补全、开启/关闭Nginx服务
-* Codota - Get AI Code Completions for your IDE - [文档](https://www.codota.com/user-guide/introduction)
+* `Auto filling Java call arguments` - 自动填充调用的方法、构造函数参数
+* `BashSupport` - Bash语法及高亮显
+* `CheckStyle-IDEA` - CheckStyle
+* `Alibaba Java Coding Guidelines` - 阿里代码规范
+* `Kubernetes and OpenShift Resource Support` - 编辑K8S、OpenShift资源文件
+* `Lombok Plugin` - 新版IDEA默认已安装
+* `Maven Helper`
+* `SonarLint`
+* `String Manipulation` - 字符窜各种大小写/驼峰规则转换
+* `Swagger Plugin`
+* `vue.js`
+* `Eclipse Code Formatter` 
+* `Nginx Support` - 支持Nginx配置自动补全、开启/关闭Nginx服务
+* `Codota` - Get AI Code Completions for your IDE - [文档](https://www.codota.com/user-guide/introduction)
 
