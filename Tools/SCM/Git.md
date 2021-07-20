@@ -140,6 +140,10 @@
         * `feature$` matches only branch names that end with ‘feature’.
     * [Locked files](https://docs.gitlab.com/ee/user/project/file_lock.html)
     * [Repository mirroring](https://docs.gitlab.com/ee/user/project/repository/repository_mirroring.html)
-
+    * [Git Push Options](https://docs.gitlab.com/ee/user/project/push_options.html) - 当前支持的客户端Push Option为：
+        * Skipping CI jobs
+        * Merge requests
+    * [Review and manage merge requests](https://docs.gitlab.com/ee/user/project/merge_requests/reviews)
+        * Checkout merge requests locally through the head ref
 
 

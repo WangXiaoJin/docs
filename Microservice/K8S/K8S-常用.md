@@ -49,7 +49,8 @@ that Kubernetes can run.
     * [kubewatch](https://github.com/bitnami-labs/kubewatch)
     * [Eventrouter](https://github.com/heptiolabs/eventrouter)
     * [kube-eventer](https://github.com/AliyunContainerService/kube-eventer)
-    * [kubernetes-event-exporter](https://github.com/opsgenie/kubernetes-event-exporter)
+    * [kubernetes-event-exporter](https://github.com/opsgenie/kubernetes-event-exporter) - 推荐
+        * [Exporting Kubernetes Event Objects for Better Observability](https://static.sched.com/hosted_files/kccncna19/d0/Exporting%20K8s%20Events.pdf) - 剖析K8S事件
 
 
 ## 问题

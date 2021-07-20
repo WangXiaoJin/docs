@@ -51,4 +51,6 @@ spring:
 ```
 > [Escaping a dot in a Map key in Yaml in Spring Boot - 解决YAML Key包含特殊字符问题](https://stackoverflow.com/questions/34070987/escaping-a-dot-in-a-map-key-in-yaml-in-spring-boot/34082891#34082891)
 
+### SpringBoot-2.4 `spring.config.import`
 
+> [Config file processing in SpringBoot2.4](https://spring.io/blog/2020/08/14/config-file-processing-in-spring-boot-2-4)
