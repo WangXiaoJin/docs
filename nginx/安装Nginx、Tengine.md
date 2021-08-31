@@ -286,6 +286,7 @@ Nginx版本：nginx-1.8.0
 ## Linux安装Tengine
 
 Linux版本：CentOS release 6.7 (Final)  
+
 Tengine版本：tengine-1.5.2
 
 1. 源码安装  
