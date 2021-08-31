@@ -1,6 +1,7 @@
-## 安装Nginx、Tengine
+# 安装Nginx、Tengine
 
-### Linux安装Nginx
+## Linux安装Nginx
+
 Linux版本：CentOS release 6.7 (Final)  
 Nginx版本：nginx-1.8.0
 
@@ -280,9 +281,10 @@ Nginx版本：nginx-1.8.0
    
    * `--with-debug` 启用debug日志
    
-   ##### configure参数参考自<http://blog.csdn.net/staricqxyz/article/details/17015401>   
+> configure参数参考自<http://blog.csdn.net/staricqxyz/article/details/17015401>   
 
-### Linux安装Tengine
+## Linux安装Tengine
+
 Linux版本：CentOS release 6.7 (Final)  
 Tengine版本：tengine-1.5.2
 
@@ -332,4 +334,4 @@ Tengine版本：tengine-1.5.2
 			}
 			```
 			> 注：使用详情见官网:<http://tengine.taobao.org/document_cn/dso_cn.html>
-	     
+		

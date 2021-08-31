@@ -37,6 +37,11 @@ either block tags, such as `@todo`, or inline tags, such as `{@underline}`.
 
 * [为何Spring MVC可获取到方法参数名，而MyBatis却不行？](https://cloud.tencent.com/developer/article/1497751)
 
+### Unicode Normalize - `NFC`/`NFD`/`NFKC`/`NFKD`
+
+* [Difference Between NFD, NFC, NFKD, and NFKC Explained with Python Code](https://towardsdatascience.com/difference-between-nfd-nfc-nfkd-and-nfkc-explained-with-python-code-e2631f96ae6c)
+
+
 ## 文档
 
 * [官方文档](https://docs.oracle.com/en/java/javase/) - 可选择你需要的JDK版本

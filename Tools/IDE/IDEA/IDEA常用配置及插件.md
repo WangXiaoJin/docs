@@ -165,4 +165,5 @@
 * `Eclipse Code Formatter` 
 * `Nginx Support` - 支持Nginx配置自动补全、开启/关闭Nginx服务
 * `Codota` - Get AI Code Completions for your IDE - [文档](https://www.codota.com/user-guide/introduction)
+* `JProfiler`
 
