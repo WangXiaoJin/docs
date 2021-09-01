@@ -33,4 +33,8 @@ into the build process and raising compilation errors whenever constraint annota
 
 * [官网](https://hibernate.org/validator/)
 * [Hibernate Validator 6.1 官方文档](https://docs.jboss.org/hibernate/validator/6.1/reference/en-US/html_single/)
-
+* [占位符配置](https://docs.jboss.org/hibernate/validator/6.1/reference/en-US/html_single/#section-interpolation-with-message-expressions)
+  * 属性: `{min}`
+  * 当前验证值: `${validatedValue}`
+  * 表达式: `${value > 1 ? 's' : ''}`
+  * 自定义: `${formatter.format('%1$.2f', validatedValue)}`

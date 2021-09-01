@@ -22,3 +22,5 @@
 
 * [URI Template](https://tools.ietf.org/html/rfc6570) - A URI Template is a compact sequence of characters for describing
 a range of Uniform Resource Identifiers through variable expansion.
+
+* [HTML规范](https://whatwg-cn.github.io/html/) - 官网翻译版
