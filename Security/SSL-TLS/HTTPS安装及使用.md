@@ -146,6 +146,13 @@ keytool -export -rfc -alias easy -keystore d:\mykeystore.keystore -file d:\easy.
 * [证书及证书管理(keytool工具实例)](https://www.cnblogs.com/benwu/articles/4891758.html)
 * [Java Keytool工具简介](https://blog.csdn.net/liumiaocn/article/details/61921014)
 
+### testssl - Testing TLS/SSL encryption
+
+testssl.sh is a free command line tool which checks a server's service on any port for the support of TLS/SSL ciphers, 
+protocols as well as recent cryptographic flaws and more.
+
+> [testssl - 官网](https://testssl.sh/)
+
 ### 参考文档
 
 * [Jetty配置SSL/TLS](http://www.eclipse.org/jetty/documentation/current/configuring-ssl.html)
