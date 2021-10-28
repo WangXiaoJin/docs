@@ -60,7 +60,13 @@ shell> systemctl start rabbitmq-server
 # 修改配置
 shell> cat << EOF > /etc/rabbitmq/rabbitmq.conf
 cluster_name = mq-test-cluster
+
 cluster_partition_handling = pause_minority
+
+## If a message delivered to a consumer has not been acknowledge before this timer
+## triggers the channel will be force closed by the broker. This ensure that
+## faultly consumers that never ack will not hold on to messages indefinitely.
+consumer_timeout = 900000
 EOF
 # 从 server1 上拷贝 .erlang.cookie，确保三台机器的 .erlang.cookie 值相同
 shell> scp root@server1:/var/lib/rabbitmq/.erlang.cookie /var/lib/rabbitmq/.erlang.cookie
@@ -733,6 +739,30 @@ at least a majority of RabbitMQ nodes hosting the quorum queue are not permanent
     * Channels Lifecycle and Topology Recovery
     * Unhandled Exceptions
   * [Metrics and Monitoring](https://www.rabbitmq.com/api-guide.html#metrics)
+
+* [Spring AMQP](https://docs.spring.io/spring-amqp/docs/current/reference/html/)
+  * [Annotation-driven Listener Endpoints](https://docs.spring.io/spring-amqp/docs/current/reference/html/#async-annotation-driven) -【重要】
+  * [Exception Handling](https://docs.spring.io/spring-amqp/docs/current/reference/html/#exception-handling) -【重要】
+  * [Recover/Requeue/Reject/Retry](https://docs.spring.io/spring-amqp/docs/current/reference/html/#resilience-recovering-from-errors-and-broker-failures) -【重要】
+  * [Multiple Broker (or Cluster) Support](https://docs.spring.io/spring-amqp/docs/current/reference/html/#multi-rabbit) -【重要】
+  * [Naming Connections](https://docs.spring.io/spring-amqp/docs/current/reference/html/#naming-connections)
+  * [Blocked Connections and Resource Constraints](https://docs.spring.io/spring-amqp/docs/current/reference/html/#blocked-connections-and-resource-constraints)
+  * [Using a Separate Connection](https://docs.spring.io/spring-amqp/docs/current/reference/html/#separate-connection)
+  * [Connection and Channel Listeners](https://docs.spring.io/spring-amqp/docs/current/reference/html/#connection-channel-listeners)
+  * [Logging Channel Close Events](https://docs.spring.io/spring-amqp/docs/current/reference/html/#channel-close-logging)
+  * [Runtime Cache Properties](https://docs.spring.io/spring-amqp/docs/current/reference/html/#runtime-cache-properties)
+  * [Adding Custom Client Connection Properties](https://docs.spring.io/spring-amqp/docs/current/reference/html/#custom-client-props)
+  * [Publishing is Asynchronous — How to Detect Successes and Failures](https://docs.spring.io/spring-amqp/docs/current/reference/html/#publishing-is-async)
+  * [Correlated Publisher Confirms and Returns](https://docs.spring.io/spring-amqp/docs/current/reference/html/#template-confirms)
+  * [Strict Message Ordering in a Multi-Threaded Environment](https://docs.spring.io/spring-amqp/docs/current/reference/html/#multi-strict)
+  * [Validated User Id](https://docs.spring.io/spring-amqp/docs/current/reference/html/#template-user-id)
+  * [Message Builder API](https://docs.spring.io/spring-amqp/docs/current/reference/html/#message-builder)
+  * [Consumer Events](https://docs.spring.io/spring-amqp/docs/current/reference/html/#consumer-events)
+  * [Detecting Idle Asynchronous Consumers](https://docs.spring.io/spring-amqp/docs/current/reference/html/#idle-containers)
+  * [Event Consumption](https://docs.spring.io/spring-amqp/docs/current/reference/html/#event-consumption)
+  * [Broker Event Listener](https://docs.spring.io/spring-amqp/docs/current/reference/html/#broker-events)
+  * [Logging Subsystem AMQP Appenders](https://docs.spring.io/spring-amqp/docs/current/reference/html/#logging) - 支持日志往AMQP发送
+
 
 * [JMS Client](https://www.rabbitmq.com/jms-client.html)
   * [JMS Client Spec Compliance](https://www.rabbitmq.com/jms-client-compliance.html)
