@@ -66,7 +66,7 @@ cluster_partition_handling = pause_minority
 ## If a message delivered to a consumer has not been acknowledge before this timer
 ## triggers the channel will be force closed by the broker. This ensure that
 ## faultly consumers that never ack will not hold on to messages indefinitely.
-consumer_timeout = 900000
+consumer_timeout = 1800000
 EOF
 # 从 server1 上拷贝 .erlang.cookie，确保三台机器的 .erlang.cookie 值相同
 shell> scp root@server1:/var/lib/rabbitmq/.erlang.cookie /var/lib/rabbitmq/.erlang.cookie
