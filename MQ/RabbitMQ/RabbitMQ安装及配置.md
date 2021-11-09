@@ -762,7 +762,9 @@ at least a majority of RabbitMQ nodes hosting the quorum queue are not permanent
   * [Event Consumption](https://docs.spring.io/spring-amqp/docs/current/reference/html/#event-consumption)
   * [Broker Event Listener](https://docs.spring.io/spring-amqp/docs/current/reference/html/#broker-events)
   * [Logging Subsystem AMQP Appenders](https://docs.spring.io/spring-amqp/docs/current/reference/html/#logging) - 支持日志往AMQP发送
-
+  * Transactions
+    * [Transactions](https://docs.spring.io/spring-amqp/docs/current/reference/html/#transactions)
+    * [Using transactions with RabbitMQ and SQL database in Spring Boot application](http://lifeinide.com/post/2017-12-29-spring-boot-rabbitmq-transactions/)
 
 * [JMS Client](https://www.rabbitmq.com/jms-client.html)
   * [JMS Client Spec Compliance](https://www.rabbitmq.com/jms-client-compliance.html)
