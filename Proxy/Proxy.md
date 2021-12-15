@@ -15,6 +15,140 @@
 
 * [Java Networking and Proxies](https://docs.oracle.com/javase/8/docs/technotes/guides/net/proxies.html)
 
+示例：
+```java
+public class Test {
+
+    public static final String PROXY_DEV = "dev";
+    public static final String PROXY_TEST = "test";
+    public static final String PROXY_PRE = "pre";
+    public static final String PROXY_PROD = "prod";
+
+    public static void main(String[] args) {
+
+        // 创建 OkHttpClient.Builder 对象
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+            .connectTimeout(20, TimeUnit.SECONDS);
+
+        // 设置代理对象，当前应用部署在哪个环境就用对应环境的 代理IP
+        // 端口号表示代理路由至哪台 Proxy Server
+        Map<String, String> proxyMap = new HashMap<>();
+        proxyMap.put(PROXY_DEV, "proxy.host:2001");
+        proxyMap.put(PROXY_TEST, "proxy.host:2002");
+        proxyMap.put(PROXY_PRE, "proxy.host:2003");
+        proxyMap.put(PROXY_PROD, "proxy.host:2004");
+
+        // 创建 OkHttpClientProxyCache 对象
+        OkHttpClientProxyCache clientProxyCache = new OkHttpClientProxyCache(builder, proxyMap, Type.SOCKS, "username",
+            "password");
+        // 代理至 PRE 环境
+        OkHttpClient client = clientProxyCache.getClient(PROXY_PRE);
+
+        // 发送请求
+        Request request = new Builder().url("http://10.75.16.31:8080/actuator").build();
+        try (Response execute = client.newCall(request).execute()) {
+            System.out.println(execute.code());
+            System.out.println(execute.message());
+            if (execute.body() != null) {
+                System.out.println(execute.body().string());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+```
+
+```java
+
+import java.net.Authenticator;
+import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
+import java.net.Proxy;
+import java.net.Proxy.Type;
+import java.util.HashMap;
+import java.util.Map;
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * OkHttpClient 代理对象缓存
+ *
+ * @author WangXiaoJin
+ * @date 2021-12-15 11:36
+ */
+public class OkHttpClientProxyCache {
+
+    private final Map<String, OkHttpClient> clientCache = new HashMap<>();
+
+    public OkHttpClientProxyCache(OkHttpClient.Builder builder, Map<String, String> proxyMap, Proxy.Type type,
+        String proxyUser, String proxyPass) {
+        Assert.notNull(builder, "builder is null");
+        Assert.notNull(proxyMap, "proxyMap is null");
+        proxyMap.forEach((key, addr) -> {
+            builder.proxy(new Proxy(type, parseAddress(addr)));
+            if (StringUtils.isNotBlank(proxyUser) && StringUtils.isNotBlank(proxyPass)) {
+                if (type == Type.SOCKS) {
+                    Authenticator.setDefault(new Authenticator() {
+                        @Override
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(proxyUser, proxyPass.toCharArray());
+                        }
+                    });
+                } else if (type == Type.HTTP) {
+                    builder.proxyAuthenticator((route, response) -> {
+                        if (response.request().header("Proxy-Authorization") != null) {
+                            return null;
+                        }
+                        return response.request().newBuilder()
+                            .header("Proxy-Authorization", Credentials.basic(proxyUser, proxyPass))
+                            .build();
+                    });
+                }
+            }
+            clientCache.put(key, builder.build());
+        });
+    }
+
+    /**
+     * 获取对应的 OkHttpClient 代理
+     */
+    public OkHttpClient getClient(String key) {
+        Assert.notNull(key, "key is null");
+        return clientCache.get(key);
+    }
+
+    /**
+     * 解析 SocketAddress，合法格式：
+     * <ul>
+     *     <li>192.168.2.1:1111</li>
+     *     <li>[2001:db8:85a3:8d3:1319:8a2e:370:7348]:1111</li>
+     * </ul>
+     */
+    private InetSocketAddress parseAddress(String addressString) {
+        Assert.notNull(addressString, "addressString is null");
+        addressString = addressString.trim();
+        int lastColon = addressString.lastIndexOf(":");
+        int lastClosingSquareBracket = addressString.lastIndexOf("]");
+        String host;
+        int port;
+        if (lastClosingSquareBracket == -1) {
+            String[] parts = addressString.split(":");
+            Assert.isTrue(parts.length == 2, "Address {0} is illegal", addressString);
+            host = parts[0];
+            port = Integer.parseInt(parts[1]);
+        } else {
+            Assert.isTrue(lastClosingSquareBracket < lastColon, "Address {0} is illegal", addressString);
+            host = addressString.substring(0, lastColon);
+            port = Integer.parseInt(addressString.substring(lastColon + 1));
+        }
+        return new InetSocketAddress(host, port);
+    }
+}
+```
+
 
 ## Squid
 
