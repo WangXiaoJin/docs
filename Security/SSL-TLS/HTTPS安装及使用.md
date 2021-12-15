@@ -79,6 +79,7 @@ acme.sh 实现了 acme 协议, 可以从 letsencrypt 生成免费的证书。
     * [acme.sh给Nginx安装Let's Encrypt - 重要](https://ruby-china.org/topics/31983)
     * [官方文档](https://github.com/Neilpang/acme.sh/wiki/%E8%AF%B4%E6%98%8E)
     * [Nginx配置HTTPS服务器](https://aotu.io/notes/2016/08/16/nginx-https/index.html)
+    * [使用示例](https://guide.v2fly.org/advanced/tls.html#tls)
 
 ### OpenSSL
 

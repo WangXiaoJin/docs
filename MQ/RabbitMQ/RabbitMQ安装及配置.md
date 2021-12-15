@@ -368,7 +368,7 @@ shell> sudo rabbitmq-diagnostics listeners
   * `Delivery Acknowledgement Timeout` - If a consumer does not ack its delivery for more than the timeout value (`30 minutes by default`), 
   its channel will be closed with a `PRECONDITION_FAILED` channel exception. The error will be logged by the node that the consumer was connected to.
   * `Exclusivity`
-  * `Single Active Consumer`
+  * `Single Active Consumer` - 只启用一个消费者消费消息：`@Argument(name = "x-single-active-consumer", value = "true", type = "java.lang.Boolean")`
   * `Priority`
 
 ### 配置

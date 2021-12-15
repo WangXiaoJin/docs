@@ -1,14 +1,20 @@
 # Java常用组件
 
-### JavaPoet
+## 1. 核心工具库
+
+### Vavr - [链接](https://docs.vavr.io/)
+
+Vavr (formerly called Javaslang) is a functional library for Java 8+ that provides persistent data types and functional control structures.
+
+
+## 2. JavaPoet
 
 `JavaPoet` is a Java API for generating `.java` source files. 是`JavaWriter`的替代产品。
 
 * [JavaPoet官网](https://github.com/square/javapoet)
 
 
-
-### AutoService
+## 3. AutoService
 
 A configuration/metadata generator for `java.util.ServiceLoader-style` service providers.
 
@@ -20,14 +26,14 @@ avoiding typos, providing resistance to errors from refactoring, etc.
 * [AutoService官网](https://github.com/google/auto/tree/master/service)
 * [Google AutoService](https://www.baeldung.com/google-autoservice)
 
-### Immutables
+## 4. Immutables
 
 Java annotation processors to generate simple, safe and consistent value objects. Do not repeat yourself, try Immutables,
 the most comprehensive tool in this field!
 
 * [Immutables官网](http://immutables.github.io/)
 
-### HTTP Request
+## 5. HTTP Request
 
 #### Spring RestTemplate
 #### Apache HttpClient
@@ -42,7 +48,7 @@ the most comprehensive tool in this field!
 * [How to send HTTP request GET/POST in Java](https://mkyong.com/java/how-to-send-http-request-getpost-in-java/)
 
 
-### 对象转换
+## 6. 对象转换
 
 #### JSON
 * [JsonUnit](https://github.com/lukas-krecan/JsonUnit) - Compare JSON in your Unit Tests
@@ -53,12 +59,11 @@ based approach while providing a simple refactoring safe API for handling specif
 > [ModelMapper官网](http://modelmapper.org/getting-started/)
 
 
-
-### XML
+## 7. XML
 
 * [XMLUnit](https://www.xmlunit.org/) - Unit Testing XML for Java and .NET
 
-### DB
+## 8. DB
 
 * [dynamic-datasource-spring-boot-starter](https://github.com/baomidou/dynamic-datasource-spring-boot-starter)
 

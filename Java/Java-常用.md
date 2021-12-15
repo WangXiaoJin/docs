@@ -42,6 +42,16 @@ either block tags, such as `@todo`, or inline tags, such as `{@underline}`.
 * [Difference Between NFD, NFC, NFKD, and NFKC Explained with Python Code](https://towardsdatascience.com/difference-between-nfd-nfc-nfkd-and-nfkc-explained-with-python-code-e2631f96ae6c)
 
 
+### JDK sun 包源码
+
+* [IDEA查看Java的sun包下的源码](https://plentymore.github.io/2019/01/04/IDEA%E6%9F%A5%E7%9C%8BJava%E7%9A%84sun%E5%8C%85%E4%B8%8B%E7%9A%84%E6%BA%90%E7%A0%81/)
+* [idea中查看sun.misc中的源码](https://www.cnblogs.com/gingo/p/14805160.html)
+
+#### Unsafe 类
+
+* [Java魔法类：Unsafe应用解析](https://tech.meituan.com/2019/02/14/talk-about-java-magic-class-unsafe.html) - 美团技术团队
+
+
 ## 文档
 
 * [官方文档](https://docs.oracle.com/en/java/javase/) - 可选择你需要的JDK版本
