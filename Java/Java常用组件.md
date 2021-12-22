@@ -91,3 +91,57 @@ based approach while providing a simple refactoring safe API for handling specif
         * [Generator](http://www.mybatis.org/generator/)
         * [Migrations](http://www.mybatis.org/migrations)
         * [MyBatis Dynamic SQL](https://mybatis.org/mybatis-dynamic-sql/docs/introduction.html) -SQL Generator for MyBatis and Spring JDBC Templates
+
+
+## 9. SSH
+
+### JSch
+
+JSch is a pure Java implementation of SSH2.
+
+JSch allows you to connect to an sshd server and use `port forwarding`, `X11 forwarding`, `file transfer`, etc., 
+and you can integrate its functionality into your own Java programs.
+
+* [官网](http://www.jcraft.com/jsch/)
+* [示例代码](http://www.jcraft.com/jsch/examples/) - 下载的源码里包含这些示例
+* [File Transfer using SFTP in Java (JSch)](https://mkyong.com/java/file-transfer-using-sftp-in-java-jsch/)
+* [Explanation for SCP protocol implementation in JSch library](https://stackoverflow.com/questions/26220381/explanation-for-scp-protocol-implementation-in-jsch-library)
+
+> **优点**：不依赖其他包，连接支持`Socks5 Proxy`、`HTTP Proxy`，支持功能：`X11Forwarding`/`KnownHosts`/`Sftp`/`PortForwarding`。  
+> **缺点**：可扩展性低。
+
+### Apache MINA SSHD
+
+Apache SSHD is a 100% pure java library to support the SSH protocols on both the `client` and `server` side. 
+This library can leverage Apache MINA, a scalable and high performance asynchronous IO library.
+
+* [官网](https://github.com/apache/mina-sshd)
+  * [属性配置及继承模型](https://github.com/apache/mina-sshd/blob/master/docs/internals.md#properties-and-inheritance-model)
+  * [SSH Jumps](https://github.com/apache/mina-sshd/blob/master/docs/internals.md#ssh-jumps)
+
+> 通过`ShellChannel#getInvertedIn()` 输入命令时需要在命令后面添加`\n`后缀，否则命令不会执行。
+
+> **优点**：可扩展性高，支持`Server`和`Client`。支持功能：`X11Forwarding`/`KnownHosts`/`Sftp`/`PortForwarding`/`SCP`/`Event listeners and handlers`/`Command line clients`。  
+> **缺点**：依赖的包多，暂时没找到连接支持`Socks5 Proxy`、`HTTP Proxy`方式，只找到Server端启用Socks5（`start/stopDynamicPortForwarding`）功能。
+
+### SSH 参考文档
+
+* [SSH Connection With Java](https://www.baeldung.com/java-ssh-connection) - 示例包含`JSch`及`Apache MINA SSHD`
+* [Proxies and Jump Hosts](https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts)
+
+## 10. File System
+
+### Apache Commons VFS
+
+`Commons Virtual File System`(Commons VFS) provides a single API for accessing various different file systems. 
+It presents a uniform view of the files from various different sources, such as the files on local disk, on an HTTP server, or inside a Zip archive.
+
+Some of the features of Commons VFS are:
+* A single consistent API for accessing files of different types.
+* Support for numerous [file system types](https://commons.apache.org/proper/commons-vfs/filesystems.html) .
+* Caching of file information. Caches information in-JVM, and optionally can cache remote file information on the local file system (replicator).
+* Event delivery.
+* Support for logical file systems made up of files from various different file systems.
+* Utilities for integrating Commons VFS into applications, such as a VFS-aware ClassLoader and URLStreamHandlerFactory.
+* A set of VFS-enabled [Ant tasks](https://commons.apache.org/proper/commons-vfs/anttasks.html).
+
