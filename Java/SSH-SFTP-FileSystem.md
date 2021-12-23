@@ -19,6 +19,15 @@ and you can integrate its functionality into your own Java programs.
 
 ### 示例
 
+```xml
+<!-- jsch依赖 -->
+<dependency>
+  <groupId>com.jcraft</groupId>
+  <artifactId>jsch</artifactId>
+  <version>0.1.55</version>
+</dependency>
+```
+
 ```java
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
