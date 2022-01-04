@@ -50,7 +50,25 @@ either block tags, such as `@todo`, or inline tags, such as `{@underline}`.
 #### Unsafe 类
 
 * [Java魔法类：Unsafe应用解析](https://tech.meituan.com/2019/02/14/talk-about-java-magic-class-unsafe.html) - 美团技术团队
+* [JAVA之Unsafe学习笔记](https://www.jianshu.com/p/b4de97ca8bb9)
 
+### 设计模式
+
+* [设计模式](https://www.runoob.com/design-pattern/design-pattern-tutorial.html) - 各设计模式示例
+
+
+### 并发
+
+* [Java中`notify`和`notifyAll`有什么区别？](https://www.zhihu.com/question/37601861)
+
+* ForkJoinPool
+  * [ForkJoinPool大型图文现场（一阅到底 vs 直接收藏）](https://segmentfault.com/a/1190000039267451)
+  * [Java 并发编程笔记：如何使用 ForkJoinPool 以及原理](https://blog.dyngr.com/blog/2016/09/15/java-forkjoinpool-internals/)
+  * [Java fork/join 框架用法及原理](https://baeldung-cn.com/java-fork-join) - Baeldung
+
+* CompletableFuture
+  * [Java CompletableFuture 详解](https://colobu.com/2016/02/29/Java-CompletableFuture/)
+  * [Guide To CompletableFuture](https://www.baeldung.com/java-completablefuture)
 
 ## 文档
 
