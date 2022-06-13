@@ -4,6 +4,9 @@
 
 ### 锁
 
+* [Select for update使用详解](https://zhuanlan.zhihu.com/p/143866444) - `主键`/`索引`/`非索引`字段 `行锁`及`表锁`场景
+* [15.7.3 Locks Set by Different SQL Statements in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html) - 官网
+
 以下链接有待确定：
 * [mysql 查看死锁和去除死锁](https://www.cnblogs.com/duanxz/p/4394641.html)
 * [mysql insert锁机制](https://blog.csdn.net/zhanghongzheng3213/article/details/53436240)

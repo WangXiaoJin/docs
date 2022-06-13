@@ -28,7 +28,7 @@
 
 * 当SCM子文件有改变时，上级所有文件夹都标记
 
-    `File | Settings | Version Control | 勾选Show directories with changed descendants`
+    `File | Settings | Version Control | Confirmation | 勾选 Hignlight directories that contain modified files in the Project tree`
 
 * 修改字体大小
 
@@ -116,7 +116,7 @@
 
 * Serializable类必须包含serialVersionUID属性
 
-    `File | Settings | Editor | Inspections | Java | Serialization issues | Serializable class without 'serialVersionUID' | 选中`
+    `File | Settings | Editor | Inspections | JVM languages | Serializable class without 'serialVersionUID' | 选中`
 
 * Java导入了没有使用的Class，调整到Error级别
 

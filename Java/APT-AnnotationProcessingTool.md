@@ -13,6 +13,66 @@ The notable exception is the `Lombok` library which uses annotation processing a
 itself into the compilation process and modify the AST via some internal compiler APIs. This hacky technique has nothing
 to do with the intended purpose of annotation processing and therefore is not discussed in this article.
 
+## Lombok 注意事项
+
+### 使用Lombok时如果`import内部类`则报`找不到符号 Data符号`
+
+编译报错示例：
+```java
+import com.banksteel.demo.user.ProbeAutoConfiguration.ProbeProperties.Probe;
+import lombok.Data;
+
+public class ProbeAutoConfiguration {
+
+    public void test(ProbeProperties props) {
+        Probe liveness = props.getReadiness();
+    }
+
+    @Data
+    public static class ProbeProperties {
+
+        private Probe readiness = new Probe();
+
+        @Data
+        public static class Probe {
+
+            private String status;
+
+        }
+    }
+}
+```
+上述示例使用了`import com.banksteel.demo.user.ProbeAutoConfiguration.ProbeProperties.Probe;`，导致了编译报错，此为 Oracle bug。
+
+修正代码：
+```java
+import lombok.Data;
+
+public class ProbeAutoConfiguration {
+
+    public void test(ProbeProperties props) {
+        // import class 改为 ProbeProperties.Probe 可避免问题
+        ProbeProperties.Probe liveness = props.getReadiness();
+    }
+
+    @Data
+    public static class ProbeProperties {
+
+        private Probe readiness = new Probe();
+
+        @Data
+        public static class Probe {
+
+            private String status;
+
+        }
+    }
+}
+```
+
+> [GitHub issue 链接](https://github.com/projectlombok/lombok/issues/1684)
+
+
 
 ## 文档
 

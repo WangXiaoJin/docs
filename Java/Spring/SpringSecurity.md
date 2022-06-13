@@ -1,4 +1,4 @@
-## SpringSecurity and SpringOAuth2
+# Spring Security
 
 ### Spring Security
 
@@ -205,7 +205,9 @@ this path will then have no authentication or authorization services applied and
  If you want to make use of the contents of the `SecurityContext` contents during a request, 
  then it must have passed through the security filter chain. Otherwise the `SecurityContextHolder`
  will not have been populated and the contents will be `null`.
- 
+
+> 注：[OAuth 2.0 各项目支持的特性及常见问题](https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Features-Matrix)
+
  
 ### Spring Security Oauth
 
@@ -219,18 +221,28 @@ this path will then have no authentication or authorization services applied and
 
 * [OAuth2 Autoconfig - 自动配置`Authorization/Resource Server` - 【重要】](https://docs.spring.io/spring-security-oauth2-boot/docs/current/reference/htmlsingle/)
 
+
+> 注：`spring-security 5.*`版本下包含了oauth2的子项目，此子项目是以后重点维护项目。将从`org.springframework.security.oauth:spring-security-oauth2`
+  项目慢慢转移至`spring-security 5.*`。`spring-security 5.*`中没有提供`Authorization Server`服务，只有`spring-security-oauth2`提供了`Authorization Server`服务。
+  `spring-security:5.1.3`提供了`spring-security-oauth2-resource-server`/`spring-security-oauth2-client`。
+
+> 注：[OAuth 2.0 Migration Guide](https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Migration-Guide) - 
+迁移`Spring Security OAuth 2.x`的`OAuth 2.0 Clients`/`OAuth 2.0 Resource`至`Spring Security 5.2.x`，提供了Demo。
+
+### Spring Authorization Server
+
+Spring Authorization Server 由 Spring Security 团队维护，现阶段还不稳定，
+支持 [OAuth 2.1 Authorization Server](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-01#section-1.1) ，
+用于替换 [Spring Security OAuth](https://spring.io/projects/spring-security-oauth/) 的`Authorization Server`功能。
+
+* [Announcing the Spring Authorization Server](https://spring.io/blog/2020/04/15/announcing-the-spring-authorization-server)
+
 ### Spring Cloud Security
 
 * [官方文档](https://spring.io/projects/spring-cloud-security#overview)
 
 ### **总结**
 
-* `spring-security 5.*`版本下包含了oauth2的子项目，此子项目是以后重点维护项目。将从`org.springframework.security.oauth:spring-security-oauth2`
-项目慢慢转移至`spring-security 5.*`。`spring-security 5.*`中没有提供`Authorization Server`服务，只有`spring-security-oauth2`提供了`Authorization Server`服务。
-`spring-security:5.1.3`提供了`spring-security-oauth2-resource-server`/`spring-security-oauth2-client`。
-  
-  > 注：[OAuth 2.0 各项目支持的特性及常见问题](https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Features-Matrix)
-  
 * 提供`UserInfoRestTemplateCustomizer` 或者`UserInfoTemplateFactory`控制`OAuth2RestTemplate`功能。参考：`ResourceServerTokenServicesConfiguration.userInfoRestTemplateFactory()`
 
   ```java

@@ -230,6 +230,46 @@ to the use of caching disks to store content closer to the tenants. For instance
 say gateway azure setup and download the object that gets cached, each subsequent request on the object gets served
 directly from the cache drives until it expires.
 
+
+## profile分析
+
+### 安装Go环境
+
+```shell script
+# 下载地址：https://golang.google.cn/dl/
+wget https://golang.google.cn/dl/go1.17.8.linux-amd64.tar.gz
+# 解压
+tar -zxf go1.17.8.linux-amd64.tar.gz
+# 将 /usr/local/go/bin 目录添加至 PATH 环境变量
+export PATH=$PATH:/usr/local/go/bin
+```
+
+### 安装 graphviz
+
+安装图形可视化软件，用于生产分析图
+
+```shell
+yum install graphviz
+```
+
+### 分析 pprof
+
+```shell
+# 开始分析
+mc admin profile start --type cpu,cpuio,mem,block,mutex,threads self
+# 分析结束
+mc admin profile stop self
+# 分析解压后的 pprof 文件
+go tool pprof -http=192.168.xxx.xxx:8081 profile-xxx-cpu.pprof
+```
+
+使用浏览器访问`http://192.168.xxx.xxx:8081`，查看资源使用情况。
+
+* [Go性能分析大杀器PPROF](https://www.cnblogs.com/sy270321/p/12450151.html)
+* [Hi, 使用多年的go pprof检查内存泄漏的方法居然是错的?!](https://colobu.com/2019/08/20/use-pprof-to-compare-go-memory-usage/)
+
+
+
 ## 参考
 
 * [Github地址](https://github.com/minio/minio)
@@ -258,3 +298,8 @@ directly from the cache drives until it expires.
     * [How to run multiple MinIO servers with Træfɪk](https://docs.min.io/docs/how-to-run-multiple-minio-servers-with-traef-k.html)
     * [How to use AWS SDK for Java with MinIO Server](https://docs.min.io/docs/how-to-use-aws-sdk-for-java-with-minio-server.html)
     * [How to use Paperclip with MinIO Server](https://docs.min.io/docs/how-to-use-paperclip-with-minio-server.html)
+
+* examples
+  * `PutObjectProgressBar` - [链接](https://github.com/minio/minio-java/blob/release/examples/PutObjectProgressBar.java)
+  * `PutObjectUiProgressBar` - [链接](https://github.com/minio/minio-java/blob/release/examples/PutObjectUiProgressBar.java)
+

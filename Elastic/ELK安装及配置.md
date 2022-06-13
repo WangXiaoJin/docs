@@ -2,10 +2,10 @@
 
 1. 安装Elasticsearch
 
-	前置条件：
-	* 安装JDK，`1.8.0_73 or later`
-	* 设置`vm_map_max_count`
-		* 编辑`/etc/sysctl.conf`，改`vm.max_map_count=262144`，永久生效。然后`sysctl -p`使配置文件当前生效
+    前置条件：
+    * 安装JDK，`1.8.0_73 or later`
+    * 设置`vm_map_max_count`
+        * 编辑`/etc/sysctl.conf`，改`vm.max_map_count=262144`，永久生效。然后`sysctl -p`使配置文件当前生效
         * `sysctl -w vm.max_map_count=262144`，重启会失效
     * 设置`ulimit` - 参考链接：[Configuring system settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/setting-system-settings.html)。
     验证`max_file_descriptors`使用`GET _nodes/stats/process?filter_path=**.max_file_descriptors`
@@ -23,44 +23,44 @@
         (note that you might have to increase the limits for the root `user` too)
     * Disable swapping - 有三种禁用swap方案，参考链接：[Disable swapping](https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration-memory.html)
         
-	```bash
-	shell> wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.5.0.tar.gz
-	shell> sha1sum elasticsearch-5.5.0.tar.gz # 通过sha1sum或shasum比较SHA值
-	shell> tar -xvf elasticsearch-5.5.0.tar.gz
-	shell> groupadd elasticsearch   #添加elasticsearch用户组
-	shell> useradd elasticsearch -g elasticsearch -p espassword #添加elasticsearch用户
-	shell> mkdir -p /data/logs/elasticsearch /data/elasticsearch #用于存放ES的日志和数据
-	shell> chown -R elasticsearch:elasticsearch elasticsearch-5.5.0 /data/logs/elasticsearch /data/elasticsearch
-	shell> su elasticsearch #切换到elasticsearch用户
-	shell> cd elasticsearch-5.5.0/bin
-	shell> ./elasticsearch -d -p pid #-d 以守护进程运行，-p pid 把进程id记录到pid文件中
-	shell> kill `cat pid` #关闭elasticsearch
-	```
+    ```bash
+    shell> wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.5.0.tar.gz
+    shell> sha1sum elasticsearch-5.5.0.tar.gz # 通过sha1sum或shasum比较SHA值
+    shell> tar -xvf elasticsearch-5.5.0.tar.gz
+    shell> groupadd elasticsearch   #添加elasticsearch用户组
+    shell> useradd elasticsearch -g elasticsearch -p espassword #添加elasticsearch用户
+    shell> mkdir -p /data/logs/elasticsearch /data/elasticsearch #用于存放ES的日志和数据
+    shell> chown -R elasticsearch:elasticsearch elasticsearch-5.5.0 /data/logs/elasticsearch /data/elasticsearch
+    shell> su elasticsearch #切换到elasticsearch用户
+    shell> cd elasticsearch-5.5.0/bin
+    shell> ./elasticsearch -d -p pid #-d 以守护进程运行，-p pid 把进程id记录到pid文件中
+    shell> kill `cat pid` #关闭elasticsearch
+    ```
 	
-	修改`jvm.options`文件的`JVM heap size`（文档[heap size](https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-size.html)）：
-	* minimum heap size (Xms) 和maximum heap size (Xmx)值必须相同，因heap size增加时JVM会停止服务
-	* heap size值越大，更多的内存会被ES用来缓存数据，也意味着垃圾回收时JVM停止服务时间越长
-	* Xmx设值不能超过物理内存`50%`，剩下的50%用于`kernel file system caches`使用（即提供给Lucene使用）
-	* Xmx设值不能超过32GB（近似值），这个值受制于JVM `compressed oops`，可通过ES日志来确认JVM是否使用`compressed oops`：
-		```
-		heap size [1.9gb], compressed ordinary object pointers [true]
-		```
-	* 最好是确保heap size低于`zero-based compressed oops`的阀值，26GB适用于大多数系统，某些系统能达到30GB，你可以在启动
-	ES时增加以下JVM参数来验证：`-XX:+UnlockDiagnosticVMOptions -XX:+PrintCompressedOopsMode`
-		```
-		heap address: 0x000000011be00000, size: 27648 MB, zero based Compressed Oops
-		```
-	* 通过`jvm.options`修改：
-		```
-		-Xms2g
-		-Xmx2g
-		```
-	* 通过环境变量修改，需要注释掉`jvm.options`的`Xms` 、`Xmx`配置：
-		```
-		ES_JAVA_OPTS="-Xms2g -Xmx2g" ./bin/elasticsearch
-		```
+    修改`jvm.options`文件的`JVM heap size`（文档[heap size](https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-size.html)）：
+    * minimum heap size (Xms) 和maximum heap size (Xmx)值必须相同，因heap size增加时JVM会停止服务
+    * heap size值越大，更多的内存会被ES用来缓存数据，也意味着垃圾回收时JVM停止服务时间越长
+    * Xmx设值不能超过物理内存`50%`，剩下的50%用于`kernel file system caches`使用（即提供给Lucene使用）
+    * Xmx设值不能超过32GB（近似值），这个值受制于JVM `compressed oops`，可通过ES日志来确认JVM是否使用`compressed oops`：
+        ```
+        heap size [1.9gb], compressed ordinary object pointers [true]
+        ```
+    * 最好是确保heap size低于`zero-based compressed oops`的阀值，26GB适用于大多数系统，某些系统能达到30GB，你可以在启动
+    ES时增加以下JVM参数来验证：`-XX:+UnlockDiagnosticVMOptions -XX:+PrintCompressedOopsMode`
+        ```
+        heap address: 0x000000011be00000, size: 27648 MB, zero based Compressed Oops
+        ```
+    * 通过`jvm.options`修改：
+        ```
+        -Xms2g
+        -Xmx2g
+        ```
+    * 通过环境变量修改，需要注释掉`jvm.options`的`Xms` 、`Xmx`配置：
+        ```
+        ES_JAVA_OPTS="-Xms2g -Xmx2g" ./bin/elasticsearch
+        ```
 	
-	修改`elasticsearch.yml`配置文件，这里我举例了集群配置，一共有`192.168.206.130`、`192.168.206.134`、`192.168.206.135`三个节点：
+    修改`elasticsearch.yml`配置文件，这里我举例了集群配置，一共有`192.168.206.130`、`192.168.206.134`、`192.168.206.135`三个节点：
     
     Node1配置：
     ```yaml
@@ -106,7 +106,7 @@
     #---------- 集群配置 ---------------
     ```
 	
-	**防火墙配置：**
+    **防火墙配置：**
     ```bash
     shell> vim /etc/sysconfig/iptables
     # 端口号根据自己的配置而定，增加下面配置
@@ -115,51 +115,51 @@
     shell> service iptables restart
     ```
 	
-	通过命令行修改cluster/node name：  
-	`./elasticsearch -Ecluster.name=my_cluster_name -Enode.name=my_node_name`  
-	通常集群配置项(如：`cluster.name`)应该配置在`elasticsearch.yml`文件中，特定节点配置项（如：`node.name`）应该通过命令行参数配置。
+    通过命令行修改cluster/node name：  
+    `./elasticsearch -Ecluster.name=my_cluster_name -Enode.name=my_node_name`  
+    通常集群配置项(如：`cluster.name`)应该配置在`elasticsearch.yml`文件中，特定节点配置项（如：`node.name`）应该通过命令行参数配置。
 	
-	> ES默认会加载$ES_HOME/config/elasticsearch.yml这个配置文件，此配置文件中任意配置项都可以通过命令行参数`-Ekey=value`
-	格式配置。例：`./bin/elasticsearch -d -Ecluster.name=my_cluster -Enode.name=node_1`。  
-	  配置文件目录可以通过`-Epath.conf=/path/to/my/config/`来修改。
+    > ES默认会加载$ES_HOME/config/elasticsearch.yml这个配置文件，此配置文件中任意配置项都可以通过命令行参数`-Ekey=value`
+    格式配置。例：`./bin/elasticsearch -d -Ecluster.name=my_cluster -Enode.name=node_1`。  
+      配置文件目录可以通过`-Epath.conf=/path/to/my/config/`来修改。
 	
-	> Elasticsearch 默认配置运行 64-bit JVMs。如果你运行了32-bit JVM，你必须删除`jvm.options`中`-server`配置。
-	且重新配置`thread stack size`值，修改`-Xss1m`为`-Xss320k`。
+    > Elasticsearch 默认配置运行 64-bit JVMs。如果你运行了32-bit JVM，你必须删除`jvm.options`中`-server`配置。
+    且重新配置`thread stack size`值，修改`-Xss1m`为`-Xss320k`。
 	
-	**节点配置：**
+    **节点配置：**
 	
-	* `discovery.zen.master_election.ignore_non_master_pings` - 默认值：false。设置为true时，在选举master节点时，
-	会忽略掉非候选master节点（`node.master: false`）的pings
-	* `discovery.zen.minimum_master_nodes` - 默认值：1。当选举Master节点时，必须最少有多少个Master候选节点处于活动状态，否则不能选举Master节点。
-	此配置项同时意味着当前Cluster至少有多少个Master候选节点有效，如果不满足此条件则当前Master节点降级，同时试图选出新的Master节点。  
-	  如果是集群环境，则Master候选节点数最好大于等于3，且`minimum_master_nodes`配置为：`(master_eligible_nodes / 2) + 1`
+    * `discovery.zen.master_election.ignore_non_master_pings` - 默认值：false。设置为true时，在选举master节点时，
+    会忽略掉非候选master节点（`node.master: false`）的pings
+    * `discovery.zen.minimum_master_nodes` - 默认值：1。当选举Master节点时，必须最少有多少个Master候选节点处于活动状态，否则不能选举Master节点。
+    此配置项同时意味着当前Cluster至少有多少个Master候选节点有效，如果不满足此条件则当前Master节点降级，同时试图选出新的Master节点。  
+      如果是集群环境，则Master候选节点数最好大于等于3，且`minimum_master_nodes`配置为：`(master_eligible_nodes / 2) + 1`
 	
-		minimum_master_nodes可以通过cluster API动态设值：  
-		```
-		PUT _cluster/settings
-		{
-		  "transient": {
-		    "discovery.zen.minimum_master_nodes": 2
-		  }
-		}
-		```
-	* 集群环境下，建议配置专用节点。不同的节点充当不同的角色，执行不同的功能。Master候选节点数: 3，minimum_master_nodes: 2，
-	后续新增的节点设值为data或ingest节点。配置如下：
-		```
-		node.master: true 	#(default: true - Master候选节点)
-		node.data: false	#(default: true - 数据节点)
-		node.ingest: false	#(default: true - 写数据之前对其进行处理)
-		```
+        minimum_master_nodes可以通过cluster API动态设值：  
+        ```
+        PUT _cluster/settings
+        {
+          "transient": {
+            "discovery.zen.minimum_master_nodes": 2
+          }
+        }
+        ```
+    * 集群环境下，建议配置专用节点。不同的节点充当不同的角色，执行不同的功能。Master候选节点数: 3，minimum_master_nodes: 2，
+    后续新增的节点设值为data或ingest节点。配置如下：
+        ```
+        node.master: true 	#(default: true - Master候选节点)
+        node.data: false	#(default: true - 数据节点)
+        node.ingest: false	#(default: true - 写数据之前对其进行处理)
+        ```
 	
-	> Docker安装ES请参考<https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html>
+    > Docker安装ES请参考<https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html>
 	
-	**配置参考:** 
-	* [Configuring Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html)
-	* [Important Elasticsearch configuration](https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html)
-	* [Node详解及配置](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html) - 重要
+    **配置参考:** 
+    * [Configuring Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html)
+    * [Important Elasticsearch configuration](https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html)
+    * [Node详解及配置](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html) - 重要
 	
-	> 注：ES的索引名(_index)必须为小写字母，不能以下划线开头，且不能包含逗号。  
-	> 类型名(_type)可以为大、小写字母，不能以下划线或句点开头，且不能包含逗号，长度限制在256个字符之内
+    > 注：ES的索引名(_index)必须为小写字母，不能以下划线开头，且不能包含逗号。  
+    > 类型名(_type)可以为大、小写字母，不能以下划线或句点开头，且不能包含逗号，长度限制在256个字符之内
 
 2. 安装Kibana
 
@@ -234,18 +234,18 @@
 
 3. 安装Logstash
 
-	Logstash-5.4依赖Java 8，不支持Java 9。
+    Logstash-5.4依赖Java 8，不支持Java 9。
 	
-	```bash
-	shell> wget https://artifacts.elastic.co/downloads/logstash/logstash-5.5.0.tar.gz
-	shell> tar -xvf logstash-5.5.0.tar.gz
-	shell> cd logstash-5.5.0
-	shell> bin/logstash-plugin update logstash-filter-dissect #更新dissect插件，5.5.0版本需要自己更新
-	shell> bin/logstash-plugin update logstash-input-dead_letter_queue #更新dead_letter_queue插件，5.5.0版本需要自己更新
-	shell> nohup bin/logstash -f logstash.conf &   #执行之前修改下logstash.yml、logstash.conf配置文件
-	```
+    ```bash
+    shell> wget https://artifacts.elastic.co/downloads/logstash/logstash-5.5.0.tar.gz
+    shell> tar -xvf logstash-5.5.0.tar.gz
+    shell> cd logstash-5.5.0
+    shell> bin/logstash-plugin update logstash-filter-dissect #更新dissect插件，5.5.0版本需要自己更新
+    shell> bin/logstash-plugin update logstash-input-dead_letter_queue #更新dead_letter_queue插件，5.5.0版本需要自己更新
+    shell> nohup bin/logstash -f logstash.conf &   #执行之前修改下logstash.yml、logstash.conf配置文件
+    ```
 	
-	**修改`logstash.yml`配置，[参考文档](https://www.elastic.co/guide/en/logstash/current/logstash-settings-file.html)：**
+    **修改`logstash.yml`配置，[参考文档](https://www.elastic.co/guide/en/logstash/current/logstash-settings-file.html)：**
 	
     ```yaml
     #node.name: test #logstash实例名，默认值为机器的hostname，如果你想在一台机子上部署多个logstash实例，请自定义此配置
@@ -557,6 +557,13 @@
     ```
     
     配置文件语法注意事项：
+    * `inputs.type: log`
+      * `close_removed` - 默认启用，当文件删除时关闭文件handler，判断的依据为`file name`，而不是`inode`。
+      * `close_renamed` - 默认值：false，当文件 renamed 时，关闭文件handler，当日志文件滚动生成且保留最近N个文件时启用此参数非常有效，
+      可以关闭 处于deleted状态 的文件handler，避免日志生成速度大于消费速度而导致磁盘爆满的问题。如果文件renamed后，新的文件名匹配监控的
+      path，则日志不会丢失，如果renamed后不匹配path，则后续日志不会采集。
+      * `close_timeout` - 日志文件只采集指定时间段，采集超出时则关闭 file handler，当下扫描后发现文件没采集完则继续采集，采集剩余时间会重置。
+      此配置可能会把多行日志分成两次发送，从而导致日志不全。
     * Filebeat使用的`glob pattern`相对于[Logstash glob pattern](https://www.elastic.co/guide/en/logstash/current/glob-support.html)来说简单了很多，
     * 字符窜有三种格式，双引号、单引号、无引号。
         * 双引号 - 支持转义字符‘\’，转义特殊字符

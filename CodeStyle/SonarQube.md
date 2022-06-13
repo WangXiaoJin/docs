@@ -31,7 +31,7 @@
             shell> ulimit -u 2048
             ```
             
-            如果想永久改变这些配置项，可以修改`/etc/sysctl.d/99-sonar.conf`（或`/etc/sysctl.conf`）、
+            如果想永久改变这些配置项，对应修改`/etc/sysctl.d/99-sonar.conf`（或`/etc/sysctl.conf`），
             `/etc/security/limits.d/99-sonar.conf`（或`/etc/security/limits.conf`）文件，具体配置略。  
             
             以下SonarQube以`sonar`作为启动用户为例，配置如下：

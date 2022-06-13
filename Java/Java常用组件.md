@@ -6,6 +6,10 @@
 
 Vavr (formerly called Javaslang) is a functional library for Java 8+ that provides persistent data types and functional control structures.
 
+### Guava
+
+* [GitHub 链接](https://github.com/google/guava)
+* [Google Guava官方教程（中文版）](https://wizardforcel.gitbooks.io/guava-tutorial/content/1.html)
 
 ## 2. JavaPoet
 
@@ -80,11 +84,6 @@ based approach while providing a simple refactoring safe API for handling specif
     * 提供多层数据源嵌套切换。（ServiceA >>> ServiceB >>> ServiceC，每个Service都是不同的数据源）
     * 提供 不使用注解 而 使用 正则 或 spel 来切换数据源方案（实验性功能）。
     * 基于seata的分布式事务支持。
-
-* [Seata](https://seata.io/zh-cn/docs/overview/what-is-seata.html)
-
-    Seata 是一款开源的分布式事务解决方案，致力于提供高性能和简单易用的分布式事务服务。
-    Seata 将为用户提供了 AT、TCC、SAGA 和 XA 事务模式，为用户打造一站式的分布式解决方案。
 
 * MyBatis
     * [MyBatis Products](https://blog.mybatis.org/p/products.html)

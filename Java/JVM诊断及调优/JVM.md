@@ -22,9 +22,92 @@
 
 ## Heap & GC
 
-### GC配置
+> JDK8 默认 `GC`/`Heap` - [官方文档](https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/ergonomics.html)
 
-常用配置：
+### GC
+
+#### 垃圾收集器
+
+**新生代**
+1. `Copy（别名：Serial、DefNew）`- the serial copy collector, uses one thread to copy surviving objects from Eden to Survivor spaces and between Survivor spaces until it decides they've been there long enough, at which point it copies them into the old generation.
+2. `PS Scavenge（别名：Parallel Scavenge、PSYoungGen）`- the parallel scavenge collector, like the Copy collector, but uses multiple threads in parallel and has some knowledge of how the old generation is collected (essentially written to work with the serial and PS old gen collectors).
+3. `ParNew （别名和内部名一样为ParNew）`- the parallel copy collector, like the Copy collector, but uses multiple threads in parallel and has an internal 'callback' that allows an old generation collector to operate on the objects it collects (really written to work with the concurrent collector).
+4. `G1 Young Generation` - the garbage first collector, uses the 'Garbage First' algorithm which splits up the heap into lots of smaller spaces, but these are still separated into Eden and Survivor spaces in the young generation for G1.
+
+**老年代**
+1. `MarkSweepCompact （别名：Serial Old（MSC））`- the serial mark-sweep collector, the daddy of them all, uses a serial (one thread) full mark-sweep garbage collection algorithm, with optional compaction.
+2. `PS MarkSweep（别名：Parallel Old ）`- the parallel scavenge mark-sweep collector, parallelised version (i.e. uses multiple threads) of the MarkSweepCompact.
+3. `ConcurrentMarkSweep （别名：CMS）`- the concurrent collector, a garbage collection algorithm that attempts to do most of the garbage collection work in the background without stopping application threads while it works (there are still phases where it has to stop application threads, but these phases are attempted to be kept to a minimum). Note if the concurrent collector fails to keep up with the garbage, it fails over to the serial MarkSweepCompact collector for (just) the next GC.
+4. `G1 Mixed Generation` -  the garbage first collector, uses the 'Garbage First' algorithm which splits up the heap into lots of smaller spaces.
+
+All of the garbage collection algorithms except `ConcurrentMarkSweep` are `stop-the-world`, i.e. they stop all application 
+threads while they operate - the stop is known as 'pause' time. The ConcurrentMarkSweep tries to do most of it's work in 
+the background and minimize the pause time, but it also has a stop-the-world phase and can fail into the MarkSweepCompact 
+which is fully stop-the-world. (The G1 collector has a concurrent phase but is currently mostly stop-the-world).
+
+> 参考链接 - [JVM垃圾收集器组合--各种组合对应的虚拟机参数实践](https://www.cnblogs.com/grey-wolf/p/10222758.html)
+
+#### 新生代老年代之间的收集器组合
+
+That's the set of garbage collectors available, but they operate in two different heap spaces and it's the combination 
+that is what we actually end up with for a particular JVM setting, so I'll also list the combinations that are possible. 
+It doesn't explode into a dozen combinations because not all of these collectors work with each other. 
+G1 is effectively an antisocial collector that doesn't like working with anyone else; the serial collectors are the 
+"last man picked" collectors; the 'PS' collectors like to work with each other; and ParNew and Concurrent like to work together.
+
+The full list of possible GC algorithm combinations that can work are:
+
+|  Command Options  | Resulting Collector Combination  | 
+|:--------: |:----------: |
+| `-XX:+UseSerialGC` | young `Copy` and old `MarkSweepCompact` |
+| `-XX:+UseG1GC` | young `G1 Young` and old `G1 Mixed` |
+| `-XX:+UseParallelGC -XX:+UseParallelOldGC -XX:+UseAdaptiveSizePolicy` | young `PS Scavenge` old `PS MarkSweep` with adaptive sizing |
+| `-XX:+UseParallelGC -XX:+UseParallelOldGC -XX:-UseAdaptiveSizePolicy` | young `PS Scavenge` old `PS MarkSweep`, no adaptive sizing |
+| `-XX:+UseParNewGC` (deprecated in Java 8 and removed in Java 9 - for ParNew see the line below which is NOT deprecated) | young `ParNew` old `MarkSweepCompact` |
+| `-XX:+UseConcMarkSweepGC -XX:+UseParNewGC` | young `ParNew` old `ConcurrentMarkSweep` |
+| `-XX:+UseConcMarkSweepGC -XX:-UseParNewGC` (deprecated in Java 8 and removed in Java 9) | young `Copy` old `ConcurrentMarkSweep` |
+
+All the combinations listed here will fail to let the JVM start if you add another GC algorithm not listed, 
+with the exception of `-XX:+UseParNewGC` which is only combinable with `-XX:+UseConcMarkSweepGC`.
+
+there are many many options for use with `-XX:+UseConcMarkSweepGC` which change the algorithm, e.g.
+* `-XX:+/-CMSIncrementalMode` (deprecated in Java 8 and removed in Java 9) - uses or disables an incremental concurrent GC algorithm
+* `-XX:+/-CMSConcurrentMTEnabled` - uses or disables parallel (multiple threads) concurrent GC algorithm
+* `-XX:+/-UseCMSCompactAtFullCollection` - uses or disables a compaction when a full GC occurs
+
+**其他选项:**
+
+|  Command Options Used On Their Own  |                                                                    Equivalent To Entry In Table Above                                                                    | 
+|:--------: |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| `-XX:+UseParallelGC` |                                                               `	-XX:+UseParallelGC -XX:+UseParallelOldGC`                                                                |
+| `-XX:+UseParallelOldGC` |                                                                `-XX:+UseParallelGC -XX:+UseParallelOldGC`                                                                |
+| `-Xincgc` (deprecated in Java 8 and removed in Java 9) |                                                                `-XX:+UseParNewGC -XX:+UseConcMarkSweepGC`                                                                |
+| `-XX:+UseConcMarkSweepGC` |                                                                `-XX:+UseParNewGC -XX:+UseConcMarkSweepGC`                                                                |
+| `-XX:+AggressiveHeap` | `-XX:+UseParallelGC -XX:+UseParallelOldGC -XX:+UseAdaptiveSizePolicy` with a bunch of other options related to sizing memory and threads and how they interact with the OS |
+
+#### 通过程序输出使用的垃圾收集器
+
+```java
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
+import java.util.List;
+
+public class Test {
+    public static void main(String[] args) {
+        List<GarbageCollectorMXBean> l = ManagementFactory.getGarbageCollectorMXBeans();
+        for (int i = 0; i < l.size(); i++) {
+            GarbageCollectorMXBean garbageCollectorMXBean = l.get(i);
+            if (i == 0) {
+                System.out.println("young generation:" + garbageCollectorMXBean.getName());
+            } else if (i == 1) {
+                System.out.println("old generation:" + garbageCollectorMXBean.getName());
+            }
+        }
+    }
+}
+```
+
+#### 常用配置
 ```
 -XX:+AlwaysPreTouch
 
@@ -52,6 +135,8 @@
 -XX:+SafepointTimeout
 -XX:SafepointTimeoutDelay=<ms before timeout log is printed>
 ```
+
+#### 参考链接
 
 * 应用重启后GC日志丢失问题
     * [GC log rotation data lose on application restart](https://stackoverflow.com/questions/19274153/gc-log-rotation-data-lose-on-application-restart)

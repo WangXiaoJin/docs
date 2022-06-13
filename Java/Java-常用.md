@@ -40,6 +40,22 @@ either block tags, such as `@todo`, or inline tags, such as `{@underline}`.
 ### Unicode Normalize - `NFC`/`NFD`/`NFKC`/`NFKD`
 
 * [Difference Between NFD, NFC, NFKD, and NFKC Explained with Python Code](https://towardsdatascience.com/difference-between-nfd-nfc-nfkd-and-nfkc-explained-with-python-code-e2631f96ae6c)
+* [从⽅不是方到Unicode正规化NFD, NFC, NFKD, NFKC](https://xobo.org/unicode-normalization-nfd-nfc-nfkd-nfkc/)
+* [`String.prototype.normalize()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize)
+
+### Character
+
+* [Character#isAlphabetic() VS Character#isLetter()](https://www.baeldung.com/java-character-isletter-isalphabetic)
+  * `UPPERCASE_LETTER`
+  * `LOWERCASE_LETTER`
+  * `TITLECASE_LETTER`
+  * `MODIFIER_LETTER`
+  * `OTHER_LETTER`
+  * `LETTER_NUMBER`
+
+### 正则 - RegExp
+
+* [正则表达式 - 可视化图解](https://regexper.com/)
 
 
 ### JDK sun 包源码
