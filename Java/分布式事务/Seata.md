@@ -41,6 +41,12 @@ XA模式只支持实现了XA协议的数据库。Seata支持MySQL、Oracle、Pos
 * [Seata XA 模式](https://seata.io/zh-cn/docs/dev/mode/xa-mode.html)
 * [Seata XA 示例](https://github.com/seata/seata-samples/tree/master/seata-xa)
 
+1.4.2版本XA模式BUG：
+* [xa模式获取channel导致的资源悬挂问题](https://github.com/seata/seata/issues/4138)
+  * [bugfix: xa resource suspension](https://github.com/seata/seata/pull/4228)
+* [XA模式资源悬挂问题](https://github.com/seata/seata/issues/4073)
+  * [bugfix: prevents XA mode resource suspension](https://github.com/seata/seata/pull/4074)
+
 ## 事务状态
 
 ### 全局事务状态表

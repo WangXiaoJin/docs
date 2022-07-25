@@ -66,3 +66,32 @@ spring:
 参考源码:
 * `org.springframework.core.io.support.SpringFactoriesLoader#loadSpringFactories(ClassLoader)`
 * `org.springframework.boot.autoconfigure.AutoConfigurationSorter#getInPriorityOrder(classNames)`
+
+### SpringBoot Class 加载顺序
+
+`lib`包搜索顺序可以通过`new JarFileArchive(file)`打印出来，打包时默认为pom依赖顺序。高版本SpringBoot可以查看 Fat Jar 的`classpath.idx`文件。
+
+* [Spring Boot ClassLoader and Class Override](https://dkublik.github.io/2018/01/05/spring-boot-class-loader-and-class-override.html)
+
+
+### Configuration Metadata
+
+借助`spring-boot-configuration-processor`自动生成`spring-configuration-metadata.json`：
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-configuration-processor</artifactId>
+  <optional>true</optional>
+</dependency>
+```
+
+#### Nested Properties
+
+The annotation processor automatically considers **inner classes** as nested properties.
+
+You can use the `@NestedConfigurationProperty` annotation on a field to indicate that a regular (**non-inner**) class should be treated as if it were nested.
+
+> This has no effect on `collections` and `maps`, as those types are **automatically** identified, 
+and a single metadata property is generated for each of them. 所以这两种类型无需配置`@NestedConfigurationProperty`.
+
+> [参考文档](https://docs.spring.io/spring-boot/docs/current/reference/html/configuration-metadata.html#appendix.configuration-metadata.annotation-processor.automatic-metadata-generation.nested-properties)

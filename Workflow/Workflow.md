@@ -62,7 +62,7 @@ The database names of Activiti all start with `ACT_`. The second part is a two-c
 BPMN 2.0 for the web, View and edit BPMN 2.0 diagrams in the browser.
 
 * [bpmn-js 官网](https://bpmn.io/)
-
+* [bpmn中文教程](https://github.com/LinDaiDai/bpmn-chinese-document)
 
 ## 参考链接
 
