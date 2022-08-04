@@ -86,6 +86,12 @@ either block tags, such as `@todo`, or inline tags, such as `{@underline}`.
   * [Java CompletableFuture 详解](https://colobu.com/2016/02/29/Java-CompletableFuture/)
   * [Guide To CompletableFuture](https://www.baeldung.com/java-completablefuture)
 
+
+## 位运算
+
+* [原码、反码、补码的产生、应用以及优缺点有哪些？](https://www.zhihu.com/question/20159860) - 值得一读
+
+
 ## 文档
 
 * [官方文档](https://docs.oracle.com/en/java/javase/) - 可选择你需要的JDK版本

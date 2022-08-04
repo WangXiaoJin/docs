@@ -45,6 +45,8 @@ props:
     sql-show: true
 ```
 
+> 源码参考: `org.apache.shardingsphere.infra.config.props.ConfigurationPropertyKey`
+
 ### 内置算法
 
 * [元数据持久化仓库](https://shardingsphere.apache.org/document/current/cn/user-manual/shardingsphere-jdbc/builtin-algorithm/metadata-repository/)
@@ -72,7 +74,7 @@ props:
   * `COSID`
   * `CosId-Snowflake`
 * [负载均衡算法](https://shardingsphere.apache.org/document/current/cn/user-manual/shardingsphere-jdbc/builtin-algorithm/load-balance/)
-  * `ROUND_ROBIN` - 事务内，读请求路由到 primary，事务外，采用轮询策略路由到 replica。
+  * `ROUND_ROBIN` - 事务内，读请求路由到 primary，事务外，采用轮询策略路由到 replica。（默认算法）
   * `RANDOM` - 	事务内，读请求路由到 primary，事务外，采用随机策略路由到 replica。
   * `WEIGHT` - 事务内，读请求路由到 primary，事务外，采用权重策略路由到 replica。需配置属性，属性名：${replica-name}，数据类型：double, 
   属性名字使用读库名字，参数填写读库对应的权重值。权重参数范围最小值 > 0，合计 <= Double.MAX_VALUE。
@@ -231,9 +233,9 @@ Apache ShardingSphere 可插拔架构提供了数十个基于 SPI 的扩展点�
 ### 运行模式 SPI
 
 * `StandalonePersistRepository` - Standalone 模式配置信息持久化
-  * `H2Repository` - 基于 H2 的持久化
+  * `FileRepository` - 基于 File 的持久化
 * `ClusterPersistRepository` - Cluster 模式配置信息持久化
-  * C`uratorZookeeperRepository` - 基于 ZooKeeper 的持久化
+  * `CuratorZookeeperRepository` - 基于 ZooKeeper 的持久化
   * `EtcdRepository` - 基于 Etcd 的持久化
 * `GovernanceWatcher` - 治理监听器
   * `ComputeNodeStateChangedWatcher` - 计算节点状态变化监听器
@@ -387,16 +389,16 @@ Apache ShardingSphere 可插拔架构提供了数十个基于 SPI 的扩展点�
 ### 读写分离 SPI
 
 * `ReadQueryLoadBalanceAlgorithm` - 读库负载均衡算法
-  * `RoundRobinReadQueryLoadBalanceAlgorithm` - 基于轮询的读库负载均衡算法
-  * `RandomReadQueryLoadBalanceAlgorithm` - 基于随机的读库负载均衡算法
-  * `WeightReadQueryLoadBalanceAlgorithm` - 基于权重的读库负载均衡算法
-  * `TransactionRandomReadQueryLoadBalanceAlgorithm` - 无论是否在事务中，读请求采用随机策略路由到多个读库
-  * `TransactionRoundRobinReadQueryLoadBalanceAlgorithm` - 无论是否在事务中，读请求采用轮询策略路由到多个读库
-  * `TransactionWeightReadQueryLoadBalanceAlgorithm` - 无论是否在事务中，读请求采用权重策略路由到多个读库
-  * `FixedReplicaRandomReadQueryLoadBalanceAlgorithm` - 显示开启事务，读请求采用随机策略路由到一个固定读库；不开事务，每次读流量使用指定算法路由到不同的读库
-  * `FixedReplicaRoundRobinReadQueryLoadBalanceAlgorithm` - 显示开启事务，读请求采用轮询策略路由到一个固定读库；不开事务，每次读流量使用指定算法路由到不同的读库
-  * `FixedReplicaWeightReadQueryLoadBalanceAlgorithm` - 显示开启事务，读请求采用权重策略路由到多个读库；不开事务，每次读流量使用指定算法路由到不同的读库
-  * `FixedPrimaryReadQueryLoadBalanceAlgorithm` - 读请求全部路由到主库
+  * `RoundRobinReplicaLoadBalanceAlgorithm` - 基于轮询的读库负载均衡算法（默认算法）
+  * `RandomReplicaLoadBalanceAlgorithm` - 基于随机的读库负载均衡算法
+  * `WeightReplicaLoadBalanceAlgorithm` - 基于权重的读库负载均衡算法
+  * `TransactionRandomReplicaLoadBalanceAlgorithm` - 无论是否在事务中，读请求采用随机策略路由到多个读库
+  * `TransactionRoundRobinReplicaLoadBalanceAlgorithm` - 无论是否在事务中，读请求采用轮询策略路由到多个读库
+  * `TransactionWeightReplicaLoadBalanceAlgorithm` - 无论是否在事务中，读请求采用权重策略路由到多个读库
+  * `FixedReplicaRandomLoadBalanceAlgorithm` - 显示开启事务，读请求采用随机策略路由到一个固定读库；不开事务，每次读流量使用指定算法路由到不同的读库
+  * `FixedReplicaRoundRobinLoadBalanceAlgorithm` - 显示开启事务，读请求采用轮询策略路由到一个固定读库；不开事务，每次读流量使用指定算法路由到不同的读库
+  * `FixedReplicaWeightLoadBalanceAlgorithm` - 显示开启事务，读请求采用权重策略路由到多个读库；不开事务，每次读流量使用指定算法路由到不同的读库
+  * `FixedPrimaryLoadBalanceAlgorithm` - 读请求全部路由到主库
 
 ### 高可用 SPI
 
@@ -462,8 +464,15 @@ Apache ShardingSphere 可插拔架构提供了数十个基于 SPI 的扩展点�
   * OpenTracing
   * Zipkin
 
-## 6. 参考文档
+## 6. 注意事项
+
+> `DataSourceMetaData.getDefaultQueryProperties()` - 提供了各数据库类型的**默认属性**，提供了非常重要的参考意义。
+
+> `DataSourcePoolCreator.create()` - 数据源创建细节
+
+## 7. 参考文档
 
 * [注册中心数据结构 -【重要】](https://shardingsphere.apache.org/document/current/cn/reference/management/)
 * [FAQ](https://shardingsphere.apache.org/document/current/cn/reference/faq/)
 * [官方示例](https://github.com/apache/shardingsphere/tree/master/examples)
+* [A Holistic Pluggable Platform for Data Sharding — ICDE 2022 & Understanding](https://faun.pub/a-holistic-pluggable-platform-for-data-sharding-icde-2022-understanding-apache-shardingsphere-55779cfde16)
