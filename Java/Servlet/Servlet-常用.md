@@ -8,6 +8,10 @@
 * SpringMVC的`spring.servlet.multipart.resolve-lazily: true`会让SpringMVC延迟上述`javax.servlet.http.Part`解析，
 但如果在在此之前调用了HttpServletRequest获取参数还是会提前触发Part解析。参考源码：`org.springframework.web.servlet.DispatcherServlet.checkMultipart()`
 
+## Request/Response Stream 可重复读
+
+参考`logback-access`的`TeeFilter`/`TeeHttpServletRequest`/`TeeServletOutputStream`
+
 ## SpringBoot注册Filter、Servlet、Listener机制
 
 SpringBoot支持自动注册下面的Bean至Servlet容器中：

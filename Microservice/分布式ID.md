@@ -83,5 +83,6 @@ Tinyid是用Java开发的一款分布式id生成系统，基于数据库号段�
 * 设计极致优化，SegmentChainId 性能可达到近似 AtomicLong 的 TPS 性能:12743W+/s。
 
 > [官方文档](https://cosid.ahoo.me/guide/)
+
 > [Github 文档](https://github.com/Ahoo-Wang/CosId) - 配置文档相对全面
 

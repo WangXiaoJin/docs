@@ -1,26 +1,42 @@
 # MySql-常用
 
-## 解答
-
-### 锁
+## 锁 / 事务隔离级别 / 索引
 
 * [Select for update使用详解](https://zhuanlan.zhihu.com/p/143866444) - `主键`/`索引`/`非索引`字段 `行锁`及`表锁`场景
 * [15.7.3 Locks Set by Different SQL Statements in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html) - 官网
+* [行级锁,表级锁,页级锁](https://www.hollischuang.com/archives/914)
+* [读锁和写锁(表级)](https://www.hollischuang.com/archives/1728)
+* [共享锁与排他锁](https://www.hollischuang.com/archives/923)
+* [深入理解乐观锁与悲观锁](https://www.hollischuang.com/archives/934)
+* [一次数据库的死锁问题排查过程](https://www.hollischuang.com/archives/3461?spm=a2c6h.12873639.article-detail.8.a601addc66TpvH)
+
+* [脏读 / 不可重复读 / 幻读](https://www.hollischuang.com/archives/900)
+* [深入分析事务的隔离级别](https://www.hollischuang.com/archives/943)
+* [为什么MySQL选择REPEATABLE READ作为默认隔离级别？](https://www.hollischuang.com/archives/6427?spm=a2c6h.12873639.article-detail.6.a601addc66TpvH)
 
 以下链接有待确定：
 * [mysql 查看死锁和去除死锁](https://www.cnblogs.com/duanxz/p/4394641.html)
 * [mysql insert锁机制](https://blog.csdn.net/zhanghongzheng3213/article/details/53436240)
 * [全面了解mysql锁机制（InnoDB）与问题排查](https://juejin.im/post/5b82e0196fb9a019f47d1823)
 
-## 索引
+### 索引
 
+* [MySQL索引完全解读](https://www.hollischuang.com/archives/4110)
+* [MySQL索引原理](https://www.hollischuang.com/archives/6172)
 * [mysql索引结构原理、性能分析与优化](http://wulijun.github.io/2012/08/21/mysql-index-implementation-and-optimization.html)
 * [《高性能MySQL》读后感——聚簇索引](https://www.jianshu.com/p/54c6d5db4fe6)
+* [InnoDB引擎的索引知识小结](https://www.hollischuang.com/archives/1712)
+* [MySql数据是如何存储在磁盘上存储的？](https://www.hollischuang.com/archives/6086)
+* [MySQL是如何查询数据](https://www.hollischuang.com/archives/6192)
+* [设计索引的原则是什么？怎么避免索引失效？](https://www.hollischuang.com/archives/6330)
+
+* [InnoDB Locking and Transaction Model](https://dev.mysql.com/doc/refman/5.7/en/innodb-next-key-locking.html) -【官网】
 
 ## 规范
 
 * [mysql字段定义不要用null的分析](https://www.cnblogs.com/balfish/p/7905100.html)
 * [Problems with NULL Values](https://dev.mysql.com/doc/refman/5.6/en/problems-with-null.html)
+* [`COUNT(列名)`/`COUNT(1)`/`COUNT(*)`区别](https://www.hollischuang.com/archives/4057)
 
 ## Binlog
 
@@ -70,3 +86,13 @@
 * [XA 事务及在Seata中的应用](https://segmentfault.com/a/1190000040564227)
 * [无处不在的 MySQL XA 事务](https://zhuanlan.zhihu.com/p/372300181)
 
+## 查用语句
+
+* `SELECT version();` - 数据库版本查询
+* `show create table fund_transfer_stream;` - 引擎查询
+* `select @@tx_isolation;` - 事务隔离级别查询
+* `set session transaction isolation level read committed;` - 设置事务隔离级别（只对当前Session生效）
+* `show engine innodb status` - 获取死锁日志
+* `show variables like '%isolation%'` - 查询变量
+* `select @@autocommit;` - 事务自动提交查询
+* `set @@autocommit = 0;` - 事务手动提交

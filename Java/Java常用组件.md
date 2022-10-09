@@ -11,6 +11,24 @@ Vavr (formerly called Javaslang) is a functional library for Java 8+ that provid
 * [GitHub 链接](https://github.com/google/guava)
 * [Google Guava官方教程（中文版）](https://wizardforcel.gitbooks.io/guava-tutorial/content/1.html)
 
+### LMAX Disruptor
+
+The LMAX Disruptor is a high performance inter-thread messaging library. It provides a concurrent `ring buffer` data structure. 
+It is designed to provide a low-latency, high-throughput work queue in `asynchronous event processing` architectures.
+
+* [LMAX Disruptor: High performance alternative to bounded queues for exchanging data between concurrent threads](https://lmax-exchange.github.io/disruptor/disruptor.html) - 参考文献
+* [LMAX Disruptor User Guide](https://lmax-exchange.github.io/disruptor/user-guide/index.html) - 用户手册
+  * WaitStrategy种类及对比
+    * `BlockingWaitStrategy`
+    * `SleepingWaitStrategy`
+    * `YieldingWaitStrategy`
+    * `BusySpinWaitStrategy`
+* 博客
+  * [Dissecting the Disruptor: What's so special about a ring buffer?](http://mechanitis.blogspot.com/2011/06/dissecting-disruptor-whats-so-special.html)
+  * [Dissecting the Disruptor: Writing to the ring buffer](http://mechanitis.blogspot.com/2011/07/dissecting-disruptor-writing-to-ring.html)
+  * [Dissecting the Disruptor: Why it's so fast (part one) - Locks Are Bad](http://mechanitis.blogspot.com/2011/07/dissecting-disruptor-why-its-so-fast.html)
+  * [Dissecting the Disruptor: How do I read from the ring buffer?](http://mechanitis.blogspot.com/2011/06/dissecting-disruptor-how-do-i-read-from.html)
+
 ## 2. JavaPoet
 
 `JavaPoet` is a Java API for generating `.java` source files. 是`JavaWriter`的替代产品。

@@ -470,6 +470,9 @@ Apache ShardingSphere 可插拔架构提供了数十个基于 SPI 的扩展点�
 
 > `DataSourcePoolCreator.create()` - 数据源创建细节
 
+> `Memory`/`Standalone` mode，不可以使用默认的`SNOWFLAKE`，因为他们返回的`WorkerId`都为0，容易出现重复ID。`Cluster`模式可以使用`SNOWFLAKE`，
+因其使用`ClusterWorkerIdGenerator`生成`WorkerId`。
+
 ## 7. 参考文档
 
 * [注册中心数据结构 -【重要】](https://shardingsphere.apache.org/document/current/cn/reference/management/)

@@ -13,7 +13,23 @@
 
 ## RMI
 
+## MX4J
 
+MX4J is an open source implementation of the JMX TM technology.
+
+The MX4J implementation provides also useful services and tools, and several examples to guide users in the use of JMX to build their applications. Some example of tools, extensions and utilities are:
+* HTTP adaptor (also over SSL)
+* ConfigurationLoader to read MBean configuration from XML
+* AbstractDynamicMBean to ease DynamicMBean development
+* Utility MBeans for:
+  * RMIRegistry
+  * TNameServ
+  * Statistics
+  * EMail
+  * Remote MBean Proxying
+* Automatic generation of management interfaces for standard MBean via XDoclet
+
+[官方文档](http://mx4j.sourceforge.net/docs/index.html)
 
 
 
