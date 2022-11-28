@@ -20,97 +20,103 @@
 
 ## 常用配置
 
-* 配置Webpack的`alias`功能
+### 配置Webpack的`alias`功能
 
-    `File | Settings | Languages & Frameworks | JavaScript | Webpack | webpack configuration file` ==> 项目中`alias.config.js`
+`File | Settings | Languages & Frameworks | JavaScript | Webpack | webpack configuration file` ==> 项目中`alias.config.js`
 
-    > 配置完成后IDEA使用这些别名后会有自动提示功能
+> 配置完成后IDEA使用这些别名后会有自动提示功能
 
-* 当SCM子文件有改变时，上级所有文件夹都标记
+### 当SCM子文件有改变时，上级所有文件夹都标记
 
-    `File | Settings | Version Control | Confirmation | 勾选 Hignlight directories that contain modified files in the Project tree`
+`File | Settings | Version Control | Confirmation | 勾选 Hignlight directories that contain modified files in the Project tree`
 
-* 修改字体大小
+### 修改字体大小
 
-    `File | Settings | Editor | Font | Size: 14`
+`File | Settings | Editor | Font | Size: 14`
 
-* 修改文本的背景色
+### 修改文本的背景色
 
-    `File | Settings | Editor | Color Scheme | General | Text | Default text | 右侧Background: F3F1F1`
+`File | Settings | Editor | Color Scheme | General | Text | Default text | 右侧Background: F3F1F1`
 
-* 配置Maven settings.xml文件
+### 配置Maven settings.xml文件
 
-    `File | Settings | Build, Execution, Deployment | Build Tools | Maven | User settings file`
+`File | Settings | Build, Execution, Deployment | Build Tools | Maven | User settings file`
 
-* Terminal使用Linux环境
+### Terminal使用Linux环境
 
-    `File | Settings | Tools | Terminal | Shell path | "C:\Program Files\Git\bin\sh.exe" -login -i`
+`File | Settings | Tools | Terminal | Shell path | "C:\Program Files\Git\bin\sh.exe" -login -i`
 
-* IDEA转换*.properties中文
+### IDEA转换*.properties中文
 
-    `File | Settings | Editor | File Encodings`
+`File | Settings | Editor | File Encodings`
+
+配置如下：
+```
+Global Encoding：UTF-8
+Project Encoding：UTF-8
+Default encoding for properties files：UTF-8
+选中Transparent native-to-ascii conversion
+```
     
-    配置如下：
-    ```
-    Global Encoding：UTF-8
-    Project Encoding：UTF-8
-    Default encoding for properties files：UTF-8
-    选中Transparent native-to-ascii conversion
-    ```
-    
 
-* 创建Java类，自动生成`@author`/`@date` JavaDoc
+### 创建Java类，自动生成`@author`/`@date` JavaDoc
 
-    `File | Settings | Editor | File and Code Templates | Includes | File Header `
-    
-    配置内容如下：
-    
-    ```
-    /**
-     *
-     * @author WangXiaoJin
-     * @date ${YEAR}-${MONTH}-${DAY} ${TIME}
-     */ 
-    ```
-    
-    > 注：如果你想默认使用系统的时间格式，请换成`${DATE} ${TIME}`
+`File | Settings | Editor | File and Code Templates | Includes | File Header `
 
-* 使用`Live Templates`自动生成`@author`、`@date`等一系列JavaDoc
+配置内容如下：
 
-    `File | Settings | Editor | Live Templates`
+```
+/**
+ *
+ * @author WangXiaoJin
+ * @date ${YEAR}-${MONTH}-${DAY} ${TIME}
+ */ 
+```
+
+> 注：如果你想默认使用系统的时间格式，请换成`${DATE} ${TIME}`
+
+### 使用`Live Templates`自动生成`@author`、`@date`等一系列JavaDoc
+
+`File | Settings | Editor | Live Templates`
+
+1. 点击右侧 `+` 选择 `Template Group` ，输入`注释`，点击 `OK`
+
+2. 在新建的`注释`组下面，新建`@author` Live Template
+    * `Abbreviation`：`@author`
+    * `Description`: `生成@author 注解`
+    * `Template text`: `@author $author$`
+    * `Define applicable contexts`: 选择所有
+    * 选中`Reformat according to style`
+    * 点击`Edit variables` -> `Expression` -> `author`: `user()`
     
-    1. 点击右侧 `+` 选择 `Template Group` ，输入`注释`，点击 `OK`
-    
-    2. 在新建的`注释`组下面，新建`@author` Live Template
-        * `Abbreviation`：`@author`
-        * `Description`: `生成@author 注解`
-        * `Template text`: `@author $author$`
-        * `Define applicable contexts`: 选择所有
-        * 选中`Reformat according to style`
-        * 点击`Edit variables` -> `Expression` -> `author`: `user()`
-        
-    3. 在新建的`注释`组下面，新建`@date` Live Template
-        * `Abbreviation`：`@date`
-        * `Description`: `生成@date 注释`
-        * `Template text`: `@date $date$ $time$`
-        * `Define applicable contexts`: 选择所有
-        * 选中`Reformat according to style`
-        * 点击`Edit variables` -> `Expression`
-            * `date`: `date("yyyy-MM-dd")`
-            * `time`: `time()`
+3. 在新建的`注释`组下面，新建`@date` Live Template
+    * `Abbreviation`：`@date`
+    * `Description`: `生成@date 注释`
+    * `Template text`: `@date $date$ $time$`
+    * `Define applicable contexts`: 选择所有
+    * 选中`Reformat according to style`
+    * 点击`Edit variables` -> `Expression`
+        * `date`: `date("yyyy-MM-dd")`
+        * `time`: `time()`
 
-* Code Completion
+### Code Completion
 
-    `File | Settings | Editor | General | Code Completion`
-    - 勾选 `Show the documentation popup in 1000 ms`
-    - Machine learning-Assisted Completion
-        - 勾选 `Rank completion suggestions based on Machine Learning`
-            - 勾选 `Java`
-            - 勾选 `kotlin`
-        - 勾选 `Show position changes in completion popup`
-    - Parameter Info
-        - 勾选 `Show parameter name hints on completion`
-        - 勾选 `Show full method signatures`
+`File | Settings | Editor | General | Code Completion`
+- 勾选 `Show the documentation popup in 1000 ms`
+- Machine learning-Assisted Completion
+    - 勾选 `Rank completion suggestions based on Machine Learning`
+        - 勾选 `Java`
+        - 勾选 `kotlin`
+    - 勾选 `Show position changes in completion popup`
+- Parameter Info
+    - 勾选 `Show parameter name hints on completion`
+    - 勾选 `Show full method signatures`
+
+### 启用`Inferred annotations`
+
+`File | Settings | Editor | Inlay Hints | Annotations | Java | Inferred annotations`
+
+> 启用`Inferred annotations`后IDEA自定生成`@Contract`/`@Nullable`/`@NotNull`/`@Unmodifiable`等注解，方便开发查看
 
 ## Inspections
 

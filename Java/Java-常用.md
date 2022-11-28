@@ -86,6 +86,13 @@ either block tags, such as `@todo`, or inline tags, such as `{@underline}`.
   * [Java CompletableFuture 详解](https://colobu.com/2016/02/29/Java-CompletableFuture/)
   * [Guide To CompletableFuture](https://www.baeldung.com/java-completablefuture)
 
+### Synthetic / Bridge
+
+* Synthetic Fields
+* Synthetic Methods
+* Synthetic Constructors
+* Bridge Methods
+> [Synthetic Constructs in Java - 参考链接](https://www.baeldung.com/java-synthetic)
 
 ## 位运算
 
@@ -97,6 +104,15 @@ either block tags, such as `@todo`, or inline tags, such as `{@underline}`.
 * [官方文档](https://docs.oracle.com/en/java/javase/) - 可选择你需要的JDK版本
 
 * [Java Language and Virtual Machine Specifications](https://docs.oracle.com/javase/specs/index.html) -【重要】
+
+* Java各版本新特性
+  * [JDK Enhancement Proposals - JEP索引排序（官网）](https://openjdk.org/jeps/0)
+  * [JDK Enhancement Proposals - Java版本排序（官网）](https://openjdk.org/projects/jdk/)
+  * [各版本新特性 - 简易参考](https://pdai.tech/md/java/java8up/java9.html)
+  * module（模块化）
+    * [Java 9 的模块（Module）系统](https://juejin.cn/post/7078562146115649544)
+    * [关于 Java 模块系统，看这一篇就够了](https://www.51cto.com/article/620291.html)
+    * [Module - 廖雪峰](https://www.liaoxuefeng.com/wiki/1252599548343744/1281795926523938#0)
 
 * [重写 `equals` 方法注意事项](https://www.artima.com/lejava/articles/equality.html)
 

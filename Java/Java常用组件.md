@@ -55,7 +55,7 @@ the most comprehensive tool in this field!
 
 * [Immutables官网](http://immutables.github.io/)
 
-## 5. HTTP Request
+## 5. HTTP
 
 #### Spring RestTemplate
 #### Apache HttpClient
@@ -109,4 +109,14 @@ based approach while providing a simple refactoring safe API for handling specif
         * [Migrations](http://www.mybatis.org/migrations)
         * [MyBatis Dynamic SQL](https://mybatis.org/mybatis-dynamic-sql/docs/introduction.html) -SQL Generator for MyBatis and Spring JDBC Templates
 
+## 9. 监控
 
+### Jolokia 
+
+Jolokia is remote JMX with JSON over HTTP.
+
+Jolokia is a JMX-HTTP bridge giving an alternative to JSR-160 connectors. It is an agent based approach with support 
+for many platforms. In addition to basic JMX operations it enhances JMX remoting with unique features like bulk requests 
+and fine grained security policies.
+
+* [官方文档](https://jolokia.org/reference/html/index.html)

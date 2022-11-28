@@ -55,10 +55,6 @@
         EOF
     ```
 
-### `exec 2>&1`
-* [sh command: exec 2>&1](https://stackoverflow.com/questions/1216922/sh-command-exec-21)
-* [Bash One-Liners Explained, Part III: All about redirections](https://catonmat.net/bash-one-liners-explained-part-three)
-
 ### `fg`、`bg`、`jobs`、`&`、`ctrl + z`
 
 > [Linux 中`fg`、`bg`、`jobs`、`&`、`ctrl + z`等指令](https://ehlxr.me/2017/01/18/Linux-%E4%B8%AD-fg%E3%80%81bg%E3%80%81jobs%E3%80%81-%E6%8C%87%E4%BB%A4/)
@@ -120,6 +116,9 @@ sed是一个强大的文本编辑工具。
 
 ### 管道/重定向
 
+* [sh command: exec 2>&1](https://stackoverflow.com/questions/1216922/sh-command-exec-21)
+* [Bash One-Liners Explained, Part III: All about redirections](https://catonmat.net/bash-one-liners-explained-part-three)
+* [Difference between `>/dev/null 2>&1 &` and `</dev/null &>/dev/null &`](https://unix.stackexchange.com/questions/497207/difference-between-dev-null-21-and-dev-null-dev-null)
 * [重定向](https://www.bookstack.cn/read/bash-tutorial/docs-archives-redirection.md) - 阮一峰 Bash 脚本教程
 * [管道和重定向基础](https://www.cnblogs.com/f-ck-need-u/p/7325378.html) - 骏马金龙
 * [彻底搞懂shell的高级I/O重定向](https://www.junmajinlong.com/shell/fd_duplicate/) - 骏马金龙
