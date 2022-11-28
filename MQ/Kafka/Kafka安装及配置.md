@@ -2,12 +2,36 @@
 
 ## 安装
 
-### 1. 安装`Java 8+`
+### 1. 安装`Java 8+`及系统配置
 
 先决条件：
 * [Java Version](https://kafka.apache.org/documentation/#java)
 * [Hardware and OS](https://kafka.apache.org/documentation/#hwandos)
 
+```bash
+# 安装 Java 17
+shell> wget https://download.oracle.com/java/17/archive/jdk-17.0.5_linux-x64_bin.tar.gz
+shell> tar -zxf jdk-17.0.5_linux-x64_bin.tar.gz
+shell> # 修改 JAVA_HOME 及 PATH
+shell> # 修改 fs.file-max 及 ulimit nofile
+```
+
+系统配置：
+* fs.file-max
+  * `sysctl -w fs.file-max=655350`(Session)
+  * `fs.file-max = 655350` - `/etc/sysctl.conf`(永久)
+* nofile
+  * `ulimit -n 65536`(Session)
+  * `* - nofile 65536` - `/etc/security/limits.conf`(永久)
+* vm.max_map_count
+  * `sysctl -w vm.max_map_count=655350`(Session)
+  * `vm.max_map_count = 655350` - `/etc/sysctl.conf`(永久)
+* 文件系统
+  * 常用的文件系统有：`EXT4`、`XFS`，推荐使用`XFS`
+  * `noatime` - This option disables updating of a file's atime (last access time) attribute when the file is read. 
+  This can eliminate a significant number of filesystem writes, especially in the case of bootstrapping consumers. Kafka does not rely on the atime attributes at all, so it is safe to disable this.
+
+> 注：系统配置值实际情况而定，详情参考上述官网文档链接。
 
 ### 2. 下载 Kafka
 
