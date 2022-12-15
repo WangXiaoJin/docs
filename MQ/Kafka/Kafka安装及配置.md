@@ -71,6 +71,14 @@ shell> vim bin/kafka-server-start.sh
 export KAFKA_OPTS="-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
 ```
 
+**客户端连接配置：**
+```properties
+security.protocol=SASL_PLAINTEXT
+sasl.mechanism=PLAIN
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
+    username="admin" \
+    password="admin123";
+```
 
 #### 3.1 KRaft 模式
 
@@ -923,10 +931,40 @@ The Admin API allows managing and inspecting topics, brokers, and other Kafka ob
 
 ## Kafka GUI
 
-推荐几款GUI：
-* [Kafka Tool](https://www.kafkatool.com/) - 客户端程序
-* [Redpanda Console](https://github.com/redpanda-data/console) - Web程序
-* [Kafka UI](https://github.com/provectus/kafka-ui) - Web程序
+### Kafka Tool
+
+> [官网链接](https://www.kafkatool.com/) - 客户端程序
+
+
+### Redpanda Console
+
+```bash
+shell> docker run -p 8080:8080 \
+  -e KAFKA_BROKERS=192.168.202.245:9092 \
+  -e KAFKA_SASL_ENABLED=true \
+  -e KAFKA_SASL_MECHANISM=PLAIN \
+  -e KAFKA_SASL_USERNAME=admin \
+  -e KAFKA_SASL_PASSWORD=admin123 \
+  -d docker.redpanda.com/vectorized/console:latest
+```
+
+> [官网链接](https://github.com/redpanda-data/console) - Web程序
+
+
+### Kafka UI
+
+```bash
+shell> docker run -p 8080:8080 \
+  -e KAFKA_CLUSTERS_0_NAME=local \
+  -e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=192.168.202.245:9092 \
+  -e KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL=SASL_PLAINTEXT \
+  -e KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM=PLAIN \
+  -e KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG='org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="admin123";' \
+  -d provectuslabs/kafka-ui:latest
+```
+
+> [官网链接](https://github.com/provectus/kafka-ui) - Web程序
+
 
 ## 参考文档
 
