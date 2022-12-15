@@ -10,6 +10,37 @@
 * [SpringBoot2.1.x后Feign出现Bean被重复注册，导致项目不能启动](https://www.jianshu.com/p/b5581826cf67)
 
 
+## Spring Cloud Consul
+Nginx配置：
+```
+upstream consul {
+    ip_hash;
+    server 192.168.201.1:8500 max_fails=10;
+    server 192.168.201.2:8500 max_fails=10;
+    server 192.168.201.3:8500 max_fails=10;
+}
+
+server {
+    listen 80;
+    server_name consul.xxx.com;
+    # 第二个参数用于设置响应头Keep-Alive
+    keepalive_timeout 75s 72s;
+    proxy_ignore_client_abort off;
+    proxy_next_upstream error timeout;
+    
+    location / {
+        proxy_pass http://consul;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}
+```
+
+问题汇总：
+* `org.apache.http.NoHttpResponseException: The target server failed to respond` - [记HttpClient的NoHttpResponse问题](https://czjxy881.github.io/java,nginx/%E8%AE%B0HttpClient%E7%9A%84NoHttpResponse%E9%97%AE%E9%A2%98/)
+
+
 ## Spring Cloud Gateway
 
 #### Reactor Netty Access Logs

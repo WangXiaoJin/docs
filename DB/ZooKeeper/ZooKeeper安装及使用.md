@@ -81,3 +81,6 @@
 	  client连接`127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002/app/a`来改变根路径  
       client连接zookeeper server时可以传一个session timeout参数，这个参数值必须在大于等于`tickTime * 2`，小于等于 `tickTime * 20`  
 
+5. Zookeeper GUI
+
+* [PrettyZoo](https://github.com/vran-dev/PrettyZoo)

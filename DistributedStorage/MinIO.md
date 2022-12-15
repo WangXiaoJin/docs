@@ -48,7 +48,7 @@
     mc mb self/mybucket
     # 拷贝本地文件至MinIO集群的mybucket
     mc cp img-01.jpg self/mybucket
-    # 磁盘损坏时需要修复数据，用下面的命令（注：命令已废弃，MinIO会后台自动修复）
+    # 磁盘损坏或文件丢失时需要修复数据，用下面的命令（注：bucket名必须提供，否则可能会hang住）
     mc admin heal -r self/mybucket
     ```
 
