@@ -965,6 +965,12 @@ shell> docker run -p 8080:8080 \
 
 > [官网链接](https://github.com/provectus/kafka-ui) - Web程序
 
+### EFAK (Eagle For Apache Kafka) - Kafka Eagle
+
+EFAK 提供了 Kafka 监控、告警、管理等相关功能
+
+> [官网链接](https://www.kafka-eagle.org/) - Web程序
+
 
 ## 参考文档
 
