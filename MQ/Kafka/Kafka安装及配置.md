@@ -116,6 +116,17 @@ node.id=1
 # controller.quorum.voters property must match the corresponding id on the controller servers.
 controller.quorum.voters=1@192.168.202.245:9094,2@192.168.202.246:9094,3@192.168.202.247:9094
 
+# Maximum time in milliseconds to wait without being able to fetch from the leader before triggering a new election
+controller.quorum.election.timeout.ms=2000
+
+# Maximum time without a successful fetch from the current leader before becoming a candidate and triggering an election for voters; 
+# Maximum time without receiving fetch from a majority of the quorum before asking around to see if there's a new epoch for leader
+controller.quorum.fetch.timeout.ms=4000
+
+# The configuration controls the maximum amount of time the client will wait for the response of a request. 
+# If the response is not received before the timeout elapses the client will resend the request if necessary or fail the request if retries are exhausted.
+controller.quorum.request.timeout.ms=4000
+
 ############################# Socket Server Settings #############################
 
 # The address the socket server listens on.
