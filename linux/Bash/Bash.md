@@ -99,17 +99,17 @@ sed是一个强大的文本编辑工具。
     # 解析JSON格式的日志文件，转换成普通日志格式
     # 1. `. as $log` - 设置变量$log，目的：当执行 try 后面的表达式报错后，使用catch返回$log原始数据
     # 2. `fromjson` - 格式化原始应用日志的json数据
-    # 3. `[.["@ts"], .level, .thread, .logger, .msg] | join(" ")` - 拼装日志数据，转换成普通日志格式
-    jq -rR '. as $log | try ( fromjson | [.["@ts"], .level, .thread, .logger, .msg] | join(" ") ) catch $log' app-log.json
+    # 3. `[.["@timestamp"], .level, .thread, .logger, .msg, .throwable] | join(" ")` - 拼装日志数据，转换成普通日志格式
+    jq -rR '. as $log | try ( fromjson | [.["@timestamp"], .level, .thread, .logger, .msg, .throwable] | join(" ") ) catch $log' app-log.json
     
     # 解析K8S控制台的JSON格式日志，转换成普通日志格式
-    kubectl logs -f --tail=100 {podname} -n {namespace} | jq -rR '. as $log | try ( fromjson | [.["@ts"], .level, .thread, .logger, .msg] | join(" ") ) catch $log'
+    kubectl logs -f --tail=100 {podname} -n {namespace} | jq -rR '. as $log | try ( fromjson | [.["@timestamp"], .level, .thread, .logger, .msg, .throwable] | join(" ") ) catch $log'
     
     # 解析Docker的json格式日志文件，转换成普通日志格式
     # 1. `.log as $log` - 设置变量$log，目的：当执行 try 后面的表达式报错后，使用catch返回$log原始数据
     # 2. `fromjson` - 格式化原始应用日志的json数据
-    # 3. `[.["@ts"], .level, .thread, .logger, .msg] | join(" ")` - 拼装日志数据，转换成普通日志格式
-    jq -r '.log as $log | .log | try ( fromjson | [.["@ts"], .level, .thread, .logger, .msg] | join(" ") ) catch $log' xxx-json.log
+    # 3. `[.["@timestamp"], .level, .thread, .logger, .msg, .throwable] | join(" ")` - 拼装日志数据，转换成普通日志格式
+    jq -r '.log as $log | .log | try ( fromjson | [.["@timestamp"], .level, .thread, .logger, .msg, .throwable] | join(" ") ) catch $log' xxx-json.log
     ```
 
 * [jo - Github](https://github.com/jpmens/jo)
