@@ -54,6 +54,10 @@
 * [Uniform Resource Identifier (URI): Generic Syntax](https://datatracker.ietf.org/doc/html/rfc3986#section-2.2) - URI规范
   * [保留字符](https://datatracker.ietf.org/doc/html/rfc3986#section-2.2) - `:/?#[]@!$&'()*+,;=` - 使用时必须转换为`%格式`
 
+## Media Types
+
+* [Media Types](https://www.iana.org/assignments/media-types/media-types.xhtml) - 最全的格式列表
+
 ## 参考链接
 
 * [Web technology (MDN)](https://developer.mozilla.org/en-US/docs/Web) -【重要】Web 参考文献
