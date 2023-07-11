@@ -2,6 +2,8 @@
 
 ## 锁 / 事务隔离级别 / 索引
 
+* [Using InnoDB Transaction and Locking Information](https://dev.mysql.com/doc/refman/5.7/en/innodb-information-schema-examples.html) - 官网
+* [MySQL中间隙锁的加锁规则](https://www.modb.pro/db/74024) - 【值得一看】
 * [Select for update使用详解](https://zhuanlan.zhihu.com/p/143866444) - `主键`/`索引`/`非索引`字段 `行锁`及`表锁`场景
 * [15.7.3 Locks Set by Different SQL Statements in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html) - 官网
 * [行级锁,表级锁,页级锁](https://www.hollischuang.com/archives/914)

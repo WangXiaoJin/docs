@@ -2,88 +2,146 @@
 
 ## Elasticsearch
 
-前置条件：
-* 安装JDK，`1.8.0_73 or later`
-* 设置`vm_map_max_count`
-  * 编辑`/etc/sysctl.conf`，改`vm.max_map_count=262144`，永久生效。然后`sysctl -p`使配置文件当前生效
-  * `sysctl -w vm.max_map_count=262144`，重启会失效
-* 设置`ulimit` - 参考链接：[Configuring system settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/setting-system-settings.html)。
-验证`max_file_descriptors`使用`GET _nodes/stats/process?filter_path=**.max_file_descriptors`
+### 前置条件
 
-* Number of threads - ES使用大量的线程池来执行各种操作，确保Elasticsearch用户能创建至少2048个线程
-  * `ulimit -u 10240`，当前会话生效。切换到Elasticsearch用户再执行下`ulimit -u 10240`
-  * `/etc/security/limits.conf`配置`nproc`为`10240`
+#### 1. Virtual memory
 
-   ```
-   # 如果想使用 (* soft nproc 10240) 这种带星号格式时需要注意一点，当你配置后发现并没有生效，
-   # 则修改/etc/security/limits.d/(xx)-nproc.conf文件，把对应的nproc值调大，否则会受限于nproc.conf配置
-   # 具体的用户配置（如下）不受限于nproc.conf配置文件
-   elasticsearch soft nproc 10240
-   elasticsearch hard nproc 10240
-   ```
+```shell
+# 永久生效
+shell> vim /etc/sysctl.conf
+vm.max_map_count = 262144
 
-   注：[参考链接](http://kumu1988.blog.51cto.com/4075018/1091369)。`10240`这个值根据使用的具体情况而定。
-   (note that you might have to increase the limits for the root `user` too)
+# 临时生效
+shell> sysctl -w vm.max_map_count=262144
+```
 
-* Disable swapping - 有三种禁用swap方案，参考链接：[Disable swapping](https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration-memory.html)
-     
+> 以`RPM`或`Debian`包运行的ES默认已经配置
+
+#### 2. Max files descriptors
+
+确保运行ES的用户`max files descriptors`值最低为 65536。
+
+> 以`RPM`或`Debian`包运行的ES默认已经配置
+
+参考链接:
+* [Configuring system settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/setting-system-settings.html)  
+* [File Descriptors](https://www.elastic.co/guide/en/elasticsearch/reference/current/file-descriptors.html)
+
+#### 3. Number of threads
+
+确保运行ES的用户`nproc`值最低为 4096。
+
+```shell
+# 永久生效
+shell> vim /etc/security/limits.conf
+elasticsearch   -   nproc    10240
+
+# 临时生效
+shell> ulimit -u 10240 
+```
+
+> 以`RPM`或`Debian`包运行的ES默认已经配置
+
+> [参考文档](https://www.elastic.co/guide/en/elasticsearch/reference/current/max-number-of-threads.html)
+
+#### 4. Disable swapping
+
+```shell
+# 临时禁用
+# 无需重启 Elasticsearch
+shell> sudo swapoff -a
+
+# 永久禁用
+# 注释掉包含`swap`关键字的行
+shell> vim /etc/fstab
+```
+
+> [参考文档](https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration-memory.html)
+
+#### 5. TCP retransmission timeout
+
+`net.ipv4.tcp_retries2`默认配置为15，按公式计算后超时时间为900秒。
+
+```shell
+# 临时配置
+shell> sysctl -w net.ipv4.tcp_retries2=5
+
+# 永久禁用
+shell> vim /etc/sysctl.conf
+net.ipv4.tcp_retries2 = 5
+```
+
+> 注：如果网络环境不稳定可以适当往上调整
+
+> [参考文档](https://www.elastic.co/guide/en/elasticsearch/reference/current/system-config-tcpretries.html)
+
+#### 6. Heap size settings
+
+By default, Elasticsearch automatically sets the JVM heap size based on a node’s [roles](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html#node-roles) 
+and total memory. We recommend the default sizing for most production environments.
+
+如想自定义 JVM 配置，最好是确保heap size低于`zero-based compressed oops`的阀值，26GB适用于大多数系统，某些系统能达到30GB，你可以在启动
+ES时增加以下JVM参数来验证：`-XX:+UnlockDiagnosticVMOptions -XX:+PrintCompressedOopsMode`
+
+```
+heap address: 0x000000011be00000, size: 27648 MB, zero based Compressed Oops
+```
+
+#### 7. Temporary directory settings
+
+By default, Elasticsearch uses a private temporary directory that the startup script creates immediately below the system temporary directory.
+
+On some Linux distributions, a system utility will clean files and directories from `/tmp` if they have not been 
+recently accessed. This behavior can lead to the private temporary directory being removed while Elasticsearch is running 
+if features that require the temporary directory are not used for a long time. Removing the private temporary directory 
+causes problems if a feature that requires this directory is subsequently used.
+
+If you install Elasticsearch using the `.deb` or `.rpm` packages and run it under `systemd`, 
+the private temporary directory that Elasticsearch uses is excluded from periodic cleanup.
+
+If you intend to run the `.tar.gz` distribution on Linux or MacOS for an extended period, consider creating 
+a dedicated temporary directory for Elasticsearch that is not under a path that will have old files and directories cleaned from it. 
+This directory should have permissions set so that only the user that Elasticsearch runs as can access it. 
+Then, set the `$ES_TMPDIR` environment variable to point to this directory before starting Elasticsearch.
+
 ```bash
-shell> wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.5.0.tar.gz
-shell> sha1sum elasticsearch-5.5.0.tar.gz # 通过sha1sum或shasum比较SHA值
-shell> tar -xvf elasticsearch-5.5.0.tar.gz
+shell> wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.6.2-linux-x86_64.tar.gz
+shell> tar -xzf elasticsearch-8.6.2-linux-x86_64.tar.gz
+shell> cd elasticsearch-8.6.2/
 shell> groupadd elasticsearch   #添加elasticsearch用户组
 shell> useradd elasticsearch -g elasticsearch -p espassword #添加elasticsearch用户
-shell> mkdir -p /data/logs/elasticsearch /data/elasticsearch #用于存放ES的日志和数据
-shell> chown -R elasticsearch:elasticsearch elasticsearch-5.5.0 /data/logs/elasticsearch /data/elasticsearch
+shell> mkdir -p /var/log/elasticsearch /var/data/elasticsearch #用于存放ES的日志和数据
+shell> chown -R elasticsearch:elasticsearch elasticsearch-5.5.0 /var/log/elasticsearch /var/data/elasticsearch
 shell> su elasticsearch #切换到elasticsearch用户
-shell> cd elasticsearch-5.5.0/bin
-shell> ./elasticsearch -d -p pid #-d 以守护进程运行，-p pid 把进程id记录到pid文件中
+# -d 以守护进程运行，-p pid 把进程id记录到pid文件中
+shell> ./bin/elasticsearch -d -p pid
 shell> kill `cat pid` #关闭elasticsearch
 ```
- 
-修改`jvm.options`文件的`JVM heap size`（文档[heap size](https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-size.html)）：
-* minimum heap size (Xms) 和maximum heap size (Xmx)值必须相同，因heap size增加时JVM会停止服务
-* heap size值越大，更多的内存会被ES用来缓存数据，也意味着垃圾回收时JVM停止服务时间越长
-* Xmx设值不能超过物理内存`50%`，剩下的50%用于`kernel file system caches`使用（即提供给Lucene使用）
-* Xmx设值不能超过32GB（近似值），这个值受制于JVM `compressed oops`，可通过ES日志来确认JVM是否使用`compressed oops`：
 
-   ```
-   heap size [1.9gb], compressed ordinary object pointers [true]
-   ```
 
-* 最好是确保heap size低于`zero-based compressed oops`的阀值，26GB适用于大多数系统，某些系统能达到30GB，你可以在启动
-ES时增加以下JVM参数来验证：`-XX:+UnlockDiagnosticVMOptions -XX:+PrintCompressedOopsMode`
-    
-   ```
-   heap address: 0x000000011be00000, size: 27648 MB, zero based Compressed Oops
-   ```
-  
-* 通过`jvm.options`修改：
 
-   ```
-   -Xms2g
-   -Xmx2g
-   ```
 
-* 通过环境变量修改，需要注释掉`jvm.options`的`Xms` 、`Xmx`配置：
-
-   ```
-   ES_JAVA_OPTS="-Xms2g -Xmx2g" ./bin/elasticsearch
-   ```
  
 修改`elasticsearch.yml`配置文件，这里我举例了集群配置，一共有`192.168.206.130`、`192.168.206.134`、`192.168.206.135`三个节点：
  
 Node1配置：
 ```yaml
-cluster.name: es-easycode
+cluster.name: app-log-prod
 #node.name: ${HOSTNAME} 可以设置系统环境变量
-node.name: node-1
-path.data: /data/elasticsearch
-path.logs: /data/logs/elasticsearch
+node.name: app-log-data-1
+path.data: /var/data/elasticsearch
+path.logs: /var/log/elasticsearch
 #plugins: /path/to/plugins
 network.host: 192.168.206.130
 http.port: 9200
 transport.tcp.port: 9300
+# 通过文件动态配置 seed nodes
+discovery.seed_providers: file
+# Provides a list of the addresses of the master-eligible nodes in the cluster
+discovery.seed_hosts:
+  - 192.168.206.130:9300
+  - 192.168.206.131:9300
+  - 192.168.206.132:9300
 # 如果在启动ES时抛出“unable to install syscall filter”警告，则禁用system_call_filter。
 # 因为某些系统（CentOS6）不支持seccomp，而ES默认开启system_call_filter，所以会抛出警告
 #bootstrap.system_call_filter: false
@@ -97,11 +155,11 @@ discovery.zen.minimum_master_nodes: 2
 
 Node2配置（Node3的配置参考Node2修改下）：
 ```yaml
-cluster.name: es-easycode
+cluster.name: app-log-prod
 #node.name: ${HOSTNAME} 可以设置系统环境变量
-node.name: node-2
-path.data: /data/elasticsearch
-path.logs: /data/logs/elasticsearch
+node.name: app-log-data-2
+path.data: /var/data/elasticsearch
+path.logs: /var/log/elasticsearch
 #plugins: /path/to/plugins
 network.host: 192.168.206.134
 http.port: 9200
@@ -161,10 +219,48 @@ shell> service iptables restart
     node.data: false	#(default: true - 数据节点)
     node.ingest: false	#(default: true - 写数据之前对其进行处理)
     ```
- 
-> Docker安装ES请参考<https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html>
- 
-**配置参考:** 
+
+
+### ES 参考文档
+
+#### Set Up
+
+* [Discovery and cluster formation settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-settings.html)
+* [Cluster-level shard allocation and routing settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cluster.html)
+* [Miscellaneous cluster settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/misc-cluster-settings.html)
+  * `cluster.blocks.read_only`
+  * `cluster.blocks.read_only_allow_delete`
+  * `cluster.max_shards_per_node`
+  * `cluster.max_shards_per_node.frozen`
+  * `User-defined cluster metadata` - Any information stored in user-defined cluster metadata will be viewable by anyone with access to the [Cluster Get Settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-get-settings.html) API, and is recorded in the Elasticsearch logs.
+  * `cluster.indices.tombstones.size`
+  * `Logger`
+  * `cluster.persistent_tasks.allocation.enable`
+  * `cluster.persistent_tasks.allocation.recheck_interval`
+* [Field data cache settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-fielddata.html)
+* [Index management settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/index-management-settings.html)
+* [Index recovery settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/recovery.html)
+* [Local gateway settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-gateway.html)
+* [Logging](https://www.elastic.co/guide/en/elasticsearch/reference/current/logging.html)
+* [Node](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html)
+  * Node roles
+  * Coordinating node
+  * Node data path
+* [Networking](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html)
+  * Network settings
+  * Request tracing
+  * Networking threading model
+* [Query cache index settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-cache.html)
+* [Security settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-settings.html)
+* [Shard request cache settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/shard-request-cache.html)
+* [Snapshot and restore settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshot-settings.html)
+* [Thread pools](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-threadpool.html)
+* [Watcher settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/notification-settings.html)
+* [Advanced configuration](https://www.elastic.co/guide/en/elasticsearch/reference/current/advanced-configuration.html) - 使用默认值，不建议调整
+  * JVM options
+
+
+
 * [Configuring Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/settings.html)
 * [Important Elasticsearch configuration](https://www.elastic.co/guide/en/elasticsearch/reference/current/important-settings.html)
 * [Node详解及配置](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-node.html) - 重要
@@ -206,10 +302,10 @@ shell> nohup ./bin/kibana &
 * 负载均衡配置 - 因Kibana不支持直接连接配置多个ES地址，所以当前最优方案是Kibana于ES集群分开部署，在当前Kibana机器部署一个ES协调节点，此ES Node负责分发Kibana请求，
 不参与ES集群的数据存储等相关操作。配置参考如下：
     ```yaml
-    cluster.name: es-easycode
-    node.name: node-kibana-1
-    path.data: /data/elasticsearch
-    path.logs: /data/logs/elasticsearch
+    cluster.name: app-log-prod
+    node.name: app-log-kibana
+    path.data: /var/data/elasticsearch
+    path.logs: /var/log/elasticsearch
     network.host: 192.168.206.136
     http.port: 9200
     transport.tcp.port: 9300
@@ -516,9 +612,9 @@ shell> service iptables restart
 Beats不依赖于JDK，相对于Logstash来说，Beats更轻量级且消耗更少的系统资源。
 
 ```bash
-shell> wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-5.5.0-linux-x86_64.tar.gz
-shell> tar -xvf filebeat-5.5.0-linux-x86_64.tar.gz
-shell> cd filebeat-5.5.0-linux-x86_64
+shell> curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.6.1-linux-x86_64.tar.gz
+shell> tar xzvf filebeat-8.6.1-linux-x86_64.tar.gz
+shell> cd filebeat-8.6.1-linux-x86_64
 shell> nohup ./filebeat &   #执行之前修改下filebeat.yml配置文件，参考filebeat.full.yml
 ```
  
@@ -605,6 +701,7 @@ logging.files:
 
 ### 参考文档
 
+* [ELK各版本及系统支持矩阵](https://www.elastic.co/cn/support/matrix)
 * [Filebeat各环境安装**目录**](https://www.elastic.co/guide/en/beats/filebeat/current/directory-layout.html)
 * [Filebeat Command 参考手册](https://www.elastic.co/guide/en/beats/filebeat/current/command-line-options.html)
   * `export` - Exports the configuration, index template, ILM policy, or a dashboard to stdout.

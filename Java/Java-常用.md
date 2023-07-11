@@ -6,7 +6,7 @@
 
 通过 `java.time.format.ZoneName` 查阅时区
 
-### Javadoc Technology
+### Javadoc
 
 #### Doclet
 
@@ -22,6 +22,8 @@ either block tags, such as `@todo`, or inline tags, such as `{@underline}`.
 
 * [Javadoc Technology](https://docs.oracle.com/javase/7/docs/technotes/guides/javadoc/index.html)
 * [javadoc - The Java API Documentation Generator](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/javadoc.html) - 详解
+* [A Guide to Formatting Code Snippets in Javadoc](https://reflectoring.io/howto-format-code-snippets-in-javadoc/) - `<pre>`/`{@code}`/`<code>`
+
 
 ### Java 获取 `Content-Type` / `MimeType`
 
@@ -56,6 +58,12 @@ either block tags, such as `@todo`, or inline tags, such as `{@underline}`.
 ### 正则 - RegExp
 
 * [正则表达式 - 可视化图解](https://regexper.com/)
+
+#### Google RE2
+
+谷歌开源的正则表达式库，性能较好。
+
+* [RE2 语法](https://github.com/google/re2/wiki/Syntax)
 
 
 ### JDK sun 包源码

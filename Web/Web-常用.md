@@ -47,7 +47,8 @@
   * [HPACK: Header Compression for HTTP/2](https://httpwg.org/specs/rfc7541.html) - RFC7541
 * [HTTP/2 Frequently Asked Questions](https://http2.github.io/faq/)
 * [实现HTTP2的组件](https://github.com/httpwg/http2-spec/wiki/Implementations)
-
+* [Java 9和Spring Boot 2.0纷纷宣布支持的HTTP/2到底是什么？](https://mp.weixin.qq.com/s?__biz=MzI3NzE0NjcwMg==&mid=2650120831&idx=1&sn=2bcafb931eff897e2f866bd02dcda680&chksm=f36bbf5ec41c36481c2f5da1f74cf48fca374bb5b5922d26ac4ace7858cf8ede4fc2cefc1584&scene=21#wechat_redirect)
+* [HTTP/2做错了什么？刚刚辉煌2年就要被弃用了！？](https://zhuanlan.zhihu.com/p/337196435)
 
 ## URI
 

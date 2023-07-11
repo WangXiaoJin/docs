@@ -1,6 +1,6 @@
 # IDEA常用配置及插件
 
-## 快捷键
+## 1. 快捷键
 
 复制一份Default快捷键配置，在新拷贝的配置中修改：
 
@@ -18,7 +18,7 @@
 * Main menu | Code | Completion | Cyclic Expand Word = Alt+.
 * Main menu | Code | Completion | Cyclic Expand Word (Backward) = Alt+Shift+.
 
-## 常用配置
+## 2. 常用配置
 
 ### 配置Webpack的`alias`功能
 
@@ -118,7 +118,7 @@ Default encoding for properties files：UTF-8
 
 > 启用`Inferred annotations`后IDEA自定生成`@Contract`/`@Nullable`/`@NotNull`/`@Unmodifiable`等注解，方便开发查看
 
-## Inspections
+### Inspections
 
 * Serializable类必须包含serialVersionUID属性
 
@@ -128,8 +128,12 @@ Default encoding for properties files：UTF-8
 
     `File | Settings | Editor | Inspections | Java | Imports | Unused import | Severity -> Error`
 
+### 鼠标悬浮元素时不显示Document，只能通过`Ctrl + Q`弹出Document窗口
 
-## 常见问题
+`File | Settings | Editor | Code Editing | Quick Documentation -> Show quick documentation on hover（取消勾选）`
+
+
+## 3. 常见问题
 
 ### IDEA 2018 字体模糊，尤其在使用Markdown时。解决方案是删除 IDEA 安装目录下的`jre64`：[参考地址](https://blog.csdn.net/zaemyn2015/article/details/84584458)
 
@@ -155,7 +159,7 @@ Default encoding for properties files：UTF-8
 打开`Version Control`面板，切换到`Local Changes` Tab想，看下你的 `Unversioned Files`项是否有太多的文件。如果这些文件你不想提交到
 服务器，则`ignore`这些文件。
 
-## Plugins
+## 4. Plugins
 
 * `Auto filling Java call arguments` - 自动填充调用的方法、构造函数参数
 * `BashSupport` - Bash语法及高亮显
