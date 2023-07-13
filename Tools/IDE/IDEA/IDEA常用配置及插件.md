@@ -166,7 +166,6 @@ Default encoding for properties files：UTF-8
 * `CheckStyle-IDEA` - CheckStyle
 * `Alibaba Java Coding Guidelines` - 阿里代码规范
 * `Kubernetes and OpenShift Resource Support` - 编辑K8S、OpenShift资源文件
-* `Lombok Plugin` - 新版IDEA默认已安装
 * `Maven Helper`
 * `SonarLint`
 * `String Manipulation` - 字符窜各种大小写/驼峰规则转换
@@ -174,6 +173,8 @@ Default encoding for properties files：UTF-8
 * `vue.js`
 * `Eclipse Code Formatter` 
 * `Nginx Support` - 支持Nginx配置自动补全、开启/关闭Nginx服务
-* `Codota` - Get AI Code Completions for your IDE - [文档](https://www.codota.com/user-guide/introduction)
 * `JProfiler`
+* `Apache Dubbo in Spring Framework` - Dubbo集成至Spring
+* `MapStruct Support` - 支持MapStruct
+* `Tabnine Al Code Completion` - AI编码提示
 
