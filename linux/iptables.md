@@ -109,3 +109,30 @@ iptables [-t table] COMMAND chain CRETIRIA -j ACTION
 |QUEUE|中断过滤程序，将封包放入队列，交给其它程序处理。透过自行开发的处理程序，可以进行其它应用，例如：计算联机费用……等。|   |
 |RETURN|结束在目前规则炼中的过滤程序，返回主规则炼继续过滤，如果把自订规则炼看成是一个子程序，那么这个动作，就相当于提早结束子程序并返回到主程序中。|	  |
 |MARK|将封包标上某个代号，以便提供作为后续过滤的条件判断依据，进行完此处理动作后，将会继续比对其它规则。|iptables -t mangle -A PREROUTING -p tcp --dport 22 -j MARK --set-mark 2|
+
+
+## 注意事项
+
+### 打印跟踪日志
+
+```shell
+# 在 filter 表 FORWARD 链的最前面追加日志跟踪
+shell> iptables -I FORWARD  -j LOG --log-prefix "FORWARD LOG: "
+```
+
+> 注：链中的日志操作不会影响后面的规则执行。如果想判断某规则是否成功匹配并执行，在当前规则前后各增加日志，
+> 1. 规则之前的日志打印，说明iptables执行经过此规则。
+> 2. 规则之后的日志打印，说明此规则不匹配，否则说明此规则生效。
+> 3. 查看日志方案：a. `tail -f /var/log/messages` b. `journalctl -kf`
+
+### 启用 ip_forward
+
+当使用`nat`表中的`PREROUTING`链时需要配置ip_forward，如下：
+```shell
+shell> /etc/sysctl.conf 设置 net.ipv4.ip_forward = 1
+shell> sysctl -p
+```
+
+> 注：`nat`表的`OUTPUT`链无需启用`ip_forward`，因为请求是从当前主机发起的。
+
+
