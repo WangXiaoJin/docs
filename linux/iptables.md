@@ -1,35 +1,28 @@
-## iptables基本概念
----
+# iptables
+
 + iptables是一个配置Linux内核防火墙的命令行工具，是netfilter项目的一部分。术语iptables也经常代指该内核级防火墙。iptables可以直接配置，也可以通过许多前端和图形界面配置。iptables用于ipv4，ip6tables用于ipv6。nftables已经包含在Linux kernel 3.13中，以后会取代iptables成为主要的Linux防火墙工具。
 + iptables可以检测、修改、转发、重定向和丢弃IPv4数据包。过滤IPv4数据包的代码已经内置于内核中，并且按照不同的目的被组织成**表**的集合。**表**由一组预先定义的**链**组成，**链**包含遍历顺序规则。每一条规则包含一个谓词的潜在匹配和相应的动作（称为目标），如果谓词为**真**，该动作会被执行。也就是说**条件匹配**。iptables是用户工具，允许用户使用**链**和**规则**。
----
+
 ## 基本模块
----
-## 表（Tables）
+
+### 表（Tables）
+
 + iptables 包含`5`张表（tables）
 + `raw`用于配置数据包，raw中的数据包不会被系统跟踪。
 + `filter`是用于存放所有与防火墙相关操作的默认表。
 + `nat`用于网络地址转换。
 + `mangle`用于对特定数据包的修改。
 + `security`用于强制访问控制网络规则。
----
-## 链（Chains）
-+ 表由链组成，链是一些按顺序排列的规则的列表。默认的filter表包含INPUT，OUTPUT和FORWARD 3条内建的链，这3条链作用于数据包过滤过程中的不同时间点。默认情况下，任何链中都没有规则。可以向链中添加自己想用的规则。链的默认规则通常设置为 ACCEPT，如果想确保任何包都不能通过规则集，那么可以重置为DROP。默认的规则总是在一条链的最后生效，所以在默认规则生效前数据包需要通过所有存在的规则。
----
-## 规则（Rules）
-+ 数据包的过滤基于规则。规则由一个目标（数据包包匹配所有条件后的动作）和很多匹配（导致该规则可以应用的数据包所满足的条件）指定。一个规则的典型匹配事项是数据包进入的端口（例如：eth0 或者 eth1）、数据包的类型（ICMP, TCP, 或者 UDP）和数据包的目的端口。目标使用-j或者--jump选项指定。目标可以是用户定义的链（例如，如果条件匹配，跳转到之后的用户定义的链，继续处理）、一个内置的特定目标或者是一个目标扩展。内置目标是 ACCEPT， DROP， QUEUE和RETURN，目标扩展是 REJECT and LOG。如果目标是内置目标，数据包的命运会立刻被决定并且在当前表的数据包的处理过程会停止。如果目标是用户定义的链，并且数据包成功穿过第二条链，目标将移动到原始链中的下一个规则。目标扩展可以被终止（像内置目标一样）或者不终止（像用户定义链一样）。
----
 
-## NAT准备工作
-```
-echo "1" > /proc/sys/net/ipv4/ip_forward  #开启IP转发
-echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf  #永久开启，重启不失效。
-```
-+ 每次使用iptables-save后都需要把输出的配置写入/etc/sysconfig/iptables中
-+ 每次保存配置(iptables-save)后都需要重启服务(systemctl restart iptables)
+### 链（Chains）
+表由链组成，链是一些按顺序排列的规则的列表。默认的filter表包含INPUT，OUTPUT和FORWARD 3条内建的链，这3条链作用于数据包过滤过程中的不同时间点。默认情况下，任何链中都没有规则。可以向链中添加自己想用的规则。链的默认规则通常设置为 ACCEPT，如果想确保任何包都不能通过规则集，那么可以重置为DROP。默认的规则总是在一条链的最后生效，所以在默认规则生效前数据包需要通过所有存在的规则。
 
-## 实际配置
----
+### 规则（Rules）
+数据包的过滤基于规则。规则由一个目标（数据包包匹配所有条件后的动作）和很多匹配（导致该规则可以应用的数据包所满足的条件）指定。一个规则的典型匹配事项是数据包进入的端口（例如：eth0 或者 eth1）、数据包的类型（ICMP, TCP, 或者 UDP）和数据包的目的端口。目标使用-j或者--jump选项指定。目标可以是用户定义的链（例如，如果条件匹配，跳转到之后的用户定义的链，继续处理）、一个内置的特定目标或者是一个目标扩展。内置目标是 ACCEPT， DROP， QUEUE和RETURN，目标扩展是 REJECT and LOG。如果目标是内置目标，数据包的命运会立刻被决定并且在当前表的数据包的处理过程会停止。如果目标是用户定义的链，并且数据包成功穿过第二条链，目标将移动到原始链中的下一个规则。目标扩展可以被终止（像内置目标一样）或者不终止（像用户定义链一样）。
+
+## 指令参数
+
+### 查看配置
 ```
 [root@vm-tongchen-test ~]# iptables -L
 Chain INPUT (policy ACCEPT)
@@ -43,8 +36,8 @@ target     prot opt source               destination
 ```
 + 如上例所示，每一个数据包都要通过三个内建的链（INPUT、OUTPUT和FORWARD）中的一个。
 + filter是最常用的表，在filter表中最常用的三个目标是ACCEPT、DROP和REJECT。ACCEPT表示允许数据包通过，DROP则会丢弃数据包，不再对其进行任何处理。REJECT会把出错信息传送至发送数据包的主机。
----
-+ 上面示例为默认filter配置，如需显示其他表配置通过 -t 参数指定表明即可，例如显示nat表：
+
+> 上面示例为默认filter配置，如需显示其他表配置通过 -t 参数指定表明即可，例如显示nat表：
 ```
 [root@vm-tongchen-test ~]# iptables -t nat -L
 Chain PREROUTING (policy ACCEPT)
@@ -64,8 +57,7 @@ Chain POSTROUTING (policy ACCEPT)
 target     prot opt source               destination         
 MASQUERADE  all  --  anywhere             anywhere            
 ```
----
-+ 参数详解
+
 iptables [-t table] COMMAND chain CRETIRIA -j ACTION
 
 + -t table ：3个filter nat mangle
@@ -74,7 +66,7 @@ iptables [-t table] COMMAND chain CRETIRIA -j ACTION
 + CRETIRIA:指定匹配标准
 + -j ACTION :指定如何进行处理
 
-# 参数说明
+### 参数说明
 
 |   参数    |   说明      |   示例      |
 |:--------: |:----------: |:-----------:|
@@ -99,9 +91,9 @@ iptables [-t table] COMMAND chain CRETIRIA -j ACTION
 |    -t 	| 表名(raw、mangle、nat、filter)| iptables -t nat |
 |    -m 	| 使用扩展模块来进行数据包的匹配(multiport/tcp/state/addrtype) | iptables -m multiport |
 
-# 动作说明
+### 动作说明
 
-+ 处理动作除了 ACCEPT、REJECT、DROP、REDIRECT 和 MASQUERADE 以外，还多出 LOG、ULOG、DNAT、SNAT、MIRROR、QUEUE、RETURN、TOS、TTL、MARK 等，其中某些处理动作不会中断过滤程序，某些处理动作则会中断同一规则链的过滤，并依照前述流程继续进行下一个规则链的过滤，一直到堆栈中的规则检查完毕为止。透过这种机制所带来的好处是，我们可以进行复杂、多重的封包过滤，简单的说，iptables 可以进行纵横交错式的过滤（tables）而非链状过滤（chains）。
+处理动作除了 ACCEPT、REJECT、DROP、REDIRECT 和 MASQUERADE 以外，还多出 LOG、ULOG、DNAT、SNAT、MIRROR、QUEUE、RETURN、TOS、TTL、MARK 等，其中某些处理动作不会中断过滤程序，某些处理动作则会中断同一规则链的过滤，并依照前述流程继续进行下一个规则链的过滤，一直到堆栈中的规则检查完毕为止。透过这种机制所带来的好处是，我们可以进行复杂、多重的封包过滤，简单的说，iptables 可以进行纵横交错式的过滤（tables）而非链状过滤（chains）。
 
 | 动作 | 说明 | 示例 |
 |:------:|:----:|:----:|
