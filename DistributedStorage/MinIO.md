@@ -303,3 +303,9 @@ go tool pprof -http=192.168.xxx.xxx:8081 profile-xxx-cpu.pprof
   * `PutObjectProgressBar` - [链接](https://github.com/minio/minio-java/blob/release/examples/PutObjectProgressBar.java)
   * `PutObjectUiProgressBar` - [链接](https://github.com/minio/minio-java/blob/release/examples/PutObjectUiProgressBar.java)
 
+## Q&A
+
+### 1. 删除对象的所有版本后服务端数据还存在
+
+配置了`replication`导致的。[参考链接](https://github.com/minio/minio/discussions/17225)
+
