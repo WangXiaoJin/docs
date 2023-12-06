@@ -159,6 +159,38 @@ public class OkHttpClientProxyCache {
 * [Squid父级socks代理](https://cloud-atlas.readthedocs.io/zh_CN/latest/web/proxy/squid/squid_socks_peer.html)
 
 
+## iptables
+
+### 代理当前主机发起的请求
+
+```shell
+# 当前主机执行的80请求转发至 192.168.200.223:80
+shell> iptables -t nat -A OUTPUT -p tcp --dport 80 -j DNAT --to-destination 192.168.200.223:80
+```
+
+### 代理别的主机发起的请求
+
+当前主机充当代理人。
+
+#### 1. 启用 ip_forward
+
+```shell
+shell> /etc/sysctl.conf 设置 net.ipv4.ip_forward = 1
+shell> sysctl -p
+```
+
+#### 2. 配置 iptables
+
+通过当前主机 80 端口的请求全部转发至 192.168.200.223:80
+```shell
+shell> iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.200.223:80
+shell> iptables -t nat -A POSTROUTING -d 192.168.200.223 -j MASQUERADE
+# 代理服务器的两端IP都需要放行，所以这里通过掩码配置范围IP。
+# 如果不想这么麻烦，可以注掉 `-A FORWARD -j REJECT --reject-with icmp-host-prohibited` 配置，达到同等效果。
+shell> iptables -I FORWARD -d 192.168.0.0/16 -p tcp -j ACCEPT
+```
+
+
 ## SOCKs5
 
 * [SOCKS Proxy Primer: What Is SOCKs5 and Why Should You Use It?](https://securityintelligence.com/posts/socks-proxy-primer-what-is-socks5-and-why-should-you-use-it/)
