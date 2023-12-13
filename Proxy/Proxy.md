@@ -216,6 +216,18 @@ shell> iptables -I FORWARD -d 192.168.0.0/16 -p tcp -j ACCEPT
 6. 关闭服务：`systemctl stop v2ray`
 7. 卸载：`./install-release.sh --remove`
 
+```shell
+# 安装和更新 V2Ray
+# 安装可执行文件和 .dat 数据文件
+shell> bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+
+# 安装最新发行的 geoip.dat 和 geosite.dat
+shell> bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)
+
+# 移除 V2Ray
+shell> bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) --remove
+```
+
 安装目录：
 ```
 installed: /usr/local/bin/v2ray
@@ -234,6 +246,348 @@ installed: /etc/systemd/system/v2ray@.service
 
 * [官网](https://www.v2fly.org/)
 * [fhs-install-v2ray](https://github.com/v2fly/fhs-install-v2ray/blob/master/README.zh-Hans-CN.md) - 安装脚本项目
+
+### V2Ray 透明代理（TPROXY）
+
+#### a. 启用 ip_forward
+
+```shell
+shell> /etc/sysctl.conf 设置 net.ipv4.ip_forward = 1
+shell> sysctl -p
+```
+
+#### b. 安装 V2Ray
+
+#### c. 修改配置文件
+
+修改`/usr/local/etc/v2ray/config.json`配置文件，重点关注**代理服务器**相关配置。
+
+```json
+{
+  "log": {
+    // Log level, one of "debug", "info", "warning", "error", "none"
+    "loglevel": "warning",
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log"
+  },
+  "inbounds": [
+    {
+      "tag": "transparent",
+      "port": 10101,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "network": "tcp,udp",
+        "followRedirect": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      },
+      "streamSettings": {
+        "sockopt": {
+          // 透明代理使用 TPROXY 方式
+          "tproxy": "tproxy",
+          "mark": 255
+        }
+      }
+    },
+    {
+      "port": 1080,
+      // 入口协议为 SOCKS 5
+      "protocol": "socks",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      },
+      "settings": {
+        "auth": "noauth"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "proxy",
+      "protocol": "trojan",
+      // 代理服务器
+      "settings": {
+        "servers": [
+          {
+            "address": "trojan.domain01",
+            "port": 9303,
+            "password": "a968d818-fc5d-56e4-9734-b21695bc009c"
+          },
+          {
+            "address": "trojan.domain02",
+            "port": 6301,
+            "password": "a968d818-fc5d-56e4-9734-b21695bc009c"
+          }
+        ]
+      },
+      "streamSettings": {
+        "security": "tls",
+        "tlsSettings": {
+          "allowInsecure": true
+        },
+        "sockopt": {
+          "mark": 255
+        }
+      },
+      "mux": {
+        // 开启 mux 后连接三方的 trojan 服务有问题
+        "enabled": false
+      }
+    },
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIP"
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 255
+        }
+      }
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole",
+      "settings": {
+        "response": {
+          "type": "http"
+        }
+      }
+    },
+    {
+      "tag": "dns-out",
+      "protocol": "dns",
+      "streamSettings": {
+        "sockopt": {
+          "mark": 255
+        }
+      }
+    }
+  ],
+  "dns": {
+    "servers": [
+      {
+        //中国大陆域名使用阿里的 DNS
+        "address": "223.5.5.5",
+        "port": 53,
+        "domains": [
+          "geosite:cn",
+          // NTP 服务器
+          "ntp.org",
+          // 此处改为你 VPS 的域名，代理服务器域名
+          "trojan.domain01",
+          "trojan.domain02"
+        ]
+      },
+      {
+        //中国大陆域名使用 114 的 DNS (备用)
+        "address": "114.114.114.114",
+        "port": 53,
+        "domains": [
+          "geosite:cn",
+          // NTP 服务器
+          "ntp.org",
+          // 此处改为你 VPS 的域名，代理服务器域名
+          "trojan.domain01",
+          "trojan.domain02"
+        ]
+      },
+      {
+        //非中国大陆域名使用 Google 的 DNS
+        "address": "8.8.8.8",
+        "port": 53,
+        "domains": [
+          "geosite:geolocation-!cn"
+        ]
+      },
+      {
+        //非中国大陆域名使用 Cloudflare 的 DNS
+        "address": "1.1.1.1",
+        "port": 53,
+        "domains": [
+          "geosite:geolocation-!cn"
+        ]
+      },
+      // 本机预设的 DNS 配置（备选）
+      "localhost"
+    ]
+  },
+  "routing": {
+    "domainStrategy": "IPOnDemand",
+    "rules": [
+      {
+        // 劫持 53 端口 UDP 流量，使用 V2Ray 的 DNS
+        "type": "field",
+        "inboundTag": [
+          "transparent"
+        ],
+        "port": 53,
+        "network": "udp",
+        "outboundTag": "dns-out"
+      },
+      {
+        // 直连 123 端口 UDP 流量（NTP 协议）
+        "type": "field",
+        "inboundTag": [
+          "transparent"
+        ],
+        "port": 123,
+        "network": "udp",
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "ip": [
+          // 设置 DNS 配置中的国内 DNS 服务器地址直连，以达到 DNS 分流目的
+          "223.5.5.5",
+          "114.114.114.114"
+        ],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "ip": [
+          // 设置 DNS 配置中的国外 DNS 服务器地址走代理，以达到 DNS 分流目的
+          "8.8.8.8",
+          "1.1.1.1"
+        ],
+        "outboundTag": "proxy"
+      },
+      {
+        // 广告拦截
+        "type": "field",
+        "domain": [
+          "geosite:category-ads-all"
+        ],
+        "outboundTag": "block"
+      },
+      {
+        // BT 流量直连
+        "type": "field",
+        "protocol": [
+          "bittorrent"
+        ],
+        "outboundTag": "direct"
+      },
+      {
+        // 直连中国大陆主流网站 ip 和 保留 ip
+        "type": "field",
+        "ip": [
+          "geoip:private",
+          "geoip:cn"
+        ],
+        "outboundTag": "direct"
+      },
+      {
+        // 直连中国大陆主流网站域名
+        "type": "field",
+        "domain": [
+          "geosite:cn"
+        ],
+        "outboundTag": "direct"
+      }
+    ]
+  }
+}
+```
+
+#### d. 重启 V2Ray 服务
+
+```shell
+shell> systemctl restart v2ray
+```
+
+#### e. 配置 iptables
+
+```shell
+# 设置策略路由
+ip rule add fwmark 1 table 100
+ip route add local 0.0.0.0/0 dev lo table 100
+
+# 代理局域网设备
+iptables -t mangle -N V2RAY
+iptables -t mangle -A V2RAY -d 0.0.0.0/8 -j RETURN
+iptables -t mangle -A V2RAY -d 127.0.0.0/8 -j RETURN
+iptables -t mangle -A V2RAY -d 169.254.0.0/16 -j RETURN
+iptables -t mangle -A V2RAY -d 224.0.0.0/4 -j RETURN
+iptables -t mangle -A V2RAY -d 240.0.0.0/4 -j RETURN
+# 直连局域网，避免 V2Ray 无法启动时无法连网关的 SSH
+iptables -t mangle -A V2RAY -d 10.0.0.0/8 -p tcp -j RETURN
+iptables -t mangle -A V2RAY -d 172.16.0.0/12 -p tcp -j RETURN
+iptables -t mangle -A V2RAY -d 192.168.0.0/16 -p tcp -j RETURN
+# 直连局域网，53 端口除外（因为要使用 V2Ray 的 DNS)
+iptables -t mangle -A V2RAY -d 10.0.0.0/8 -p udp ! --dport 53 -j RETURN
+iptables -t mangle -A V2RAY -d 172.16.0.0/12 -p udp ! --dport 53 -j RETURN
+iptables -t mangle -A V2RAY -d 192.168.0.0/16 -p udp ! --dport 53 -j RETURN
+# 直连 SO_MARK 为 0xff 的流量(0xff 是 16 进制数，数值上等同与上面V2Ray 配置的 255)，此规则目的是解决v2ray占用大量CPU（https://github.com/v2ray/v2ray-core/issues/2621）
+iptables -t mangle -A V2RAY -j RETURN -m mark --mark 0xff
+# 给 UDP 打标记 1，转发至 10101 端口
+iptables -t mangle -A V2RAY -p udp -j TPROXY --on-ip 127.0.0.1 --on-port 10101 --tproxy-mark 1
+iptables -t mangle -A V2RAY -p tcp -j TPROXY --on-ip 127.0.0.1 --on-port 10101 --tproxy-mark 1
+# 应用规则
+iptables -t mangle -A PREROUTING -j V2RAY
+
+# 代理网关本机
+iptables -t mangle -N V2RAY_MASK
+iptables -t mangle -A V2RAY_MASK -d 0.0.0.0/8 -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 127.0.0.0/8 -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 169.254.0.0/16 -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 224.0.0.0/4 -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 240.0.0.0/4 -j RETURN
+# 直连局域网
+iptables -t mangle -A V2RAY_MASK -d 10.0.0.0/8 -p tcp -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 172.16.0.0/12 -p tcp -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 192.168.0.0/16 -p tcp -j RETURN
+# 直连局域网，53 端口除外（因为要使用 V2Ray 的 DNS）
+iptables -t mangle -A V2RAY_MASK -d 10.0.0.0/8 -p udp ! --dport 53 -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 172.16.0.0/12 -p udp ! --dport 53 -j RETURN
+iptables -t mangle -A V2RAY_MASK -d 192.168.0.0/16 -p udp ! --dport 53 -j RETURN
+# 直连 SO_MARK 为 0xff 的流量(0xff 是 16 进制数，数值上等同与上面V2Ray 配置的 255)，此规则目的是避免代理本机(网关)流量出现回环问题
+iptables -t mangle -A V2RAY_MASK -j RETURN -m mark --mark 0xff
+# 给 UDP 打标记，重路由
+iptables -t mangle -A V2RAY_MASK -p udp -j MARK --set-mark 1
+iptables -t mangle -A V2RAY_MASK -p tcp -j MARK --set-mark 1
+# 应用规则
+iptables -t mangle -A OUTPUT -j V2RAY_MASK
+
+# 新建 DIVERT 规则，避免已有连接的包二次通过 TPROXY，理论上有一定的性能提升
+iptables -t mangle -N DIVERT
+iptables -t mangle -A DIVERT -j MARK --set-mark 1
+iptables -t mangle -A DIVERT -j ACCEPT
+iptables -t mangle -I PREROUTING -p tcp -m socket -j DIVERT
+```
+
+> 注：至此你可以访问外网，可访问方式：
+> 1. 本机直接访问：`curl https://www.youtube.com`
+> 2. 本地代理访问：`curl -x socks5://127.0.0.1:1080 https://www.youtube.com`
+> 3. 局域网中其他机器代理访问：`curl -x socks5://{透明代理IP}:1080 https://www.youtube.com`
+> 4. 局域网中其他机器通过网关访问，网关配置为`{透明代理IP}`即可
+
+> 参考资料：
+> * [透明代理(TPROXY)](https://guide.v2fly.org/app/tproxy.html)
+> * [漫谈各种黑科技式 DNS 技术在代理环境中的应用](https://tachyondevel.medium.com/%E6%BC%AB%E8%B0%88%E5%90%84%E7%A7%8D%E9%BB%91%E7%A7%91%E6%8A%80%E5%BC%8F-dns-%E6%8A%80%E6%9C%AF%E5%9C%A8%E4%BB%A3%E7%90%86%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8-62c50e58cbd0)
+
+#### f. 卸载透明代理配置及 v2ray
+
+当你不需要透明代理功能时，通过以下步骤来卸载。
+```shell
+shell> ip rule del fwmark 1 table 100
+shell> ip route del local 0.0.0.0/0 dev lo table 100
+shell> iptables -t mangle -F
+shell> systemctl disable v2ray
+shell> systemctl stop v2ray
+shell> ./install-release.sh --remove
+```
 
 
 ## goproxy
