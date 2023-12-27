@@ -262,7 +262,7 @@ shell> sysctl -p
 
 修改`/usr/local/etc/v2ray/config.json`配置文件，重点关注**代理服务器**相关配置。
 
-```json
+```json5
 {
   "log": {
     // Log level, one of "debug", "info", "warning", "error", "none"
@@ -337,10 +337,6 @@ shell> sysctl -p
         "sockopt": {
           "mark": 255
         }
-      },
-      "mux": {
-        // 开启 mux 后连接三方的 trojan 服务有问题
-        "enabled": false
       }
     },
     {
@@ -497,6 +493,30 @@ shell> sysctl -p
         "outboundTag": "direct"
       }
     ]
+  }
+}
+```
+
+使用`Shadowsocks`协议代理配置：
+```json5
+{
+  "tag": "proxy",
+  "protocol": "shadowsocks",
+  // 代理服务器
+  "settings": {
+    "servers": [
+      {
+        "address": "xxxx.me",
+        "port": 563,
+        "method": "aes-128-gcm",
+        "password": "8c07404f-dc34-4cd8-afdf-ece73ae52f20"
+      }
+    ]
+  },
+  "streamSettings": {
+    "sockopt": {
+      "mark": 255
+    }
   }
 }
 ```
