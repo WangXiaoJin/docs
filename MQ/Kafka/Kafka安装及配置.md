@@ -94,6 +94,8 @@ EOF
 ```
 2. 执行命令时带上配置文件: `bin/kafka-{xx}.sh ... --bootstrap-server {ip}:9092 --command-config /etc/kafka/kafka_client.properties`
 
+> 注：如果连接Kafka不需要账号密码，则以上配置可忽略，且下面配置文件中`SASL_PLAINTEXT`替换为`PLAINTEXT`。
+
 #### 3.1 KRaft 模式
 
 **配置Kafka (config/kraft/server.properties)：**
