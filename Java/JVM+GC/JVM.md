@@ -203,4 +203,42 @@ public class Test {
 * [深入理解堆外内存 Metaspace](https://www.javadoop.com/post/metaspace)
 * [What is Metaspace?](https://stuefe.de/posts/metaspace/what-is-metaspace/)
 
+### 查看 Metaspace 使用情况
+
+#### 1. jmap -clstats pid
+
+查看类加载器实例及已加载类的数量。
+
+#### 2. JVM参数
+
+* `-XX:+TraceClassLoading` - Enables tracing of classes as they are loaded. By default, this option is disabled and classes are not traced.
+* `-XX:+TraceClassLoadingPreorder` - Enables tracing of all loaded classes in the order in which they are referenced. By default, this option is disabled and classes are not traced.
+* `-XX:+TraceClassResolution` - Enables tracing of constant pool resolutions. By default, this option is disabled and constant pool resolutions are not traced.
+* `-XX:+TraceClassUnloading` - Enables tracing of classes as they are unloaded. By default, this option is disabled and classes are not traced.
+* `-XX:+TraceLoaderConstraints` - Enables tracing of the loader constraints recording. By default, this option is disabled and loader constraints recording is not traced.
+
+#### 3. jcmd pid GC.class_stats
+
+查看已加载的类信息：
+
+`jcmd pid GC.class_stats |awk '{print $13}'| sort | uniq -c | sort -r`
+
+> 注：`jcmd <pid> help` - 列出支持的参数列表。  
+> GC.class_stats 需要启用`-XX:+UnlockDiagnosticVMOptions`功能
+
+#### 4. Native Memory Tracking
+通过 NMT 查看 堆及非堆的内存使用情况
+
+* [Native Memory Tracking](https://docs.oracle.com/javase/8/docs/technotes/guides/vm/nmt-8.html) - 启动 NMT
+* [Native Memory Tracking](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/tooldescr007.html) - 使用手册
+* [Native Memory Tracking 详解](https://heapdump.cn/article/4644018)
+
+##### 错误：Native memory tracking is not enabled 
+
+确保java进程启动时启用了`-XX:NativeMemoryTracking`。
+
+##### 错误：Java HotSpot(TM) 64-Bit Server VM warning: Native Memory Tracking did not setup properly, using wrong launcher?
+
+`-XX:NativeMemoryTracking` 需放在`-jar`指令前面。[参考文档](https://stackoverflow.com/questions/53955159/not-able-to-enable-native-memory-tracking-in-a-spring-boot-application)
+
 

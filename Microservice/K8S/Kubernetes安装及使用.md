@@ -762,5 +762,7 @@ type PodSpec struct {
 
 * [`Strategic Merge Patch`详解 -【重要】](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-api-machinery/strategic-merge-patch.md)
 
+## kubectl
 
+* [kubectl 指令 操作手册](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands)
 

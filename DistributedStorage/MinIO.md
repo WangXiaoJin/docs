@@ -52,6 +52,22 @@
     mc admin heal -r self/mybucket
     ```
 
+### Bucket 启用 Versioned 后彻底删除文件
+
+#### 1. 通过 Object Lifecycle Management 自动删除
+
+```shell
+# expire-delete-marker - 当没有其他版本的对象时删除delete markers版本
+# --noncurrent-expire-days "7" - 非当前版本保留7天
+shell> mc ilm rule add --expire-delete-marker --noncurrent-expire-days "7" myminio/bucket
+```
+
+#### 2. 命令删除
+
+```shell
+# dry-run - 先试运行，没问题后再去掉此参数执行
+shell> mc rm -r --non-current --versions --force --dry-run myminio/bucket
+```
 
 ### 安装及配置参考文档
 

@@ -80,6 +80,20 @@ sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule require
     password="admin123";
 ```
 
+**Kafka命令行执行之鉴权配置：**
+1. 创建鉴权配置文件
+```bash
+shell> cat << 'EOF' > /etc/kafka/kafka_client.properties
+security.protocol=SASL_PLAINTEXT
+sasl.mechanism=PLAIN
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
+    username="admin" \
+    password="admin123";
+
+EOF
+```
+2. 执行命令时带上配置文件: `bin/kafka-{xx}.sh ... --bootstrap-server {ip}:9092 --command-config /etc/kafka/kafka_client.properties`
+
 #### 3.1 KRaft 模式
 
 **配置Kafka (config/kraft/server.properties)：**
@@ -340,7 +354,7 @@ shell> bin/kafka-server-stop.sh
 ```
 
 > 注：`kafka-server-start.sh`默认JVM配置为`-Xmx1G -Xms1G`，明显不适用于生产环境。修改Kafka JVM配置，请提供`KAFKA_HEAP_OPTS`环境变量。
-具体请查看`kafka-server-start.sh`脚本内容。
+> 具体请查看`kafka-server-start.sh`脚本内容。
 
 #### 3.2 ZooKeeper 模式
 
@@ -633,10 +647,10 @@ shell> bin/kafka-server-stop.sh
 ```
 
 > 注：使用`zookeeper-server-start.sh`启动时默认JVM配置`-Xmx512M -Xms512M`。如想修改ZK的JVM，请在执行`zookeeper-server-start.sh`
-前提供`KAFKA_HEAP_OPTS`环境变量。具体请查看`zookeeper-server-start.sh`脚本内容。
+> 前提供`KAFKA_HEAP_OPTS`环境变量。具体请查看`zookeeper-server-start.sh`脚本内容。
 
 > 注：`kafka-server-start.sh`默认JVM配置为`-Xmx1G -Xms1G`，明显不适用于生产环境。修改Kafka JVM配置，请提供`KAFKA_HEAP_OPTS`环境变量。
-具体请查看`kafka-server-start.sh`脚本内容。
+> 具体请查看`kafka-server-start.sh`脚本内容。
 
 #### 3.3 配置文档
 
@@ -760,7 +774,7 @@ This tool helps to read data from standard input and publish it to Kafka.
 
 ```bash
 # 生产事件，标准输入中每行内容产生一个事件，按 `Ctrl-C` 退出
-shell> bin/kafka-console-producer.sh --topic quickstart-events --bootstrap-server localhost:9092
+shell> bin/kafka-console-producer.sh --topic quickstart-events --bootstrap-server {ip}:9092
 ```
 
 ### kafka-console-consumer.sh
@@ -768,7 +782,7 @@ This tool helps to read data from Kafka topics and outputs it to standard output
 
 ```bash
 # 读取事件，按 `Ctrl-C` 退出
-shell> bin/kafka-console-consumer.sh --topic quickstart-events --from-beginning --bootstrap-server localhost:9092
+shell> bin/kafka-console-consumer.sh --topic quickstart-events --from-beginning --bootstrap-server {ip}:9092
 ```
 
 ### kafka-consumer-groups.sh
@@ -891,9 +905,9 @@ This tool helps to create, delete, describe, or change a topic.
 
 ```bash
 # 创建 topic
-shell> bin/kafka-topics.sh --create --topic quickstart-events --bootstrap-server localhost:9092
+shell> bin/kafka-topics.sh --create --topic quickstart-events --bootstrap-server {ip}:9092
 # 查看 topic
-shell> bin/kafka-topics.sh --describe --topic quickstart-events --bootstrap-server localhost:9092
+shell> bin/kafka-topics.sh --describe --topic quickstart-events --bootstrap-server {ip}:9092
 # 删除 topic
 shell> bin/kafka-topics.sh --bootstrap-server broker_host:port --delete --topic my_topic_name
 # 新增 topic 配置
