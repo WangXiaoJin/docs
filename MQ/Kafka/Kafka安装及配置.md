@@ -1107,5 +1107,40 @@ EFAK 提供了 Kafka 监控、告警、管理等相关功能
   * [KIP-500: Replace ZooKeeper with a Self-Managed Metadata Quorum](https://cwiki.apache.org/confluence/display/KAFKA/KIP-500%3A+Replace+ZooKeeper+with+a+Self-Managed+Metadata+Quorum)
 
 
+## 问题
+
+### 1. 客户端高可用问题 - 服务端频繁先后宕机重启，虽然服务端正常，但会导致客户端不能正常功能，一直用之前的服务重连。
+
+原因：客户端应用启动时会根据`bootstrap-servers`配置，选择一个节点和服务端通信，服务端返回有效的节点数据，并选择一个节点作为Coordinator和集群进行通信。
+客户端会缓存这个数据5分钟（默认值），通过`metadata.max.age.ms`参数控制。 当Partition leader发生改变、缓存时间过期、Coordinator节点通信失败，
+此时会从缓存的节点列表里面挑选其他节点作为Coordinator节点并跟新最新的数据。
+
+以下场景存在问题：当服务端的节点相继shutdown，只有一个节点生存（A）。此时客户端会跟新本地缓存，只保留一个有效节点，且此节点为Coordinator节点。
+在5分钟内（缓冲有效时间内）其他节点相继startup，然后再shutdown最后生存的节点A。此时客户端缓存中只保留了A节点，然而A又挂了，所以只能不停地去尝试连接A。
+只要A不恢复，客户端应用则无法正常工作。但此时的Kafka集群是正常工作的。
+
+解决方案：
+1. 重启客户端应用
+2. 服务端失败节点恢复
+3. `metadata.max.age.ms`参数值调小（不能根本解决问题）
+4. `metadata.recovery.strategy` (新功能，官方实现中)
+
+测试时打开相关日志，并搜索`Updated cluster metadata`关键字查看数据更新情况：
+```yaml
+logging:
+  level:
+    org.apache.kafka.clients.Metadata: trace
+    org.apache.kafka.clients.consumer.internals.AbstractCoordinator: trace
+```
+
+参考地址：
+* [A consumer can't discover new group coordinator when the cluster was partly restarted](https://issues.apache.org/jira/browse/KAFKA-8206)
+* [Proactively discover alive brokers from bootstrap server lists when all nodes are down](https://issues.apache.org/jira/browse/KAFKA-13653)
+* [KAFKA-8206: Allow client to rebootstrap](https://github.com/apache/kafka/pull/13277)
+* [KIP-899: Allow producer and consumer clients to rebootstrap](https://cwiki.apache.org/confluence/display/KAFKA/KIP-899%3A+Allow+producer+and+consumer+clients+to+rebootstrap)
+
+### 2. 服务端高可用
+
+* [4.7 Replication](https://kafka.apache.org/documentation/#replication)
 
 
