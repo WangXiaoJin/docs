@@ -33,8 +33,6 @@ syncLimit=5
 dataDir=/data/zk/data
 # 可选配置，不配置则log写入dataDir目录中，与snapshot存放不同dedicated device会提高性能。
 dataLogDir=/data/zk/dataLog
-# the port at which the clients will connect
-clientPort=2181
 #  (No Java system property) Limits the number of concurrent connections (at the socket level) that a single client, 
 #  identified by IP address, may make to a single member of the ZooKeeper ensemble. 
 #  This is used to prevent certain classes of DoS attacks, including file descriptor exhaustion. 
@@ -56,10 +54,11 @@ zookeeper.extendedTypesEnabled=true
 #leaderServes=
 
 # 集群配置
-# 第一个端口号用于从节点连接主节点，第二个端口号用于leader选举
-server.1=192.168.1.101:2888:3888
-server.2=192.168.1.102:2888:3888
-server.3=192.168.1.103:2888:3888
+# 第一个端口号用于从节点连接主节点，第二个端口号用于leader选举，第三个端口号给客户端连接用
+# 第一个IP用于集群间通信，第二个IP用于客户端连接
+server.1=192.168.1.101:2888:3888;192.168.1.101:2181
+server.2=192.168.1.102:2888:3888;192.168.1.102:2181
+server.3=192.168.1.103:2888:3888;192.168.1.103:2181
 
 # The number of snapshots to retain in dataDir
 autopurge.snapRetainCount=8

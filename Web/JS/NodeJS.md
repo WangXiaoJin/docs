@@ -4,12 +4,47 @@
 
 * [`exports`、`module.exports` 和 `export`、`export default`讲解](https://juejin.im/post/597ec55a51882556a234fcef)
 * Node.js模块系统 - require/exports - 模块加载规则及原理
-    * http://nodejs.cn/api/modules.html
-    * https://www.runoob.com/nodejs/nodejs-module-system.html
+  * http://nodejs.cn/api/modules.html
+  * https://www.runoob.com/nodejs/nodejs-module-system.html
 * Node.js 全局对象/全局属性 - `__filename`/`__dirname`/`console`/`process`等
-    * http://nodejs.cn/api/globals.html
-    * https://www.runoob.com/nodejs/nodejs-global-object.html
+  * http://nodejs.cn/api/globals.html
+  * https://www.runoob.com/nodejs/nodejs-global-object.html
 
+## 安装 fnm + nodeJS + pnpm
+
+```shell
+# Download and install fnm:
+winget install Schniz.fnm
+# 配置系统环境变量
+# FNM_DIR 是一个环境变量，用于指定 fnm 安装和管理 Node.js 版本的目录。默认值：C:\Users\{user}\AppData\Roaming\fnm
+FNM_DIR=D:\Program Files\fnm
+# FNM_NODE_DIST_MIRROR 指定 Node.js 二进制文件的下载镜像源，默认值：https://nodejs.org/dist
+FNM_NODE_DIST_MIRROR=https://npmmirror.com/mirrors/node/
+# 在运行环境（bash、PowerShell）中配置 fnm，参考下面的文档
+# Download and install Node.js:
+fnm install 22
+# Verify the Node.js version:
+node -v # Should print "v22.14.0".
+# Download and install pnpm:
+corepack enable pnpm
+# 查看存储路径
+pnpm store path
+# pnpm 存储目录，不要出现空格，默认：C:\Users\{admin}\AppData\Local\pnpm\store\v10
+pnpm config set store-dir D:\data\pnpm\store\v10
+# Verify pnpm version:
+pnpm -v
+```
+
+> [Node官方文档](https://nodejs.org/zh-cn/download)
+
+**fnm安装及配置：** 官方文档 - https://github.com/Schniz/fnm
+
+* 在git bash环境中使用fnm时，配置请参考`Bash`配置，配置文件（`.bashrc`/`.bash_profile`）位于`%USERPROFILE%`（可直接通过文件资源管理器访问）
+* Bash环境配置
+* PowerShell 环境配置
+* Windows CMD环境配置
+
+--use-on-cd --version-file-strategy=recursive --resolve-engines
 
 ## npm
 
@@ -17,17 +52,17 @@
 
 * `npm help config` - config命令，配置会保存到文件中
 * [npm-config](https://docs.npmjs.com/misc/config) - 【非常重要】**命令行使用配置及配置详解**
-    * `npm ci --verbose` - `-dd, --verbose、--loglevel verbose`，配置LogLevel
+  * `npm ci --verbose` - `-dd, --verbose、--loglevel verbose`，配置LogLevel
 
 ### 配置`prefix`/`cache`参数
 
-  ```bash
-  # 全局模块插件存放路径，默认值为安装目录
-  npm config set prefix "D:\Program Files\node-v10.15.3"
-  
-  # 缓存路径，默认值 ~AppData\Roaming\npm-cache
-  npm config set cache "D:\Program Files\node-v10.15.3\node_cache"
-  ```
+```bash
+# 全局模块插件存放路径，默认值为安装目录
+npm config set prefix "D:\Program Files\node-v10.15.3"
+
+# 缓存路径，默认值 ~AppData\Roaming\npm-cache
+npm config set cache "D:\Program Files\npm-cache"
+```
 
 ### `package.json vars` / `configuration`
 
@@ -46,11 +81,15 @@ The package.json “config” keys are overwritten in the environment if there i
 , "config" : { "port" : "8080" }
 , "scripts" : { "start" : "node server.js" } }
 ```
+
 and the server.js is this:
+
 ```
 http.createServer(...).listen(process.env.npm_package_config_port)
 ```
+
 then the user could change the behavior by doing:
+
 ```
 npm config set foo:port 80
 ```
@@ -72,9 +111,13 @@ The `npm_lifecycle_event` environment variable is set to whichever stage of the 
 * 在package.json所在目录下使用`npm install . -g`可先在本地安装当前命令行程序，可用于发布前的本地测试。
 
 * `npm ci` - 和 `npm install` 类似，但它不会改变 `npm-shrinkwrap.json`、`package-lock.json`，适用于构建服务器、持续集成、自动化部署。
+
 * 使用 `npm help ci` 查看文档解释
+
 * [`npm i` changed my npm-shrinkwrap/package-lock, why?](https://npm.community/t/npm-i-changed-my-npm-shrinkwrap-package-lock-why/190)
+
 * [`package-lock` 和 `npm-shrinkwrap`](https://xwenliang.cn/p/5cbd98b57eb9de0c54000003)
+
 * [`npm install` `模块依赖`算法 -【重要】](https://docs.npmjs.com/cli/install.html#algorithm)
 
 * 使用`npm update <package>`可以把当前目录下node_modules子目录里边的对应模块更新至最新版本。
@@ -92,20 +135,30 @@ The `npm_lifecycle_event` environment variable is set to whichever stage of the 
 * `npm help npm-scripts` - 脚本的生命周期
 
 ### 包依赖 / `package-lock` / `npm-shrinkwrap`
-    
+
 * [`npm install` `模块依赖`算法 -【重要】](https://docs.npmjs.com/cli/install.html#algorithm)
+
 * [`npm i` changed my npm-shrinkwrap/package-lock, why?](https://npm.community/t/npm-i-changed-my-npm-shrinkwrap-package-lock-why/190)
+
 * [package-lock 和 npm-shrinkwrap](https://xwenliang.cn/p/5cbd98b57eb9de0c54000003)
+
 * `npm help package-lock.json`
+
 * `npm help npm-shrinkwrap.json`
+
 * `npm help npm-package-locks`
-    * Resolving lockfile conflicts: `npm install --package-lock-only`
+  
+  * Resolving lockfile conflicts: `npm install --package-lock-only`
+
 * `npm help npm-shrinkwrap`
+
 * `npm help package.json`
 
 * [package.json详解 -【重要】](https://docs.npmjs.com/files/package.json.html)
+  
   * [dependencies配置讲解](https://docs.npmjs.com/files/package.json.html#dependencies)
   * [npm-semver - The semantic versioner for npm(dependencies配置版本详解)](https://docs.npmjs.com/misc/semver.html)
+
 * [Configuring npm -【重要】](https://docs.npmjs.com/cli-documentation/files)
 
 ## 常用插件
@@ -119,19 +172,22 @@ The `npm_lifecycle_event` environment variable is set to whichever stage of the 
 * [npm install 两个依赖包的Peer Dependencies冲突该怎么解决？](https://segmentfault.com/q/1010000011571000/a-1020000011575690)
 
 * 共享`node_modules`或基础组件
-    
-    * 使用系统软链接，Windows：`mklink /j "node_modules" "../project1/node_modules"`
-    * 使用`npm link`
+  
+  * 使用系统软链接，Windows：`mklink /j "node_modules" "../project1/node_modules"`
+  * 使用`npm link`
 
 ## 文档
 
 * [Nexus Npm Registry](https://help.sonatype.com/repomanager3/formats/npm-registry) -【重要】在Nexus上使用Npm仓库
 
 * [npm官网](https://docs.npmjs.com/)
-    * [npm-scope](https://docs.npmjs.com/misc/scope) - 讲解`scoped packages`发布、安装及配置
-    
-* [淘宝 NPM 镜像](http://npm.taobao.org/)
-* [NodeJS中文文档 - 【重要】](http://nodejs.cn/api/util.html)
-* [runoob.com简易文档](https://www.runoob.com/nodejs/nodejs-http-server.html)
-* [npm11个提供工作效率的用法](https://leokongwq.github.io/2016/10/21/npm-11-useful-tips.html)
+  
+  * [npm-scope](https://docs.npmjs.com/misc/scope) - 讲解`scoped packages`发布、安装及配置
 
+* [淘宝 NPM 镜像](http://npm.taobao.org/)
+
+* [NodeJS中文文档 - 【重要】](http://nodejs.cn/api/util.html)
+
+* [runoob.com简易文档](https://www.runoob.com/nodejs/nodejs-http-server.html)
+
+* [npm11个提供工作效率的用法](https://leokongwq.github.io/2016/10/21/npm-11-useful-tips.html)

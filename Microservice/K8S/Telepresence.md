@@ -1,5 +1,8 @@
 # Telepresence
 
+* K8S集群中的请求被代理至本地local环境，让本地启用的应用代替K8S集群中的服务，可以作到本地调试K8S集群中的流量。
+* 当前支持拦截对象：Deployments, ReplicaSets, StatefulSets。
+* 可以借助此功能让本地环境和远程K8S集群内部网络打通，便于调试。
 
 ## 参考文档
 

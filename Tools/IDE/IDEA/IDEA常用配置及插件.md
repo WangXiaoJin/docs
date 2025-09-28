@@ -38,9 +38,9 @@
 
 `File | Settings | Editor | Color Scheme | General | Text | Default text | 右侧Background: F3F1F1`
 
-### 配置Maven settings.xml文件
+### 配置Maven home path
 
-`File | Settings | Build, Execution, Deployment | Build Tools | Maven | User settings file`
+`File | Settings | Build, Execution, Deployment | Build Tools | Maven | Maven home path`
 
 ### Terminal使用Linux环境
 
@@ -68,36 +68,24 @@ Default encoding for properties files：UTF-8
 ```
 /**
  *
- * @author WangXiaoJin
- * @date ${YEAR}-${MONTH}-${DAY} ${TIME}
+ * @author ${USER}
+ * @date ${YEAR}/${MONTH}/${DAY}
  */ 
 ```
 
-> 注：如果你想默认使用系统的时间格式，请换成`${DATE} ${TIME}`
+### Live Templates
 
-### 使用`Live Templates`自动生成`@author`、`@date`等一系列JavaDoc
+Live Templates 的 Expression可以写Groovy脚本，脚本内嵌了`_editor`变量（`com.intellij.openapi.editor.impl.EditorImpl`），
+可用来获取当前编辑器的上下文信息。
+```xml
+<!-- 查看 com.intellij.openapi.editor.impl.EditorImpl 类   -->
+<dependency>
+  <groupId>com.jetbrains.intellij.platform</groupId>
+  <artifactId>ide-impl</artifactId>
+  <version>242.20224.428</version>
+</dependency>
+```
 
-`File | Settings | Editor | Live Templates`
-
-1. 点击右侧 `+` 选择 `Template Group` ，输入`注释`，点击 `OK`
-
-2. 在新建的`注释`组下面，新建`@author` Live Template
-    * `Abbreviation`：`@author`
-    * `Description`: `生成@author 注解`
-    * `Template text`: `@author $author$`
-    * `Define applicable contexts`: 选择所有
-    * 选中`Reformat according to style`
-    * 点击`Edit variables` -> `Expression` -> `author`: `user()`
-    
-3. 在新建的`注释`组下面，新建`@date` Live Template
-    * `Abbreviation`：`@date`
-    * `Description`: `生成@date 注释`
-    * `Template text`: `@date $date$ $time$`
-    * `Define applicable contexts`: 选择所有
-    * 选中`Reformat according to style`
-    * 点击`Edit variables` -> `Expression`
-        * `date`: `date("yyyy-MM-dd")`
-        * `time`: `time()`
 
 ### Code Completion
 
@@ -177,4 +165,6 @@ Default encoding for properties files：UTF-8
 * `Apache Dubbo in Spring Framework` - Dubbo集成至Spring
 * `MapStruct Support` - 支持MapStruct
 * `Tabnine Al Code Completion` - AI编码提示
+* `EnvFile` - 通过文件设置环境变量 - [插件地址](https://github.com/Ashald/EnvFile)
+* `Easy Javadoc` - 生产JavaDoc
 

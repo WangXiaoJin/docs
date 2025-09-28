@@ -1,6 +1,6 @@
 # K8S-常用
 
-## 组件
+## 1. 组件
 
 ### Container-Management-Platform
 
@@ -52,7 +52,7 @@ that Kubernetes can run.
     * [kubernetes-event-exporter](https://github.com/opsgenie/kubernetes-event-exporter) - 推荐
         * [Exporting Kubernetes Event Objects for Better Observability](https://static.sched.com/hosted_files/kccncna19/d0/Exporting%20K8s%20Events.pdf) - 剖析K8S事件
 
-## 访问K8S
+## 2. 访问K8S
 
 1. [Accessing the Kubernetes API from a Pod](https://kubernetes.io/docs/tasks/run-application/access-api-from-pod/)
 2. [Accessing Clusters](https://kubernetes.io/docs/tasks/access-application-cluster/access-cluster/)
@@ -126,7 +126,7 @@ users:
 
 
 
-## 问题
+## 3. 问题
 
 ### setting cgroup config for procHooks process caused
 
@@ -137,7 +137,8 @@ invalid argument\\\"\"": unknown**
 
 可通过升级内核解决: <https://github.com/kubernetes/kubernetes/issues/72878>
 
-## 文档
+
+## 4. 文档
 
 * [Write a simple Kubernetes Operator in Java using the Fabric8 Kubernetes Client](https://developers.redhat.com/blog/2019/10/07/write-a-simple-kubernetes-operator-in-java-using-the-fabric8-kubernetes-client/) -
 
