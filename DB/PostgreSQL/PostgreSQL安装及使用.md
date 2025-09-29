@@ -160,10 +160,34 @@ host    replication     all             0.0.0.0/0             scram-sha-256
 host    replication     all             ::0/0                 scram-sha-256
 ```
 
-修改 postgres 密码：
+配置修改好后重启服务，并执行以下操作：
 ```shell
+# 修改 postgres 密码
 $ sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres@765';"
+
+# 验证内核是否配置 CONFIG_HUGETLBFS=y 、CONFIG_HUGETLB_PAGE=y
+$ grep -E "CONFIG_HUGETLBFS|CONFIG_HUGETLB_PAGE" /boot/config-$(uname -r)
+# 查看当前 shared_buffers 的配置值需要多少 hugepages
+$ sudo -u postgres psql -c "SHOW shared_memory_size_in_huge_pages;"
+ shared_memory_size_in_huge_pages
+----------------------------------
+ 4262
+(1 row)
+
+# 查看当前系统的 hugepagesize 配置为 2048 kB
+$ grep ^Hugepagesize /proc/meminfo
+Hugepagesize:       2048 kB
+
+# 当前 Session 生效
+$ sysctl -w vm.nr_hugepages=4262
+# 修改 hugepages-2048kB 配置为 4262，重启服务后生效
+$ echo 4262 > /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+
+# 重启服务
+$ systemctl restart postgresql-17
 ```
+
+**以下为集群配置**
 
 创建集群复制账号及赋权：
 ```shell
@@ -202,26 +226,17 @@ max_standby_streaming_delay = 5s
 - [Lock Management](https://www.postgresql.org/docs/current/runtime-config-locks.html)
 
 
-### 3. 启用 huge pages
-
-```shell
-# 验证内核是否配置 CONFIG_HUGETLBFS=y 、CONFIG_HUGETLB_PAGE=y
-$ grep -E "CONFIG_HUGETLBFS|CONFIG_HUGETLB_PAGE" /boot/config-$(uname -r)
-# 暂停服务
-$ systemctl stop postgresql-17
-# 切换到 postgres 用户
-$ su - postgres
-
-```
-
-### 4. 创建role及授权
+### 3. 创建role及授权
 
 PostgreSQL使用`role`的概念来管理数据库访问权限。根据角色的设置方式，可以将角色视为一个`user`或`group`。
 
 ```shell
+# 切换到 postgres 用户
+$ su - postgres
+
 $ createuser name
 $ CREATE USER name;
-CREATE ROLE name PASSWORD 'string'.
+$ CREATE ROLE name WITH PASSWORD 'string'.
 ```
 
 - 通过 [pg_hba.conf](https://www.postgresql.org/docs/current/auth-pg-hba-conf.html) 配置文件授权。
@@ -229,7 +244,7 @@ CREATE ROLE name PASSWORD 'string'.
 - [Roles 管理](https://www.postgresql.org/docs/current/user-manag.html)
 - [预定义角色列表](https://www.postgresql.org/docs/current/predefined-roles.html)
 
-### 5. 刷新配置：
+### 4. 刷新配置
 ```shell
 # 方法1：使用 pg_ctl（需要知道数据目录）
 $ sudo -u postgres pg_ctl reload -D ${PGDATA}
@@ -283,6 +298,7 @@ $ systemctl reload postgresql
 ### 3. 监控数据库
 
 - [Monitoring Database Activity](https://www.postgresql.org/docs/current/monitoring.html)
+
 
 ## ㈢文档
 
