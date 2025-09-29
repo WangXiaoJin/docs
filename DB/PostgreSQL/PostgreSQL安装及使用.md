@@ -15,6 +15,7 @@ $ dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86
 $ dnf -qy module disable postgresql
 
 # 自动创建用户及组：`postgres:x:26:26:PostgreSQL Server:/var/lib/pgsql:/bin/bash`和 `postgres:x:26:`
+# 如果是源码安装的话，则需要自己创建postgres用户，且必须是系统用户：`useradd -r -m -s /bin/bash postgres`
 # `/var/lib/pgsql` 的 home目录中存在 `.bash_profile` 文件，里面默认设置了环境变量 `PGDATA=/var/lib/pgsql/17/data`
 $ dnf install -y postgresql17-server
 
