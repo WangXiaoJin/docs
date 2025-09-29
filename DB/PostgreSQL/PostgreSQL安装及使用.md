@@ -97,13 +97,25 @@ shared_buffers = 8GB
 temp_buffers = 32MB
 # 每个操作私有，用于查询操作的排序、哈希等
 work_mem = 16MB
+# 后台管理操作最大内存
+maintenance_work_mem = 2GB
 
+# 固态硬盘可配置为几百左右
+effective_io_concurrency = 200
 # 期望可以同时执行的并发磁盘I/O操作的数量。如果你使用的是SSD或NVMe存储设备，建议设置为100 - 200。
 #effective_io_concurrency = 1
+# 资源足够的情况下可以调高 max_worker_processes 和 max_parallel_workers
 max_worker_processes = 8
 max_parallel_workers = 8
-max_parallel_maintenance_workers = 2
-max_parallel_workers_per_gather = 2
+max_parallel_maintenance_workers = 4
+max_parallel_workers_per_gather = 4
+
+min_wal_size = 1GB
+max_wal_size = 4GB
+
+effective_cache_size = 24GB
+# 固态硬盘可设置为 1.1
+random_page_cost = 1.1
 
 log_destination = 'stderr'
 logging_collector = on
@@ -161,8 +173,11 @@ host    replication     all             0.0.0.0/0             scram-sha-256
 host    replication     all             ::0/0                 scram-sha-256
 ```
 
-配置修改好后重启服务，并执行以下操作：
+配置修改好后执行以下操作：
 ```shell
+# 重启服务
+$ systemctl restart postgresql-17
+
 # 修改 postgres 密码
 $ sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres@765';"
 
