@@ -235,8 +235,8 @@ PostgreSQL使用`role`的概念来管理数据库访问权限。根据角色的�
 $ su - postgres
 
 $ createuser name
-$ CREATE USER name;
-$ CREATE ROLE name WITH PASSWORD 'string'.
+$ CREATE ROLE jonathan LOGIN;
+$ CREATE USER davide WITH PASSWORD 'jw8s0F4';
 ```
 
 - 通过 [pg_hba.conf](https://www.postgresql.org/docs/current/auth-pg-hba-conf.html) 配置文件授权。
