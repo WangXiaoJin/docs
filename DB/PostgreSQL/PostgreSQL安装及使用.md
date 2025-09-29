@@ -18,9 +18,27 @@ $ dnf -qy module disable postgresql
 # `/var/lib/pgsql` 的 home目录中存在 `.bash_profile` 文件，里面默认设置了环境变量 `PGDATA=/var/lib/pgsql/17/data`
 $ dnf install -y postgresql17-server
 
-# 修改服务中的配置
+# 创建归档数据文件目录
+$ mkdir -p /apply/pgsql/17/archive_wal
+# 设置目录权限
+$ chown -R postgres:postgres /apply/pgsql 
+$ chmod -R go-rwx /apply/pgsql
+
+# 查看 postgres 组的ID
+$ cat /etc/group | grep postgres
+# 设置 vm.nr_hugepages，假如 postgres 组的ID为 26
+$ echo "vm.hugetlb_shm_group=26" | sudo tee -a /etc/sysctl.conf
+$ sysctl -p
+
+# 修改服务中的配置。设置`PGDATA`、`maxproc`、`openfiles`和`datasize`
+# LimitMEMLOCK 根据 shared_buffers 配置进行调整，可适当大于 shared_buffers
 $ vim /usr/lib/systemd/system/postgresql-17.service
-    Environment=PGDATA=/apply/pgsql/17/data/
+[Service]
+LimitNOFILE=1048576
+LimitNPROC=infinity
+LimitDATA=infinity
+LimitMEMLOCK=8G
+Environment=PGDATA=/apply/pgsql/17/data/
 $ systemctl daemon-reload
 
 # locale -a 显示所有可配置的locale。lc-collate和lc-ctyp值为非C或POSIX时，会影响性能。
@@ -35,21 +53,8 @@ $ localectl set-locale LANG=en_US.utf8
 $ export PGSETUP_INITDB_OPTIONS="--encoding=UTF8 --data-checksums --locale=C --lc-monetary='zh_CN.UTF-8' --lc-numeric='zh_CN.UTF-8' --lc-time='zh_CN.UTF-8'"
 $ /usr/pgsql-17/bin/postgresql-17-setup initdb
 
-# 修改文件权限，目录为上述 PGDATA 环境变量
-$ chown postgres:postgres /apply/pgsql /apply/pgsql/17
-$ chmod go-rwx /apply/pgsql /apply/pgsql/17
-
 $ systemctl enable postgresql-17
 $ systemctl start postgresql-17
-```
-
-设置`maxproc`、`openfiles`和`datasize`：
-```
-[Service]
-User=postgres
-LimitNOFILE=65536
-LimitNPROC=65536
-LimitDATA=unlimited
 ```
 
 验证配置：
@@ -60,7 +65,7 @@ $ cat /proc/<PID>/limits | grep -i "open files\|processes\|data"
 
 > - [内核资源配置](https://www.postgresql.org/docs/current/kernel-resources.html)
 >   - Shared Memory and Semaphores
->   - systemd RemoveIPC
+>   - systemd RemoveIPC - 如果是自己创建postgres用户时，需要设置为系统用户: `adduser --system postgres`
 >   - Resource Limits
 >   - Linux Memory Overcommit
 >   - Linux Huge Pages
@@ -72,11 +77,11 @@ $ cat /proc/<PID>/limits | grep -i "open files\|processes\|data"
 # 数据库集群名称
 cluster_name = 'pg_primary'
 # 集群配置，非集群部署请注释掉此配置
-synchronous_standby_names = 'ANY 1 (pg_standby)'
+#synchronous_standby_names = 'ANY 1 (pg_standby)'
 archive_mode = on
-archive_command = 'test ! -f /apply/pgsql/archive_wal/%f && cp %p /apply/pgsql/archive_wal/%f'
+archive_command = 'test ! -f /apply/pgsql/17/archive_wal/%f && cp %p /apply/pgsql/17/archive_wal/%f'
 
-listen_addresses = 0.0.0.0
+listen_addresses = '0.0.0.0'
 port = 5432
 max_connections = 2000
 
@@ -114,7 +119,7 @@ log_truncate_on_rotation = on
 log_min_duration_statement = 10s
 log_connections = on
 log_disconnections = on
-log_error_verbosity = VERBOSE
+log_error_verbosity = verbose
 log_line_prefix = '%m [%b %p:%c] %q[%a/%u@%h/%d] '
 #log_lock_waits = on
 #log_recovery_conflict_waits = on
@@ -132,26 +137,44 @@ idle_in_transaction_session_timeout = 5min
 datestyle = 'iso, ymd'
 timezone = 'Asia/Shanghai'
 
-# 以下配置需要验证
 client_encoding = 'UTF8'
 lc_monetary = 'zh_CN.UTF-8'
 lc_numeric = 'zh_CN.UTF-8'
 lc_time = 'zh_CN.UTF-8'
 ```
 
+修改`pg_hba.conf`配置，允许远程连接数据库服务：
+```shell
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     peer
+# IPv4 local connections:
+host    all             all             0.0.0.0/0             scram-sha-256
+# IPv6 local connections:
+host    all             all             ::0/0                 scram-sha-256
+# Allow replication connections from localhost, by a user with the
+# replication privilege.
+local   replication     all                                     peer
+host    replication     all             0.0.0.0/0             scram-sha-256
+host    replication     all             ::0/0                 scram-sha-256
+```
+
+修改 postgres 密码：
+```shell
+$ sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres@765';"
+```
+
 创建集群复制账号及赋权：
 ```shell
 # 执行SQL
 CREATE USER replicator WITH REPLICATION PASSWORD 'your_secure_password';
-
-# 修改 pg_hba.conf，允许 replicator 用户从备库IP使用密码进行流复制。replication：表示这是用于复制的连接（不是普通数据库连接）
-host    replication     replicator         192.168.1.20/32        scram-sha-256
 ```
 
 Standby增加以下配置：
 ```shell
 cluster_name = 'pg_standby'
-restore_command = 'cp /apply/pgsql/archive_wal/%f %p'
+restore_command = 'cp /apply/pgsql/17/archive_wal/%f %p'
 primary_conninfo = 'host=primary_host port=5432 user=replicator password=secret'
 # 需进一步验证使用的必要性（有些三方工具会自动配置）。需要主库创建物理复制槽点：pg_standby_slot（SELECT * FROM pg_create_physical_replication_slot('pg_standby_slot');）
 #primary_slot_name = 'pg_standby_slot'
@@ -166,7 +189,7 @@ max_standby_streaming_delay = 5s
 #sync_replication_slots = on
 ```
 
-> 注：配置项中的WAL归档目录为：`/apply/pgsql/archive_wal/`，推荐使用NFS或S3存储，以便主备时时共享文件。
+> 注：配置项中的WAL归档目录为：`/apply/pgsql/17/archive_wal/`，推荐使用NFS或S3存储，以便主备时时共享文件。
 
 `参数配置`相关文档：
 - [连接和认证](https://www.postgresql.org/docs/current/runtime-config-connection.html)
@@ -178,37 +201,20 @@ max_standby_streaming_delay = 5s
 - [Client Connection Defaults](https://www.postgresql.org/docs/current/runtime-config-client.html)
 - [Lock Management](https://www.postgresql.org/docs/current/runtime-config-locks.html)
 
-### systemd
 
-编辑 `/etc/systemd/system/postgresql.service`：
+### 3. 启用 huge pages
+
+```shell
+# 验证内核是否配置 CONFIG_HUGETLBFS=y 、CONFIG_HUGETLB_PAGE=y
+$ grep -E "CONFIG_HUGETLBFS|CONFIG_HUGETLB_PAGE" /boot/config-$(uname -r)
+# 暂停服务
+$ systemctl stop postgresql-17
+# 切换到 postgres 用户
+$ su - postgres
 
 ```
-[Unit]
-Description=PostgreSQL database server
-Documentation=man:postgres(1)
-After=network-online.target
-Wants=network-online.target
 
-[Service]
-Type=notify
-User=postgres
-LimitNOFILE=65536
-LimitNPROC=65536
-LimitDATA=unlimited
-ExecStart=/usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data
-ExecReload=/bin/kill -HUP $MAINPID
-KillMode=mixed
-KillSignal=SIGINT
-TimeoutSec=infinity
-
-[Install]
-WantedBy=multi-user.target
-```
-
-> - [服务启动](https://www.postgresql.org/docs/current/server-start.html)
-
-
-### 创建role及授权
+### 4. 创建role及授权
 
 PostgreSQL使用`role`的概念来管理数据库访问权限。根据角色的设置方式，可以将角色视为一个`user`或`group`。
 
@@ -222,6 +228,18 @@ CREATE ROLE name PASSWORD 'string'.
 - [Password Authentication](https://www.postgresql.org/docs/current/auth-password.html)
 - [Roles 管理](https://www.postgresql.org/docs/current/user-manag.html)
 - [预定义角色列表](https://www.postgresql.org/docs/current/predefined-roles.html)
+
+### 5. 刷新配置：
+```shell
+# 方法1：使用 pg_ctl（需要知道数据目录）
+$ sudo -u postgres pg_ctl reload -D ${PGDATA}
+
+# 方法2：使用 psql 发送信号
+$ sudo -u postgres psql -c "SELECT pg_reload_conf();"
+
+# 方法3：使用 systemctl
+$ systemctl reload postgresql
+```
 
 ## ㈡ 维护
 
