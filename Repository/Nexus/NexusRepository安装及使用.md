@@ -1,10 +1,6 @@
 # NexusRepository安装及使用
 
-## 安装
-
-> [Nexus下载地址](https://help.sonatype.com/en/download.html)
-
-### 1. 系统要求
+## 1. 系统要求
 
 `mount`建议使用`noatime`配置，以提供性能。
 * [Optimizing Nexus Disk IO Performance](https://support.sonatype.com/hc/en-us/articles/213465258-Optimizing-Nexus-Disk-IO-Performance?_ga=2.138188403.2134597265.1574671641-534816866.1574671641) - Avoid Recording File Access Times On Reads
@@ -25,7 +21,7 @@ $ mount -o remount /opt
   * [Database Requirements](https://help.sonatype.com/en/sonatype-nexus-repository-system-requirements.html#database-requirements)
   * [Nexus Repository Memory Overview](https://help.sonatype.com/en/nexus-repository-memory-overview.html)【重要，根据实际情况调整JVM参数】
 
-#### 1.1 File Handle Limits
+### 1.1 File Handle Limits
 
 **init.d**
 
@@ -44,9 +40,13 @@ b. (可选)当使用`Ubuntu`时，进程是通过`init.d`运行的，则会忽�
 
 c. systemd 服务运行时，参考下面的文档配置
 
-### 2. Install And Run
+## 2. Install And Run
 
-#### 2.1 安装
+### 2.1 安装
+
+> 下载地址
+> - [PostgreSQL版（最新）](https://help.sonatype.com/en/download.html) - 新版有速率限制，安装时慎重考略
+> - [OrientDB版](https://help.sonatype.com/en/orientdb-downloads.html)
 
 ```shell
 # 安装到 /opt/sonatype 目录
@@ -61,29 +61,45 @@ $ ln -s /opt/sonatype/nexus-3.84.0-03 /opt/sonatype/nexus
 $ useradd -r nexus
 
 # 修改 run_as_user="nexus"
-$ vim ./nexus/bin/nexus
+$ vim ./nexus/bin/nexus 或者 ./nexus/bin/nexus.rc
 run_as_user='nexus'
 
 $ chown -R nexus:nexus /opt/sonatype
 ```
 
-#### 2.2 配置
+### 2.2 配置
+
+#### ① OrientDB 版
+
+> 安装 jdk1.8 并在`bin/nexus`脚本中新增环境变量: `INSTALL4J_JAVA_HOME={java安装目录}`
 
 JVM配置 `$install-dir/bin/nexus.vmoptions`：
 ```shell
 # RAM为16GB的配置
--Xms8g
--Xmx8g
--XX:MaxDirectMemorySize=4g
+-Xms4g
+-Xmx4g
+-XX:+UseG1GC
+-XX:MaxDirectMemorySize=6717m
 ```
 
 > - [JVM及应用配置](https://help.sonatype.com/en/configuring-the-runtime-environment.html) -【重要】
 > - [重试机制的配置](https://help.sonatype.com/en/retry-limit-configuration.html) - 可选配置
 
 > - `./nexus/etc/nexus-default.properties`中定义了应用的`port`及`context-path`的默认值，默认访问URL为：http://127.0.0.1:8081 。
-    > 此文件不应该被修改，应修改`$data-dir/etc/nexus.properties`配置文件，此文件在Nexus首次启动时创建，你也可以在首次启动前手动创建。
+  此文件不应该被修改，应修改`$data-dir/etc/nexus.properties`配置文件，此文件在Nexus首次启动时创建，你也可以在首次启动前手动创建。
 > - `$data-dir` 默认值为`../sonatype-work/nexus3`
 > - 默认admin的初始密码存储于`sonatype-work/nexus3/admin.password`文件中
+
+
+#### ② PostgreSQL 版
+
+JVM配置：
+```shell
+# RAM为16GB的配置
+-Xms8g
+-Xmx8g
+-XX:MaxDirectMemorySize=4g
+```
 
 PostgreSQL 数据库配置：
 ```shell
@@ -111,7 +127,7 @@ $ \dx
 $ SELECT * FROM pg_extension;
 ```
 
-配置数据库连接：
+配置数据库连接（`nexus.vmoptions`）：
 ```shell
 -Dnexus.datastore.enabled
 -Dnexus.datastore.nexus.username=nexus
@@ -125,7 +141,7 @@ $ SELECT * FROM pg_extension;
 - [Install Nexus Repository with a PostgreSQL Database](https://help.sonatype.com/en/install-nexus-repository-with-postgresql.html)
 
 
-#### 2.3 运行
+### 2.3 运行
 
 **手动运行**
 ```shell
@@ -175,11 +191,11 @@ $ systemctl start nexus.service
 > 验证服务是否启动成功 `tail -f /opt/sonatype-work/nexus3/log/nexus.log`
 
 
-#### 2.4 Nginx配置
+### 2.4 Nginx配置
 
 - [Run Behind a Reverse Proxy](https://help.sonatype.com/en/run-behind-a-reverse-proxy.html)
 
-#### 2.5 UI 配置
+### 2.5 UI 配置
 
 1. 配置`Blob Stores` `Soft Quota`
     
@@ -212,7 +228,7 @@ $ systemctl start nexus.service
         * [What to Do When the Blobstore is Out of Disk Space](https://support.sonatype.com/hc/en-us/articles/360000096228?_ga=2.240034305.346890334.1575246796-534816866.1574671641)
     
 
-## 文档
+## 3. 文档
 
 * [Sonatype Support Knowledge Base](https://support.sonatype.com/hc/en-us) - 搜索Sonatype的知识分享，协助解决问题。
 * [官方文档](https://help.sonatype.com/en/sonatype-nexus-repository.html)
