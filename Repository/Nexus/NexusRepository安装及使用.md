@@ -46,7 +46,7 @@ c. systemd 服务运行时，参考下面的文档配置
 
 > 下载地址
 > - [PostgreSQL版（最新）](https://help.sonatype.com/en/download.html) - 新版有速率限制，安装时慎重考略
-> - [OrientDB版](https://help.sonatype.com/en/orientdb-downloads.html)
+> - [OrientDB版](https://help.sonatype.com/en/orientdb-downloads.html) - 此版本的速率限制忽略，仅起提醒作用
 
 ```shell
 # 安装到 /opt/sonatype 目录
