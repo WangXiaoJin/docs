@@ -58,7 +58,7 @@ $ tar xvz --keep-directory-symlink -f nexus-3.84.0-03-linux-x86_64.tar.gz
 $ ln -s /opt/sonatype/nexus-3.84.0-03 /opt/sonatype/nexus
 
 # 添加nexus用户及用户组
-$ useradd -r nexus
+$ useradd -rm nexus
 
 # 修改 run_as_user="nexus"
 $ vim ./nexus/bin/nexus 或者 ./nexus/bin/nexus.rc
