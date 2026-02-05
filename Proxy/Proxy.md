@@ -306,6 +306,7 @@ shell> sysctl -p
         ]
       },
       "settings": {
+        "udp": true,
         "auth": "noauth"
       }
     }
@@ -332,7 +333,8 @@ shell> sysctl -p
       "streamSettings": {
         "security": "tls",
         "tlsSettings": {
-          "allowInsecure": true
+          "serverName": "m.ctrip.com", // SNI，必须与订阅信息一致
+          "allowInsecure": true   // 与`skip-cert-verify: true`对应
         },
         "sockopt": {
           "mark": 255
