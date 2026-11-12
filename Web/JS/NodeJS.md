@@ -10,41 +10,45 @@
   * http://nodejs.cn/api/globals.html
   * https://www.runoob.com/nodejs/nodejs-global-object.html
 
-## 安装 fnm + nodeJS + pnpm
+## 安装 nvm + nodeJS + pnpm
 
 ```shell
-# Download and install fnm:
-winget install Schniz.fnm
-# 配置系统环境变量
-# FNM_DIR 是一个环境变量，用于指定 fnm 安装和管理 Node.js 版本的目录。默认值：C:\Users\{user}\AppData\Roaming\fnm
-FNM_DIR=D:\Program Files\fnm
-# FNM_NODE_DIST_MIRROR 指定 Node.js 二进制文件的下载镜像源，默认值：https://nodejs.org/dist
-FNM_NODE_DIST_MIRROR=https://npmmirror.com/mirrors/node/
-# 在运行环境（bash、PowerShell）中配置 fnm，参考下面的文档
-# Download and install Node.js:
-fnm install 22
-# Verify the Node.js version:
-node -v # Should print "v22.14.0".
+# 下载最新版 nvm-setup.exe，下载地址
+https://github.com/coreybutler/nvm-windows/releases
+# nvm安装目录
+D:\node\nvm
+# Active NodeJs Version Location
+D:\node\nodejs
+
+# 列出可安装的版本
+$ nvm list available
+# 安装最新的 LTS 版本
+$ nvm install 24.14.1
+# 使用指定版本
+$ nvm use 24.14.1
+
+# 设置全局安装路径
+$ npm config set prefix "D:\node\npm_global"
+# 设置缓存路径
+$ npm config set cache "D:\node\npm_cache"
+# 设置国内镜像源
+$ npm config set registry https://registry.npmmirror.com
+
 # Download and install pnpm:
-corepack enable pnpm
-# 查看存储路径
-pnpm store path
-# pnpm 存储目录，不要出现空格，默认：C:\Users\{admin}\AppData\Local\pnpm\store\v10
-pnpm config set store-dir D:\data\pnpm\store\v10
-# Verify pnpm version:
-pnpm -v
+$ corepack enable pnpm
+# 全局二进制文件执行路径
+$ pnpm config set global-bin-dir "D:\node\pnpm_bin"
+# 全局库存储路径
+$ pnpm config set global-dir "D:\node\pnpm_global"
+# 核心：内容寻址存储路径（跨项目复用依赖的关键）
+$ pnpm config set store-dir "D:\node\pnpm_store"
+# 缓存路径
+$ pnpm config set cache-dir "D:\node\pnpm_cache"
+# 镜像源
+$ pnpm config set registry https://registry.npmmirror.com
 ```
 
-> [Node官方文档](https://nodejs.org/zh-cn/download)
-
-**fnm安装及配置：** 官方文档 - https://github.com/Schniz/fnm
-
-* 在git bash环境中使用fnm时，配置请参考`Bash`配置，配置文件（`.bashrc`/`.bash_profile`）位于`%USERPROFILE%`（可直接通过文件资源管理器访问）
-* Bash环境配置
-* PowerShell 环境配置
-* Windows CMD环境配置
-
---use-on-cd --version-file-strategy=recursive --resolve-engines
+> 注意：需要把`D:\node\npm_global`和`D:\node\pnpm_bin`加入到环境变量`PATH`中。
 
 ## npm
 
@@ -53,16 +57,6 @@ pnpm -v
 * `npm help config` - config命令，配置会保存到文件中
 * [npm-config](https://docs.npmjs.com/misc/config) - 【非常重要】**命令行使用配置及配置详解**
   * `npm ci --verbose` - `-dd, --verbose、--loglevel verbose`，配置LogLevel
-
-### 配置`prefix`/`cache`参数
-
-```bash
-# 全局模块插件存放路径，默认值为安装目录
-npm config set prefix "D:\Program Files\node-v10.15.3"
-
-# 缓存路径，默认值 ~AppData\Roaming\npm-cache
-npm config set cache "D:\Program Files\npm-cache"
-```
 
 ### `package.json vars` / `configuration`
 
@@ -167,15 +161,6 @@ The `npm_lifecycle_event` environment variable is set to whichever stage of the 
 * `serve` - 启用 HTTP Server 功能（推荐）
 * `http-server` - 启用 HTTP Server 功能
 
-## 常见问题
-
-* [npm install 两个依赖包的Peer Dependencies冲突该怎么解决？](https://segmentfault.com/q/1010000011571000/a-1020000011575690)
-
-* 共享`node_modules`或基础组件
-  
-  * 使用系统软链接，Windows：`mklink /j "node_modules" "../project1/node_modules"`
-  * 使用`npm link`
-
 ## 文档
 
 * [Nexus Npm Registry](https://help.sonatype.com/repomanager3/formats/npm-registry) -【重要】在Nexus上使用Npm仓库
@@ -183,8 +168,6 @@ The `npm_lifecycle_event` environment variable is set to whichever stage of the 
 * [npm官网](https://docs.npmjs.com/)
   
   * [npm-scope](https://docs.npmjs.com/misc/scope) - 讲解`scoped packages`发布、安装及配置
-
-* [淘宝 NPM 镜像](http://npm.taobao.org/)
 
 * [NodeJS中文文档 - 【重要】](http://nodejs.cn/api/util.html)
 

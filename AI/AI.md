@@ -10,7 +10,7 @@ OCR software, free and offline. 开源、免费的离线OCR软件。支持截屏
 
 ## 2. MCP
 
-* [官方文档](https://modelcontextprotocol.io/introduction)
+* [官方文档](https://modelcontextprotocol.io/docs/getting-started/intro)
 
 * [schema.json](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/2025-03-26/schema.json)
 
@@ -34,4 +34,11 @@ OCR software, free and offline. 开源、免费的离线OCR软件。支持截屏
 * 支持纯CPU环境运行，并支持 GPU(CUDA)/NPU(CANN)/MPS 加速
 * 兼容Windows、Linux和Mac平台
 
+## 4. 提示词工程
 
+* [Prompt Engineering Guide](https://github.com/dair-ai/Prompt-Engineering-Guide)
+
+
+## 5. 其他
+
+- [Local Deep Research](https://github.com/LearningCircuit/local-deep-research) - 在保护数据隐私的前提下，让大模型在用户本地设备上自动对个人文档或知识库进行多轮深度检索、交叉分析与综合推理，生成详尽的定制化研究报告。

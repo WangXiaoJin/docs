@@ -1,40 +1,28 @@
-# AI
+# Claude Code
 
-## 1. OCR
+## 1. 安装
 
-### Umi-OCR
+安装参考地址：https://code.claude.com/docs/en/overview
 
-OCR software, free and offline. 开源、免费的离线OCR软件。支持截屏/批量导入图片，PDF文档识别，排除水印/页眉页脚，扫描/生成二维码。内置多国语言库。
+> 注意：如果安装成功，但运行 Claude 时出现 “找不到命令 ”或 “未识别 ”错误，说明安装目录不在你的 PATH 里。你的 shell 会在 PATH 目录中搜索程序，
+> 安装程序会将 claude 放在 `macOS/Linux` 或 `%USERPROFILE%\.local\bin\claude.exe` Windows 上的 `~/.local/bin/claude`。
+> 
+> 检查安装目录是否在你的 PATH 中，如果没有则打开系统设置，进入环境变量，在用户路径变量中添加 `%USERPROFILE%\.local\bin`。重启你的终端。
 
-> [Umi-OCR](https://github.com/hiroi-sora/Umi-OCR)
+## 2. 配置
 
-## 2. MCP
-
-* [官方文档](https://modelcontextprotocol.io/introduction)
-
-* [schema.json](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/schema/2025-03-26/schema.json)
-
-* [知乎个人文章](https://www.zhihu.com/column/c_1849077942736527360)
-
-## 3. MinerU
-
-一站式开源高质量数据提取工具，将PDF转换成Markdown和JSON格式。
-
-主要功能：
-* 删除页眉、页脚、脚注、页码等元素，确保语义连贯
-* 输出符合人类阅读顺序的文本，适用于单栏、多栏及复杂排版
-* 保留原文档的结构，包括标题、段落、列表等
-* 提取图像、图片描述、表格、表格标题及脚注
-* 自动识别并转换文档中的公式为LaTeX格式
-* 自动识别并转换文档中的表格为HTML格式
-* 自动检测扫描版PDF和乱码PDF，并启用OCR功能
-* OCR支持84种语言的检测与识别
-* 支持多种输出格式，如多模态与NLP的Markdown、按阅读顺序排序的JSON、含有丰富信息的中间格式等
-* 支持多种可视化结果，包括layout可视化、span可视化等，便于高效确认输出效果与质检
-* 支持纯CPU环境运行，并支持 GPU(CUDA)/NPU(CANN)/MPS 加速
-* 兼容Windows、Linux和Mac平台
-
-## 4. 提示词工程
-
-* [Prompt Engineering Guide](https://github.com/dair-ai/Prompt-Engineering-Guide)
+在`%USERPROFILE%\.claude\settings.json`中添加以下配置：
+```json
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.ppio.com/anthropic",
+    "ANTHROPIC_AUTH_TOKEN": "sk_xxxxxx",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "pa/claude-haiku-4-5-20251001",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "pa/claude-opus-4-6",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "pa/claude-sonnet-4-5-20250929",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "API_TIMEOUT_MS": "3000000"
+  }
+}
+```
 

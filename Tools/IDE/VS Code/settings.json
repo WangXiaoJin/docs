@@ -1,0 +1,215 @@
+{
+  "workbench.colorTheme": "Qoder Light",
+  "workbench.editor.revealIfOpen": true,
+  "workbench.editor.empty.hint": "hidden",
+  "workbench.colorCustomizations": {
+    "[Default Dark Modern]": {
+      "tab.activeBorderTop": "#00FF00",
+      "tab.unfocusedActiveBorderTop": "#00FF0088",
+      "textCodeBlock.background": "#00000055"
+    },
+    "editor.wordHighlightStrongBorder": "#FF6347",
+    "editor.wordHighlightBorder": "#FFD700",
+    "editor.findMatchHighlightBackground": "#00ff0055",
+    "editor.findMatchHighlightBorder": "#929090",
+    "editor.findMatchBackground": "#0bf30bc9",
+    "editor.findMatchBorder": "#929090",
+    "editor.selectionHighlightBackground": "#00ff0055",
+    "editor.selectionHighlightBorder": "#929090"
+  },
+
+  "files.exclude": {
+    "**/__pycache__": true
+  },
+  
+  "files.eol": "\n",
+  "[bat]": {
+    "files.eol": "\r\n"
+  },
+  "emmet.variables": {
+    "lang": "zh-CN"
+  },
+
+  "editor.linkedEditing": true,
+  "editor.minimap.enabled": false,
+  "editor.unicodeHighlight.includeComments": true,
+  "editor.hover.delay": 800,
+  "editor.quickSuggestions": {
+    "comments": "on",
+    "strings": "on"
+  },
+  "editor.rulers": [
+    {
+      "column": 80,
+      "color": "#00FF0010"
+    },
+    {
+      "column": 100,
+      "color": "#BDB76B15"
+    },
+    {
+      "column": 120,
+      "color": "#FA807219"
+    }
+  ],
+  "editor.tokenColorCustomizations": {
+    "[*Light*]": {
+      "textMateRules": [
+        {
+          "scope": "ref.matchtext",
+          "settings": {
+            "foreground": "#000"
+          }
+        }
+      ]
+    },
+    "[*Dark*]": {
+      "textMateRules": [
+        {
+          "scope": "ref.matchtext",
+          "settings": {
+            "foreground": "#fff"
+          }
+        }
+      ]
+    }
+  },
+  
+  "cSpell.diagnosticLevel": "Hint",
+  "cSpell.userWords": [
+    "Nacos"
+  ],
+  
+  "trailing-spaces.backgroundColor": "rgba(255,0,0,0.1)",
+  "trailing-spaces.includeEmptyLines": false,
+  
+  "diffEditor.renderSideBySide": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "diffEditor.hideUnchangedRegions.enabled": true,
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "markdown-preview-enhanced.previewTheme": "vue.css",
+  "markdown-preview-enhanced.enablePreviewZenMode": true,
+  "[markdown]": {
+    "diffEditor.ignoreTrimWhitespace": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[sql]": {
+    "editor.defaultFormatter": "dbcode.dbcode"
+  },
+  "[yaml]": {
+    "diffEditor.ignoreTrimWhitespace": false
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "gitlens.views.commitDetails.files.layout": "tree",
+  "gitlens.views.scm.grouped.views": {
+    "commits": true,
+    "branches": true,
+    "remotes": true,
+    "stashes": true,
+    "tags": true,
+    "worktrees": true,
+    "contributors": true,
+    "fileHistory": true,
+    "repositories": true,
+    "searchAndCompare": false,
+    "launchpad": false
+  },
+
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.inlayHints.pytestParameters": true,
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.variableTypes": true,
+
+  "redhat.telemetry.enabled": false,
+  "java.maven.downloadSources": true,
+  "maven.executable.path": "D:/software/apache-maven-3.9.9/bin/mvn.cmd",
+  "maven.settingsFile": "D:/software/apache-maven-3.9.9/conf/settings.xml",
+  "java.configuration.maven.userSettings": "D:\\software\\apache-maven-3.9.9\\conf\\settings.xml",
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.configuration.detectJdksAtStart": false,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.debug.settings.hotCodeReplace": "auto",
+  "java.dependency.packagePresentation": "hierarchical",
+  "java.maxConcurrentBuilds": 16,
+  "java.sources.organizeImports.staticStarThreshold": 1,
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-17",
+      "path": "D:\\Program Files\\jdk-17.0.13"
+    },
+    {
+      "name": "JavaSE-25",
+      "path": "D:\\Program Files\\jdk-25.0.4",
+      "default": true
+    }
+  ],
+  "terminal.integrated.tabs.hideCondition": "never",
+  "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.profiles.windows": {
+    "JavaSE-17 LTS": {
+      "overrideName": true,
+      "env": {
+        "PATH": "D:\\Program Files\\jdk-17.0.13\\bin;${env:PATH}",
+        "JAVA_TOOL_OPTIONS": "-Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8",
+        "JAVA_HOME": "D:\\Program Files\\jdk-17.0.13"
+      },
+      "path": "cmd",
+      "args": [
+        "/k",
+        "chcp",
+        "65001"
+      ]
+    },
+    "JavaSE-25 LTS": {
+      "overrideName": true,
+      "env": {
+        "PATH": "D:\\Program Files\\jdk-25.0.4\\bin;${env:PATH}",
+        "JAVA_TOOL_OPTIONS": "-Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8",
+        "JAVA_HOME": "D:\\Program Files\\jdk-25.0.4"
+      },
+      "path": "cmd",
+      "args": [
+        "/k",
+        "chcp",
+        "65001"
+      ]
+    }
+  },
+  "terminal.integrated.automationProfile.windows": {
+    "path": "cmd"
+  },
+  "java.test.config": {
+    "vmArgs": [
+      "-Dstdout.encoding=UTF-8",
+      "-Dstderr.encoding=UTF-8"
+    ]
+  },
+  "terminal.integrated.defaultProfile.windows": "JavaSE-25 LTS",
+  "terminal.integrated.env.windows": {
+    "JAVA_HOME": "D:\\Program Files\\jdk-25.0.4",
+    "PATH": "D:\\Program Files\\jdk-25.0.4\\bin;${env:PATH}"
+  },
+  "maven.terminal.useJavaHome": true,
+  "maven.terminal.customEnv": [
+    {
+      "environmentVariable": "JAVA_HOME",
+      "value": "D:\\Program Files\\jdk-25.0.4"
+    }
+  ],
+  "maven-helper.dependency.showGroupId": false,
+
+}

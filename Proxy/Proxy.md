@@ -1,21 +1,21 @@
 # Proxy
 
-
 ## Nginx
 
 * [使用 NGINX 作为 HTTPS 正向代理服务器](https://www.infoq.cn/article/taujwgln6d_6qls6yj6s)
 
 * [TCP and UDP Proxy and Load Balancing](https://docs.nginx.com/nginx/admin-guide/load-balancer/tcp-udp-load-balancer/) -【官网】
-    * [Accepting the PROXY Protocol](https://docs.nginx.com/nginx/admin-guide/load-balancer/using-proxy-protocol/)    
+  
+  * [Accepting the PROXY Protocol](https://docs.nginx.com/nginx/admin-guide/load-balancer/using-proxy-protocol/)    
 
 * `nginx_tcp_proxy_module` - [Support TCP proxy with Nginx](https://github.com/yaoweibin/nginx_tcp_proxy_module)
-
 
 ## Java Net Proxy
 
 * [Java Networking and Proxies](https://docs.oracle.com/javase/8/docs/technotes/guides/net/proxies.html)
 
 示例：
+
 ```java
 public class Test {
 
@@ -61,7 +61,6 @@ public class Test {
 ```
 
 ```java
-
 import java.net.Authenticator;
 import java.net.InetSocketAddress;
 import java.net.PasswordAuthentication;
@@ -149,7 +148,6 @@ public class OkHttpClientProxyCache {
 }
 ```
 
-
 ## Squid
 
 * [Squid中文权威指南](https://www.phpfans.net/manu/Squid/)
@@ -157,7 +155,6 @@ public class OkHttpClientProxyCache {
 * [官网配置手册](http://www.squid-cache.org/Doc/config/)
 * [Squid 超速缓存代理服务器](https://documentation.suse.com/zh-cn/sles/15-SP2/html/SLES-all/cha-squid.html)
 * [Squid父级socks代理](https://cloud-atlas.readthedocs.io/zh_CN/latest/web/proxy/squid/squid_socks_peer.html)
-
 
 ## iptables
 
@@ -182,6 +179,7 @@ shell> sysctl -p
 #### 2. 配置 iptables
 
 通过当前主机 80 端口的请求全部转发至 192.168.200.223:80
+
 ```shell
 shell> iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.200.223:80
 shell> iptables -t nat -A POSTROUTING -d 192.168.200.223 -j MASQUERADE
@@ -190,14 +188,14 @@ shell> iptables -t nat -A POSTROUTING -d 192.168.200.223 -j MASQUERADE
 shell> iptables -I FORWARD -d 192.168.0.0/16 -p tcp -j ACCEPT
 ```
 
-
 ## SOCKs5
 
 * [SOCKS Proxy Primer: What Is SOCKs5 and Why Should You Use It?](https://securityintelligence.com/posts/socks-proxy-primer-what-is-socks5-and-why-should-you-use-it/)
 * [Create a SOCKS proxy on a Linux server with SSH to bypass content filters](https://ma.ttias.be/socks-proxy-linux-ssh-bypass-content-filters/)
 
+## ~~V2Ray - `Project V`~~
 
-## V2Ray - `Project V`
+>  目前V2Ray不维护了，改用 [Xray](https://xtls.github.io/)
 
 * `多入口多出口` - 一个 V2Ray 进程可并发支持多个入站和出站协议，每个协议可独立工作。
 * `定制化路由` - 入站流量可按配置由不同地出口发出。轻松实现按区域或按域名分流，以达到最优的网络性能。
@@ -229,6 +227,7 @@ shell> bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/
 ```
 
 安装目录：
+
 ```
 installed: /usr/local/bin/v2ray
 installed: /usr/local/bin/v2ctl
@@ -500,6 +499,7 @@ shell> sysctl -p
 ```
 
 使用`Shadowsocks`协议代理配置：
+
 ```json5
 {
   "tag": "proxy",
@@ -590,18 +590,21 @@ iptables -t mangle -I PREROUTING -p tcp -m socket -j DIVERT
 ```
 
 > 注：至此你可以访问外网，可访问方式：
+> 
 > 1. 本机直接访问：`curl https://www.youtube.com`
 > 2. 本地代理访问：`curl -x socks5://127.0.0.1:1080 https://www.youtube.com`
 > 3. 局域网中其他机器代理访问：`curl -x socks5://{透明代理IP}:1080 https://www.youtube.com`
 > 4. 局域网中其他机器通过网关访问，网关配置为`{透明代理IP}`即可
 
 > 参考资料：
+> 
 > * [透明代理(TPROXY)](https://guide.v2fly.org/app/tproxy.html)
 > * [漫谈各种黑科技式 DNS 技术在代理环境中的应用](https://tachyondevel.medium.com/%E6%BC%AB%E8%B0%88%E5%90%84%E7%A7%8D%E9%BB%91%E7%A7%91%E6%8A%80%E5%BC%8F-dns-%E6%8A%80%E6%9C%AF%E5%9C%A8%E4%BB%A3%E7%90%86%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8-62c50e58cbd0)
 
 #### f. 卸载透明代理配置及 v2ray
 
 当你不需要透明代理功能时，通过以下步骤来卸载。
+
 ```shell
 shell> ip rule del fwmark 1 table 100
 shell> ip route del local 0.0.0.0/0 dev lo table 100
@@ -612,12 +615,315 @@ shell> ./install-release.sh --remove
 ```
 
 
+
+---
+
+
+
+## Xray - `Project X`
+
+> 目前V2Ray不维护了，改用 [Xray](https://xtls.github.io/)
+
+### 安装
+
+1. 下载安装脚本：
+   
+   ```
+   https://github.com/XTLS/Xray-install/raw/main/install-release.sh
+   ```
+2. 下载最新稳定版本`Xray-linux-64.zip`，下载地址：[XTLS/Xray-core/releases](https://github.com/XTLS/Xray-core/releases)
+3. 安装本地包：`./install-release.sh install -u root --local Xray-linux-64.zip`
+4. 开启自启动：`systemctl enable xray`
+5. 启动服务：`systemctl start xray`
+6. 关闭服务：`systemctl stop xray`
+7. 卸载：`./install-release.sh remove`
+
+> 安装文档：<https://github.com/XTLS/Xray-install/blob/main/README_zh-Hans.md>
+
+安装目录：
+
+```
+installed: /usr/local/bin/xray
+installed: /usr/local/share/xray/geoip.dat
+installed: /usr/local/share/xray/geosite.dat
+installed: /usr/local/etc/xray/config.json
+installed: /var/log/xray/
+installed: /var/log/xray/access.log
+installed: /var/log/xray/error.log
+installed: /etc/systemd/system/xray.service
+installed: /etc/systemd/system/xray@.service
+```
+
+> 注：因GitHub被墙，所以不能直接通过脚本远程下载，只能本地安装包安装。
+
+### XRay 透明代理（TPROXY）
+
+#### a. 禁用 ip_forward
+
+```shell
+shell> /etc/sysctl.conf 设置 
+net.ipv4.ip_forward = 0
+net.ipv6.conf.all.forwarding = 0
+shell> sysctl -p
+```
+
+> 参考链接：[大案牍术破案纪实第三篇--我们是如何破解Splice性能下降甚至低于Direct之谜的 · XTLS/Xray-core · Discussion #59 · GitHub](https://github.com/XTLS/Xray-core/discussions/59)
+
+#### b. 修改配置文件
+
+为了更好的分流体验，请替换默认路由规则文件为 [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat)，否则 Xray-core 将无法加载本配置。
+
+```shell
+sudo curl -oL /usr/local/share/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+```
+
+修改`/usr/local/etc/xray/config.json`配置文件，重点关注**代理服务器**相关配置。
+
+```json
+{
+  "log": {
+    // Log level, one of "debug", "info", "warning", "error", "none"
+    "loglevel": "warning",
+    "error": "/var/log/xray/error.log",
+    "access": "/var/log/xray/access.log"
+  },
+  "inbounds": [
+    {
+      "tag": "all-in",
+      "port": 12345,
+      "protocol": "tunnel",
+      "settings": {
+        "allowedNetwork": "tcp,udp",
+        "followRedirect": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
+      },
+      "streamSettings": {
+        "sockopt": {
+          "tproxy": "tproxy"
+        }
+      }
+    },
+    {
+      "port": 1081,
+      "protocol": "http",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
+      }
+    },
+    {
+      "port": 1080,
+      // 入口协议为 SOCKS 5
+      "protocol": "socks",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls"
+        ]
+      },
+      "settings": {
+        "auth": "noauth"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIPv4"
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 2
+        }
+      }
+    },
+    {
+      "tag": "proxy",
+      "protocol": "vless",
+      "settings": {
+        "address": "服务端域名",
+        "port": 443,
+        "id": "UUID",
+        "flow": "xtls-rprx-vision",
+        "encryption": "none"
+      },
+      "streamSettings": {
+        "method": "tcp",
+        "security": "xtls",
+        "sockopt": {
+          "mark": 2
+        }
+      }
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole",
+      "settings": {
+        "response": {
+          "type": "http"
+        }
+      }
+    },
+    {
+      "tag": "dns-out",
+      "protocol": "dns",
+      "settings": {
+        "rewriteAddress": "8.8.8.8"
+      },
+      "proxySettings": {
+        "tag": "proxy"
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 2
+        }
+      }
+    }
+  ],
+  "dns": {
+    "hosts": {
+      "服务端域名": "服务端 IP"
+    },
+    "servers": [
+      {
+        "address": "119.29.29.29",
+        "port": 53,
+        "domains": ["geosite:cn"],
+        "expectIPs": ["geoip:cn"]
+      },
+      {
+        "address": "223.5.5.5",
+        "port": 53,
+        "domains": ["geosite:cn"],
+        "expectIPs": ["geoip:cn"]
+      },
+      "8.8.8.8",
+      "1.1.1.1",
+      "https+local://doh.dns.sb/dns-query"
+    ]
+  },
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "inboundTag": ["all-in"],
+        "port": 53,
+        "outboundTag": "dns-out"
+      },
+      {
+        "ip": ["8.8.8.8", "1.1.1.1"],
+        "outboundTag": "proxy"
+      },
+      {
+        "domain": ["geosite:category-ads-all"],
+        "outboundTag": "block"
+      },
+      {
+        "domain": ["geosite:geolocation-!cn"],
+        "outboundTag": "proxy"
+      },
+      {
+        "ip": ["geoip:telegram"],
+        "outboundTag": "proxy"
+      }
+    ]
+  }
+}
+```
+
+#### d. 重启 XRay 服务
+
+```shell
+shell> systemctl restart xray
+```
+
+#### e. 配置 iptables
+
+```shell
+# 设置策略路由
+ip route add local default dev lo table 100
+ip rule add fwmark 1 table 100
+
+iptables -t mangle -N XRAY
+iptables -t mangle -A XRAY -d 10.0.0.0/8 -j RETURN
+iptables -t mangle -A XRAY -d 100.64.0.0/10 -j RETURN
+iptables -t mangle -A XRAY -d 127.0.0.0/8 -j RETURN
+iptables -t mangle -A XRAY -d 169.254.0.0/16 -j RETURN
+iptables -t mangle -A XRAY -d 172.16.0.0/12 -j RETURN
+iptables -t mangle -A XRAY -d 192.168.0.0/16 -j RETURN
+iptables -t mangle -A XRAY -d 224.0.0.0/4 -j RETURN
+iptables -t mangle -A XRAY -d 240.0.0.0/4 -j RETURN
+iptables -t mangle -A XRAY -d 255.255.255.255/32 -j RETURN
+iptables -t mangle -A XRAY -d 10.0.0.0/8 -p tcp ! --dport 53 -j RETURN
+iptables -t mangle -A XRAY -d 10.0.0.0/8 -p udp ! --dport 53 -j RETURN
+iptables -t mangle -A XRAY -d 172.16.0.0/12 -p tcp ! --dport 53 -j RETURN
+iptables -t mangle -A XRAY -d 172.16.0.0/12 -p udp ! --dport 53 -j RETURN
+iptables -t mangle -A XRAY -d 192.168.0.0/16 -p tcp ! --dport 53 -j RETURN
+iptables -t mangle -A XRAY -d 192.168.0.0/16 -p udp ! --dport 53 -j RETURN
+iptables -t mangle -A XRAY -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1
+iptables -t mangle -A XRAY -p udp -j TPROXY --on-port 12345 --tproxy-mark 1
+iptables -t mangle -A PREROUTING -j XRAY
+
+iptables -t mangle -N XRAY_SELF
+iptables -t mangle -A XRAY_SELF -d 10.0.0.0/8 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 100.64.0.0/10 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 127.0.0.0/8 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 169.254.0.0/16 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 172.16.0.0/12 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 192.168.0.0/16 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 224.0.0.0/4 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 240.0.0.0/4 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 255.255.255.255/32 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 10.0.0.0/8 -p tcp ! --dport 53 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 10.0.0.0/8 -p udp ! --dport 53 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 172.16.0.0/12 -p tcp ! --dport 53 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 172.16.0.0/12 -p udp ! --dport 53 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 192.168.0.0/16 -p tcp ! --dport 53 -j RETURN
+iptables -t mangle -A XRAY_SELF -d 192.168.0.0/16 -p udp ! --dport 53 -j RETURN
+iptables -t mangle -A XRAY_SELF -m mark --mark 2 -j RETURN
+iptables -t mangle -A XRAY_SELF -p tcp -j MARK --set-mark 1
+iptables -t mangle -A XRAY_SELF -p udp -j MARK --set-mark 1
+iptables -t mangle -A OUTPUT -j XRAY_SELF
+```
+
+> 注：至此你可以访问外网，可访问方式：
+> 
+> 1. 本机直接访问：`curl https://www.youtube.com`
+> 2. 本地代理访问：`curl -x socks5://127.0.0.1:1080 https://www.youtube.com`
+> 3. 局域网中其他机器代理访问：`curl -x socks5://{透明代理IP}:1080 https://www.youtube.com`
+> 4. 局域网中其他机器通过网关访问，网关配置为`{透明代理IP}`即可
+
+> 参考资料：
+
+#### f. 卸载透明代理配置及 xray
+
+当你不需要透明代理功能时，通过以下步骤来卸载。
+
+```shell
+shell> ip rule del fwmark 1 table 100
+shell> ip route del local default dev lo table 100
+shell> iptables -t mangle -F
+shell> systemctl disable xray
+shell> systemctl stop xray
+shell> ./install-release.sh remove
+```
+
+
+
+---
+
 ## goproxy
 
 Proxy是golang实现的高性能http,https,websocket,tcp,socks5代理服务器,支持内网穿透,链式代理,通讯加密,智能HTTP,SOCKS5代理,黑白名单,限速,限流量,限连接数,跨平台,KCP支持,认证API
 
 > [官网](https://github.com/snail007/goproxy)
-
 
 ## Tinyproxy
 
@@ -625,13 +931,11 @@ lightweight http(s) proxy daemon
 
 * [官网](http://tinyproxy.github.io/)
 
-
 ## Dante
 
 A free SOCKS server
 
 * [官网](http://www.inet.no/dante/)
-
 
 ## nps
 
