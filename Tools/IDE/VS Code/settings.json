@@ -1,4 +1,6 @@
 {
+  "workbench.iconTheme": "vscode-jetbrains-icon-theme-2023-auto",
+  "workbench.colorTheme": "IntelliJ IDEA New UI Light with Light Header",
   "workbench.editor.revealIfOpen": true,
   "workbench.editor.empty.hint": "hidden",
   "workbench.colorCustomizations": {
