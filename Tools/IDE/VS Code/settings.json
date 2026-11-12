@@ -17,6 +17,7 @@
     "editor.selectionHighlightBorder": "#929090"
   },
 
+  "explorer.autoReveal": false,
   "files.exclude": {
     "**/__pycache__": true
   },
@@ -113,6 +114,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
 
+  "gitlens.hovers.enabled": false,
   "gitlens.views.commitDetails.files.layout": "tree",
   "gitlens.views.scm.grouped.views": {
     "commits": true,
