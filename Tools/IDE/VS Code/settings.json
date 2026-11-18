@@ -32,6 +32,7 @@
     "lang": "zh-CN"
   },
 
+  "editor.guides.bracketPairs": "active",
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   "editor.unicodeHighlight.includeComments": true,
